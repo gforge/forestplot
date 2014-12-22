@@ -1,0 +1,8 @@
+NEWS for the forestplot package
+
+Changes for 1.0
+---------------
+* Separation from the Gmisc-package
+* The xlog argument changed back to match the original from the forestplot-package
+* If provided a vector of length two for the zero argumente you get an area for the zero-effect
+* There is a maximum colgap length for the box corresponding to the box height
