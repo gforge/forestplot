@@ -259,7 +259,7 @@ fpDrawSummaryCI <- function(lower_limit, estimate, upper_limit,
   # it is provided as a unit() object
   size <- ifelse(is.unit(size),
       convertUnit(size, unitTo="npc", valueOnly=TRUE),
-      size)
+      size)*.9
   grid.polygon(x = unit(c(lower_limit, estimate, upper_limit, estimate), "native"),
                y = unit(y.offset +
                           c(0, 0.5 * size, 0, -0.5 * size), "npc"),
