@@ -15,7 +15,14 @@ prFpGetGraphTicksAndClips(xticks, xticks.digits, xlog, xlab, lwd.xaxis, col,
   \item{xticks.digits}{The number of digits to allow in the
   x-axis if this is created by default.}
 
-  \item{xlog}{If TRUE, x-axis tick marks are exponentiated}
+  \item{xlog}{If TRUE, x-axis tick marks are to follow a
+  logarithmic scale, e.g. for logistic regressoin (OR),
+  survival estimates (HR), poisson regression etc.
+  \emph{Note:} This is an intentional break with the
+  original \code{\link[rmeta]{forestplot}} function as I've
+  found that exponentiated ticks/clips/zero effect are more
+  difficult to for non-statisticians and there are
+  sometimes issues with rounding the tick marks properly.}
 
   \item{xlab}{x-axis label}
 

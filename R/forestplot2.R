@@ -34,7 +34,9 @@
 #'  to be a matrix containing the labeltext in the rownames and then columns for
 #'  mean, lower, and upper .
 #' @param mean A vector or a matrix with the averages. You can also provide a 2D/3D
-#'  matrix that is automatically converted to the lower/upper parameters.
+#'  matrix that is automatically converted to the lower/upper parameters. The values
+#'  should be in exponentiated form if they follow this interpretation, e.g. use
+#'  exp(mean) if you have the output from a logistic regression.
 #' @param lower The lower bound of the confidence interval for the forestplot, needs
 #'   to be the same format as the mean, i.e. matrix/vector of equal columns & length
 #' @param upper The upper bound of the confidence interval for the forestplot, needs
@@ -61,7 +63,12 @@
 #'   is to set line height to "lines" and then you get 50 % more than what the
 #'   text height is as your line height.
 #' @param col See \code{\link{fpColors}}
-#' @param xlog If TRUE, x-axis tick marks are exponentiated
+#' @param xlog If TRUE, x-axis tick marks are to follow a logarithmic scale, e.g. for
+#'   logistic regressoin (OR), survival estimates (HR), poisson regression etc.
+#'   \emph{Note:} This is an intentional break with the original \code{\link[rmeta]{forestplot}}
+#'   function as I've found that exponentiated ticks/clips/zero effect are more
+#'   difficult to for non-statisticians and there are sometimes issues with rounding
+#'   the tick marks properly.
 #' @param xticks Optional user-specified x-axis tick marks. Specify NULL to use
 #'   the defaults, numeric(0) to omit the x-axis.
 #' @param xticks.digits The number of digits to allow in the x-axis if this
@@ -108,7 +115,7 @@ forestplot2 <- function (labeltext,
                          fontfamily.labelrow,
                          clip                 = c(-Inf, Inf),
                          xlab                 = "",
-                         zero                 = 0,
+                         zero                 = ifelse(xlog, 1, 0),
                          graphwidth           = "auto",
                          lineheight           = "auto",
                          col                  = fpColors(),
@@ -254,6 +261,25 @@ forestplot2 <- function (labeltext,
   # Save the original values since the function due to it's inheritance
   # from the original forestplot needs some changing to the parameters
   if (xlog){
+    if (any(mean < 0, na.rm = TRUE) ||
+          any(lower < 0, na.rm = TRUE) ||
+          any(upper < 0, na.rm = TRUE) ||
+          zero <= 0 ||
+          (!missing(clip) && any(clip <= 0, na.rm = TRUE))){
+      warning("The values should be provided as exponentials when using the log scale.",
+              " This is an intentional break with the original forestplot function in order",
+              " to simplify other arguments such as ticks, clips, and more. The function has",
+              " converted the values using exp() but it is recommended that this is done prior",
+              " to calling the function in order to avoid any unnecessary errors.")
+      if (zero <= 0)
+        zero = exp(zero)
+      if (any(clip) < 0)
+        clip = exp(clip)
+      mean <- exp(mean)
+      lower <- exp(lower)
+      upper <- exp(upper)
+    }
+
     # Change all the values along the log scale
     org_mean <- log(mean)
     org_lower <- log(lower)

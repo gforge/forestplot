@@ -6,10 +6,11 @@
 \usage{
 forestplot2(labeltext, mean, lower, upper, align, is.summary = FALSE,
   fontfamily.summary, fontfamily.labelrow, clip = c(-Inf, Inf), xlab = "",
-  zero = 0, graphwidth = "auto", lineheight = "auto", col = fpColors(),
-  xlog = FALSE, xticks, xticks.digits = 2, lwd.xaxis, lwd.zero, lwd.ci,
-  cex = 1, cex.axis = cex * 0.6, boxsize, mar = unit(rep(5, times = 4),
-  "mm"), main, legend, legend_args = fpLegend(), new_page = FALSE,
+  zero = ifelse(xlog, 1, 0), graphwidth = "auto", lineheight = "auto",
+  col = fpColors(), xlog = FALSE, xticks, xticks.digits = 2, lwd.xaxis,
+  lwd.zero, lwd.ci, cex = 1, cex.axis = cex * 0.6, boxsize,
+  mar = unit(rep(5, times = 4), "mm"), main, legend,
+  legend_args = fpLegend(), new_page = FALSE,
   confintNormalFn = fpDrawNormalCI, confintSummaryFn = fpDrawSummaryCI,
   legendMarkerFn, ...)
 }
@@ -31,7 +32,10 @@ forestplot2(labeltext, mean, lower, upper, align, is.summary = FALSE,
 
   \item{mean}{A vector or a matrix with the averages. You
   can also provide a 2D/3D matrix that is automatically
-  converted to the lower/upper parameters.}
+  converted to the lower/upper parameters. The values
+  should be in exponentiated form if they follow this
+  interpretation, e.g. use exp(mean) if you have the output
+  from a logistic regression.}
 
   \item{lower}{The lower bound of the confidence interval
   for the forestplot, needs to be the same format as the
@@ -83,7 +87,14 @@ forestplot2(labeltext, mean, lower, upper, align, is.summary = FALSE,
 
   \item{col}{See \code{\link{fpColors}}}
 
-  \item{xlog}{If TRUE, x-axis tick marks are exponentiated}
+  \item{xlog}{If TRUE, x-axis tick marks are to follow a
+  logarithmic scale, e.g. for logistic regressoin (OR),
+  survival estimates (HR), poisson regression etc.
+  \emph{Note:} This is an intentional break with the
+  original \code{\link[rmeta]{forestplot}} function as I've
+  found that exponentiated ticks/clips/zero effect are more
+  difficult to for non-statisticians and there are
+  sometimes issues with rounding the tick marks properly.}
 
   \item{xticks}{Optional user-specified x-axis tick marks.
   Specify NULL to use the defaults, numeric(0) to omit the
