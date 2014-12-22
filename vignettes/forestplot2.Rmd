@@ -1,0 +1,60 @@
+---
+title: "Introduction to forest plots"
+author: "Max Gordon"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Introduction to forest plots}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
+---
+
+[Forest plots](http://en.wikipedia.org/wiki/Forest_plot) date back to [1970s](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1120528/) and have most frequently been used for [meta-analysis](http://en.wikipedia.org/wiki/Meta-analysis), but are in no way restricted to these.  the `forestplot2` function of this package is a development of the [rmeta](http://cran.r-project.org/web/packages/rmeta/index.html)-package's `forestplot` function, hence the name. With the forestplot2 you can:
+
+* **Text:**
+    + Use a table of text, i.e. the text can consist of several columns if needed&dagger;
+    + Use expressions within your text, e.g. `expression(beta)`
+    + Set fontfamily for both summary and regular rows
+* **Confidence intervals:**
+    + Clip confidence intervals to arrows when they exceed specified limits&dagger;
+    + Use multiple confidence bands for the same row
+    + Choose between boxes, diamonds, points etc as estimate indicator
+    + Make your own custom confidence interval drawing functions
+* **Legends:**
+    + Have legend on top or to the left
+    + Have the legend within plot
+    + Put a box around legend (sharp or rounded corners)
+* **Other:**
+    + Automatically adapts graph to viewport (graph) size
+    + Have the zero-effect line as a line or a wide box
+
+&dagger; Features present int the original `forestplot` functions.
+
+Basic example
+=============
+
+Below is a basic example from the original `forestplot` function:
+
+```{r}
+library(rmeta)
+data(cochrane)
+steroid <- meta.MH(n.trt, n.ctrl, ev.trt, ev.ctrl,
+                        names=name, data=cochrane)
+
+tabletext<-cbind(c("","Study",steroid$names,NA,"Summary"),
+                 c("Deaths","(steroid)",cochrane$ev.trt,NA,NA),
+                 c("Deaths","(placebo)", cochrane$ev.ctrl, NA,NA),
+                 c("","OR",format(exp(steroid$logOR),digits=2),NA,format(exp(steroid$logMH),digits=2))
+                 )
+
+m<- c(NA,NA,steroid$logOR,NA,steroid$logMH)
+l<- m-c(NA,NA,steroid$selogOR,NA,steroid$selogMH)*2
+u<- m+c(NA,NA,steroid$selogOR,NA,steroid$selogMH)*2
+forestplot2(tabletext,exp(m),exp(l),exp(u),
+            zero=0,is.summary=c(TRUE,TRUE,rep(FALSE,8),TRUE),
+            clip=c(log(0.1),log(2.5)), xlog=TRUE,
+            col=meta.colors(box="royalblue",line="darkblue", summary="royalblue"))
+```
+
