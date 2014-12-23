@@ -12,8 +12,6 @@ License: GPL (>= 3)
 URL: http://gforge.se/packages/
 BugReports: https://github.com/gforge/forestplot/issues
 Biarch: yes
-Imports:
-    methods
 Depends:
     grid
 Suggests:

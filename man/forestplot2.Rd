@@ -290,6 +290,8 @@ forestplot2(labeltext = row_names,
 
 
 par(ask=ask)
+# See vignette for a more detailed description
+# vignette("forestplot2",  package="forestplot")
 }
 \author{
 Max Gordon, Thomas Lumley

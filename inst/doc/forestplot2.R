@@ -50,7 +50,7 @@ forestplot2(tabletext, new_page = TRUE,
 tabletext <- cbind(rownames(HRQoL$Sweden),
                    sprintf("%.2f", HRQoL$Sweden[,"coef"]))
 forestplot2(tabletext, new_page = TRUE, 
-            fontfamily.labelrow =  "HersheyGothicGerman",
+            fontfamily.labelrow =  "HersheyScript",
             rbind(HRQoL$Sweden),
             col=clrs,
             xlab="EQ-5D index")

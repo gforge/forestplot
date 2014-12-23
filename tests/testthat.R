@@ -1,3 +1,3 @@
 library('testthat')
 
-test_check('Gmisc')
+test_check('forestplot')
