@@ -13,7 +13,8 @@ URL: http://gforge.se/packages/
 BugReports: https://github.com/gforge/forestplot/issues
 Biarch: yes
 Imports:
-    methods,
+    methods
+Depends:
     grid
 Suggests:
     testthat,
