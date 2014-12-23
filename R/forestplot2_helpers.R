@@ -1198,6 +1198,10 @@ prFpFetchRowLabel <- function(label_type, labeltext, i, j){
       return(FALSE)
     row_column_text <- labeltext[i, j]
   }
+  if (!is.expression(row_column_text) &&
+        is.na(row_column_text))
+    return("")
+
   return(row_column_text)
 }
 
