@@ -1,54 +1,7 @@
----
-title: "Introduction to forest plots"
-author: "Max Gordon"
-date: "`r Sys.Date()`"
-output: 
-  rmarkdown::html_vignette:
-    toc: true
-    keep_md: true
-vignette: >
-  %\VignetteIndexEntry{Introduction to forest plots}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\usepackage[utf8]{inputenc}
----
-
-```{r, echo=FALSE}
+## ----, echo=FALSE--------------------------------------------------------
 knitr::opts_chunk$set(fig.width = 7, fig.height=3)
-```
 
-[Forest plots](http://en.wikipedia.org/wiki/Forest_plot) date back to [1970s](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1120528/) and have most frequently been used for [meta-analysis](http://en.wikipedia.org/wiki/Meta-analysis), but are in no way restricted to these.  the `forestplot2` function of this package is a development of the [rmeta](http://cran.r-project.org/web/packages/rmeta/index.html)-package's `forestplot` function, hence the name. With the forestplot2 you can:
-
-* **Text:**
-    + Use a table of text, i.e. the text can consist of several columns if needed&dagger;
-    + Use expressions within your text, e.g. `expression(beta)`
-    + Set fontfamily for both summary and regular rows
-* **Confidence intervals:**
-    + Clip confidence intervals to arrows when they exceed specified limits&dagger;
-    + Use multiple confidence bands for the same row
-    + Choose between boxes, diamonds, points etc as estimate indicator
-    + Make your own custom confidence interval drawing functions
-* **Legends:**
-    + Have legend on top or to the left
-    + Have the legend within plot
-    + Put a box around legend (sharp or rounded corners)
-* **Other:**
-    + Automatically adapts graph to viewport (graph) size
-    + Have the zero-effect line as a line or a wide box
-    + All arguments can be within one array
-
-&dagger; Features present int the original `forestplot` functions.
-
-Text
-====
-
-A forest plot is closely connected to text and the ability to customize the text is central.
-
-Table of text
--------------
-
-Below is a basic example from the original `forestplot` function that shows how to use a table of text:
-
-```{r, fig.height=4, fig.width=8, message=FALSE}
+## ----, fig.height=4, fig.width=8, message=FALSE--------------------------
 library(forestplot)
 # Cochrane data from the rmeta-package
 cochrane_from_rmeta <- 
@@ -80,14 +33,8 @@ forestplot2(tabletext,
             clip=c(0.1,2.5), 
             xlog=TRUE,
             col=fpColors(box="royalblue",line="darkblue", summary="royalblue"))
-```
 
-Using expressions
------------------
-
-If we present a regression output it is sometimes convenient to have non-ascii letters. We will use my study comparing health related quality of life 1 year after total hip arthroplasties between Sweden and Denmark for this section:
-
-```{r}
+## ------------------------------------------------------------------------
 data(HRQoL)
 clrs <- fpColors(box="royalblue",line="darkblue", summary="royalblue")
 tabletext <- 
@@ -98,14 +45,8 @@ forestplot2(tabletext, new_page = TRUE,
                   HRQoL$Sweden),
             col=clrs,
             xlab="EQ-5D index")
-```
 
-Altering fonts
---------------
-
-Altering fonts may give a completely different feel to the table:
-
-```{r}
+## ------------------------------------------------------------------------
 tabletext <- cbind(rownames(HRQoL$Sweden),
                    sprintf("%.2f", HRQoL$Sweden[,"coef"]))
 forestplot2(tabletext, new_page = TRUE, 
@@ -113,28 +54,15 @@ forestplot2(tabletext, new_page = TRUE,
             rbind(HRQoL$Sweden),
             col=clrs,
             xlab="EQ-5D index")
-```
 
-Confidence intervals
---------------------
-
-Clipping the interval is convenient for uncertain estimates in order to retain the resolution for those of more interest. The clipping simply adds an arrow to the confidence interval, see the bottom estimate below:
-
-```{r}
+## ------------------------------------------------------------------------
 forestplot2(tabletext, new_page = TRUE, 
             rbind(HRQoL$Sweden),
             clip =c(-.1, Inf),
             col=clrs,
             xlab="EQ-5D index")
-```
 
-
-Multiple confidence bands
--------------------------
-
-When combining similar results for the same row I'm very fond of using multiple bands per row. This efficiently increases the data-ink ratio while making the comparison between the two bands trivial. The first time I've used this was in [my article](http://www.biomedcentral.com/1471-2474/14/316/abstract) comparing Swedish with Danish patients 1 year after total hip arthroplasty. Here the clipping also becomes obvious as the Danish sample was much smaller, resulting in wider confidence intervals.
-
-```{r}
+## ------------------------------------------------------------------------
 forestplot2(tabletext, new_page = TRUE, 
             mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
             lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
@@ -143,15 +71,8 @@ forestplot2(tabletext, new_page = TRUE,
             col=fpColors(box=c("blue", "darkred")),
             xlab="EQ-5D index")
 
-```
 
-
-Estimate indicator
-------------------
-
-You can choose between a number of different estimate indicators. Using the example above we can set the Danish results to circles.
-
-```{r}
+## ------------------------------------------------------------------------
 forestplot2(tabletext, new_page = TRUE, 
             confintNormalFn = c(fpDrawNormalCI, fpDrawCircleCI),
             boxsize = .25, # We set the box size to better visualize the type
@@ -162,16 +83,8 @@ forestplot2(tabletext, new_page = TRUE,
             clip =c(-.125, 0.075),
             col=fpColors(box=c("blue", "darkred")),
             xlab="EQ-5D index")
-```
 
-The confidence interval/box drawing functions are fully customizeable. You can write your own function that accepts the parameters: lower_limit, estimate, upper_limit, size, y.offset, clr.line, clr.marker, and lwd.
-
-Legends
-=======
-
-Adding a basic legend is done through the `legend` argument:
-
-```{r}
+## ------------------------------------------------------------------------
 forestplot2(tabletext, new_page = TRUE, 
             legend = c("Sweden", "Denmark"),
             confintNormalFn = c(fpDrawNormalCI, fpDrawCircleCI),
@@ -183,11 +96,8 @@ forestplot2(tabletext, new_page = TRUE,
             clip =c(-.125, 0.075),
             col=fpColors(box=c("blue", "darkred")),
             xlab="EQ-5D index")
-```
 
-This can be further customized by setting the `legend_args` argument using the `fpLegend` function:
-
-```{r}
+## ------------------------------------------------------------------------
 forestplot2(tabletext, new_page = TRUE, 
             legend_args = fpLegend(pos = list(x=.85, y=0.25), 
                                    gp=gpar(col="#CCCCCC", fill="#F9F9F9")),
@@ -201,6 +111,4 @@ forestplot2(tabletext, new_page = TRUE,
             clip =c(-.125, 0.075),
             col=fpColors(box=c("blue", "darkred")),
             xlab="EQ-5D index")
-```
 
-Ok, that's it. I hope you find the additions to the original forestplot useful.
