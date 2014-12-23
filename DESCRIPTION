@@ -5,9 +5,9 @@ Title: Advanced forest plot using grid graphics
 Author: Max Gordon <max@gforge.se>
 Maintainer: Max Gordon <max@gforge.se>
 Description: The package is centered around the function forestplot2.
-   It is a more general version of the original rmeta-package's forestplot
-   fuunction (hence the name forestplot2). The aim is at using forest plots
-   for more than just meta-analyses.
+    It is a more general version of the original rmeta-package's forestplot
+    fuunction (hence the name forestplot2). The aim is at using forest plots
+    for more than just meta-analyses.
 License: GPL (>= 3)
 URL: http://gforge.se/packages/
 BugReports: https://github.com/gforge/forestplot/issues
