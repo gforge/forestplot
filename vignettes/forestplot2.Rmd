@@ -33,10 +33,15 @@ vignette: >
 
 &dagger; Features present int the original `forestplot` functions.
 
-Basic example
+Text
+====
+
+A forest plot is closely connected to text and the ability to customize the text is central.
+
+Table of text
 =============
 
-Below is a basic example from the original `forestplot` function:
+Below is a basic example from the original `forestplot` function that shows how to use a table of text:
 
 ```{r}
 # Cochrane data from the rmeta-package
@@ -63,9 +68,25 @@ tabletext<-cbind(
     "0.25", "0.70", "0.35", "0.14", 
     "1.02", NA, "0.53"))
 
-forestplot2(tabletext, cochrane_from_rmeta,new_page = TRUE,
+forestplot2(tabletext, 
+            cochrane_from_rmeta,new_page = TRUE,
             is.summary=c(TRUE,TRUE,rep(FALSE,8),TRUE),
             clip=c(0.1,2.5), xlog=TRUE,
-            col=meta.colors(box="royalblue",line="darkblue", summary="royalblue"))
+            col=fpColors(box="royalblue",line="darkblue", summary="royalblue"))
+```
+
+Using expressions
+=================
+
+If we present a regression output it is sometimes convenient to have non-ascii letters. We will use my study comparing health related quality of life 1 year after total hip arthroplasties between Sweden and Denmark for this section:
+
+```{r}
+data(HRQoL)
+tabletext <- 
+  list(c(NA, rownames(HRQoL$Sweden)),
+       c(list(expression(beta)), as.list(sprintf("%.2f", HRQoL$Sweden[,"coef"]))))
+forestplot2(tabletext, new_page = TRUE,
+            rbind(rep(NA, 3), 
+                  HRQoL$Sweden))
 ```
 
