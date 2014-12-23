@@ -62,6 +62,8 @@
 #'   is to set the line height to \code{unit(2, "cm")}. A third option
 #'   is to set line height to "lines" and then you get 50 % more than what the
 #'   text height is as your line height.
+#' @param line.margin Whe having multiple lines there needs to be a margin that
+#'   separates the rows from eachother in order to deduce which belong together.
 #' @param col See \code{\link{fpColors}}
 #' @param xlog If TRUE, x-axis tick marks are to follow a logarithmic scale, e.g. for
 #'   logistic regressoin (OR), survival estimates (HR), poisson regression etc.
@@ -118,6 +120,7 @@ forestplot2 <- function (labeltext,
                          zero                 = ifelse(xlog, 1, 0),
                          graphwidth           = "auto",
                          lineheight           = "auto",
+                         line.margin,
                          col                  = fpColors(),
                          xlog                 = FALSE,
                          xticks,
@@ -643,11 +646,13 @@ forestplot2 <- function (labeltext,
       if (is.unit(b_height))
         b_height <- convertUnit(b_height, unitTo="npc", valueOnly=TRUE)
 
-      # Add some space so that the boxes
-      # between lines don't blend
-      margin <- 0.05
-      y.offset_base <- b_height/2 + margin
-      y.offset_increase <- (1 - margin - y.offset_base*2)/(length(low_values)-1)
+      if (missing(line.margin)){
+        line.margin <- .1 + .2/(length(low_values) - 1)
+      }else if (is.unit(line.margin)){
+        line.margin <- convertUnit(line.margin, unitTo = "npc", valueOnly = TRUE)
+      }
+      y.offset_base <- b_height/2 + line.margin
+      y.offset_increase <- (1 - line.margin*2 - b_height)/(length(low_values)-1)
 
       for(j in length(low_values):1){
         # Start from the bottom and plot up

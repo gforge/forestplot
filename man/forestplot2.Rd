@@ -7,8 +7,8 @@
 forestplot2(labeltext, mean, lower, upper, align, is.summary = FALSE,
   fontfamily.summary, fontfamily.labelrow, clip = c(-Inf, Inf), xlab = "",
   zero = ifelse(xlog, 1, 0), graphwidth = "auto", lineheight = "auto",
-  col = fpColors(), xlog = FALSE, xticks, xticks.digits = 2, lwd.xaxis,
-  lwd.zero, lwd.ci, cex = 1, cex.axis = cex * 0.6, boxsize,
+  line.margin, col = fpColors(), xlog = FALSE, xticks, xticks.digits = 2,
+  lwd.xaxis, lwd.zero, lwd.ci, cex = 1, cex.axis = cex * 0.6, boxsize,
   mar = unit(rep(5, times = 4), "mm"), main, legend,
   legend_args = fpLegend(), new_page = FALSE,
   confintNormalFn = fpDrawNormalCI, confintSummaryFn = fpDrawSummaryCI,
@@ -84,6 +84,10 @@ forestplot2(labeltext, mean, lower, upper, align, is.summary = FALSE,
   A third option is to set line height to "lines" and then
   you get 50 % more than what the text height is as your
   line height.}
+
+  \item{line.margin}{Whe having multiple lines there needs
+  to be a margin that separates the rows from eachother in
+  order to deduce which belong together.}
 
   \item{col}{See \code{\link{fpColors}}}
 
