@@ -1,6 +1,6 @@
 #' Draws a forest plot
 #'
-#' The \emph{forestplot2} is based on the \pkg{rmeta} 2.16
+#' The \emph{forestplot} is based on the \pkg{rmeta} 2.16
 #' \code{\link[rmeta]{forestplot}} function. This
 #' function resolves some limitations of the original
 #' functions such as:
@@ -64,7 +64,10 @@
 #'   text height is as your line height.
 #' @param line.margin Whe having multiple lines there needs to be a margin that
 #'   separates the rows from eachother in order to deduce which belong together.
-#' @param col See \code{\link{fpColors}}
+#' @param col Set the colors for all the elements. See \code{\link{fpColors}} for
+#'   details.
+#' @param txt_gp Set the fonts etc for all text elements. See \code{\link{fpTxtGp}}
+#'   for details.
 #' @param xlog If TRUE, x-axis tick marks are to follow a logarithmic scale, e.g. for
 #'   logistic regressoin (OR), survival estimates (HR), poisson regression etc.
 #'   \emph{Note:} This is an intentional break with the original \code{\link[rmeta]{forestplot}}
@@ -78,9 +81,6 @@
 #' @param lwd.xaxis lwd for the xaxis
 #' @param lwd.zero  lwd for the vertical line that gives the no-effect line
 #' @param lwd.ci lwd for the confidence bands
-#' @param cex The font adjustment
-#' @param cex.axis The font adjustment for the x-xaxis, defaults to 60 \%
-#'   of the cex parameter.
 #' @param boxsize Override the default box size based on precision
 #' @param mar A numerical vector of the form c(bottom, left, top, right) of the type \code{unit()}
 #' @param main The title of the plot if any
@@ -106,40 +106,37 @@
 #'
 #' @author Max Gordon, Thomas Lumley
 #'
-#' @example inst/examples/forestplot2_example.R
+#' @example inst/examples/forestplot_example.R
 #' @family forestplot functions
 #' @export
-forestplot2 <- function (labeltext,
-                         mean, lower, upper,
-                         align,
-                         is.summary           = FALSE,
-                         fontfamily.summary,
-                         fontfamily.labelrow,
-                         clip                 = c(-Inf, Inf),
-                         xlab                 = "",
-                         zero                 = ifelse(xlog, 1, 0),
-                         graphwidth           = "auto",
-                         lineheight           = "auto",
-                         line.margin,
-                         col                  = fpColors(),
-                         xlog                 = FALSE,
-                         xticks,
-                         xticks.digits        = 2,
-                         lwd.xaxis,
-                         lwd.zero,
-                         lwd.ci,
-                         cex                  = 1,
-                         cex.axis             = cex * 0.6,
-                         boxsize,
-                         mar                  = unit(rep(5, times=4), "mm"),
-                         main,
-                         legend,
-                         legend_args          = fpLegend(),
-                         new_page             = FALSE,
-                         confintNormalFn      = fpDrawNormalCI,
-                         confintSummaryFn     = fpDrawSummaryCI,
-                         legendMarkerFn,
-                         ...)
+forestplot <- function (labeltext,
+                        mean, lower, upper,
+                        align,
+                        is.summary           = FALSE,
+                        clip                 = c(-Inf, Inf),
+                        xlab                 = "",
+                        zero                 = ifelse(xlog, 1, 0),
+                        graphwidth           = "auto",
+                        lineheight           = "auto",
+                        line.margin,
+                        col                  = fpColors(),
+                        txt_gp               = fpTxtGp(),
+                        xlog                 = FALSE,
+                        xticks,
+                        xticks.digits        = 2,
+                        lwd.xaxis,
+                        lwd.zero,
+                        lwd.ci,
+                        boxsize,
+                        mar                  = unit(rep(5, times=4), "mm"),
+                        main,
+                        legend,
+                        legend_args          = fpLegend(),
+                        new_page             = FALSE,
+                        confintNormalFn      = fpDrawNormalCI,
+                        confintSummaryFn     = fpDrawSummaryCI,
+                        legendMarkerFn,
+                        ...)
 {
   dot_args <- list(...)
   if (any(grepl("^legend\\.", names(dot_args)))){
@@ -154,6 +151,12 @@ forestplot2 <- function (labeltext,
       dot_args[[n]] <- NULL
     }
   }
+
+  if (!inherits(txt_gp, "fpTxtGp"))
+    stop("The txt_gp argument must come from a call to the fpTxtGp() function")
+
+  if (!inherits(col, "fpColors"))
+    stop("The col argument must come from a call to the fpColors() function")
 
   if (missing(lower) &&
         missing(upper) &&
@@ -363,9 +366,8 @@ forestplot2 <- function (labeltext,
                           labeltext = labeltext, align = align,
                           nc = nc, nr = nr,
                           is.summary = is.summary,
-                          fontfamily.summary = fontfamily.summary,
-                          fontfamily.labelrow = fontfamily.labelrow,
-                          col = col, cex = cex)
+                          txt_gp = txt_gp,
+                          col = col)
 
   # Set the gap between columns, I set it to
   # 6 mm but for relative widths we switch it
@@ -396,8 +398,7 @@ forestplot2 <- function (labeltext,
                                         xlog=xlog,
                                         xlab=xlab,
                                         lwd.xaxis=lwd.xaxis,
-                                        cex=cex,
-                                        cex.axis=cex.axis,
+                                        txt_gp = txt_gp,
                                         col=col,
                                         clip=clip, zero=zero,
                                         x_range=prFpXrange(upper = upper,
@@ -592,7 +593,7 @@ forestplot2 <- function (labeltext,
     # Set cwidth to min value if the value is invalid
     # this can be the case for reference points
     cwidth[cwidth <= 0 | is.na(cwidth)] <- min(cwidth[cwidth > 0])
-    textHeight <- convertUnit(grobHeight(textGrob("A", gp=gpar(cex=cex))),
+    textHeight <- convertUnit(grobHeight(textGrob("A", gp=do.call(gpar, txt_gp$label))),
                               unitTo="npc",
                               valueOnly=TRUE)
     info <- 1/cwidth*0.75

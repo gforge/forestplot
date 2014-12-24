@@ -27,12 +27,12 @@ tabletext<-cbind(
     "0.25", "0.70", "0.35", "0.14", 
     "1.02", NA, "0.53"))
 
-forestplot2(tabletext, 
-            cochrane_from_rmeta,new_page = TRUE,
-            is.summary=c(TRUE,TRUE,rep(FALSE,8),TRUE),
-            clip=c(0.1,2.5), 
-            xlog=TRUE,
-            col=fpColors(box="royalblue",line="darkblue", summary="royalblue"))
+forestplot(tabletext, 
+           cochrane_from_rmeta,new_page = TRUE,
+           is.summary=c(TRUE,TRUE,rep(FALSE,8),TRUE),
+           clip=c(0.1,2.5), 
+           xlog=TRUE,
+           col=fpColors(box="royalblue",line="darkblue", summary="royalblue"))
 
 ## ------------------------------------------------------------------------
 data(HRQoL)
@@ -40,30 +40,31 @@ clrs <- fpColors(box="royalblue",line="darkblue", summary="royalblue")
 tabletext <- 
   list(c(NA, rownames(HRQoL$Sweden)),
        append(list(expression(beta)), sprintf("%.2f", HRQoL$Sweden[,"coef"])))
-forestplot2(tabletext, new_page = TRUE,
-            rbind(rep(NA, 3), 
-                  HRQoL$Sweden),
-            col=clrs,
-            xlab="EQ-5D index")
+forestplot(tabletext, new_page = TRUE,
+           rbind(rep(NA, 3), 
+                 HRQoL$Sweden),
+           col=clrs,
+           xlab="EQ-5D index")
 
 ## ------------------------------------------------------------------------
 tabletext <- cbind(rownames(HRQoL$Sweden),
                    sprintf("%.2f", HRQoL$Sweden[,"coef"]))
-forestplot2(tabletext, new_page = TRUE, 
-            fontfamily.labelrow =  "HersheyScript",
-            rbind(HRQoL$Sweden),
-            col=clrs,
-            xlab="EQ-5D index")
+forestplot(tabletext, new_page = TRUE, 
+           txt_gp = fpTxtGp(label = gpar(fontfamily = "HersheyScript")),
+           rbind(HRQoL$Sweden),
+           col=clrs,
+           xlab="EQ-5D index")
 
 ## ------------------------------------------------------------------------
-forestplot2(tabletext, new_page = TRUE, 
-            rbind(HRQoL$Sweden),
-            clip =c(-.1, Inf),
-            col=clrs,
-            xlab="EQ-5D index")
+forestplot(tabletext, new_page = TRUE, 
+           rbind(HRQoL$Sweden),
+           clip =c(-.1, Inf),
+           col=clrs,
+           xlab="EQ-5D index")
 
 ## ------------------------------------------------------------------------
-forestplot2(tabletext, new_page = TRUE, 
+tabletext <- tabletext[,1]
+forestplot(tabletext, new_page = TRUE, 
             mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
             lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
             upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
@@ -73,7 +74,7 @@ forestplot2(tabletext, new_page = TRUE,
 
 
 ## ------------------------------------------------------------------------
-forestplot2(tabletext, new_page = TRUE, 
+forestplot(tabletext, new_page = TRUE, 
             confintNormalFn = c(fpDrawNormalCI, fpDrawCircleCI),
             boxsize = .25, # We set the box size to better visualize the type
             line.margin = .1, # We need to add this to avoid crowding
@@ -85,7 +86,7 @@ forestplot2(tabletext, new_page = TRUE,
             xlab="EQ-5D index")
 
 ## ------------------------------------------------------------------------
-forestplot2(tabletext, new_page = TRUE, 
+forestplot(tabletext, new_page = TRUE, 
             legend = c("Sweden", "Denmark"),
             confintNormalFn = c(fpDrawNormalCI, fpDrawCircleCI),
             boxsize = .25, # We set the box size to better visualize the type
@@ -98,7 +99,7 @@ forestplot2(tabletext, new_page = TRUE,
             xlab="EQ-5D index")
 
 ## ------------------------------------------------------------------------
-forestplot2(tabletext, new_page = TRUE, 
+forestplot(tabletext, new_page = TRUE, 
             legend_args = fpLegend(pos = list(x=.85, y=0.25), 
                                    gp=gpar(col="#CCCCCC", fill="#F9F9F9")),
             legend = c("Sweden", "Denmark"),
