@@ -163,6 +163,9 @@ forestplot(row_names, coef, low, high,
 
 par(ask=ask)
 }
+\author{
+Max Gordon, Thomas Lumley
+}
 \seealso{
 Other forestplot.functions: \code{\link{forestplot}};
 \code{\link{fpColors}}; \code{\link{fpLegend}}

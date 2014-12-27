@@ -34,6 +34,7 @@
 #' @return \code{void} The function outputs the line using grid compatible
 #'  functions and does not return anything.
 #'
+#' @author Max Gordon, Thomas Lumley
 #' @example inst/examples/forestplot_alt_ci_example.R
 #' @rdname fpDrawCI
 #' @export

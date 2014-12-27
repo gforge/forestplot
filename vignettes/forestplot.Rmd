@@ -50,7 +50,7 @@ Below is a basic example from the original `forestplot` function that shows how 
 
 ```{r, fig.height=4, fig.width=8, message=FALSE}
 library(forestplot)
-# Cochrane data from the rmeta-package
+# Cochrane data from the 'rmeta'-package
 cochrane_from_rmeta <- 
   structure(list(
     mean  = c(NA, NA, 0.578, 0.165, 0.246, 0.700, 0.348, 0.139, 1.017, NA, 0.531), 
