@@ -424,6 +424,27 @@ prFpPrintLabels <- function(labels, nc, nr){
   }
 }
 
+#' An alternativ to rep()
+#'
+#' The rep() doesn't work with length.out
+#' when lists are supposed to be their own
+#' elements
+#'
+#' @param x The list to be repeated
+#' @param length.out The length of the resulting list
+#' @return \code{list}
+#' @keywords internal
+prListRep <- function(x, length.out){
+  lapply(0:(length.out-1),
+         function(x, g){
+           if (!is.list(g) ||
+                 !is.list(g[[1]]))
+             return(g)
+
+           return(g[[(x %% length(g)) + 1]])
+         }, g = x)
+}
+
 #' Gets the forestplot legend grobs
 #'
 #' @return \code{list} A "Legend" class that derives from a
@@ -436,14 +457,15 @@ prFpPrintLabels <- function(labels, nc, nr){
 #' @inheritParams fpLegend
 #' @keywords internal
 prFpGetLegendGrobs <- function(legend,
-                               cex,
+                               txt_gp,
                                title){
   lGrobs <- list()
   max_width <- 0
   max_height <- 0
+  gp <- prListRep(txt_gp$legend, length.out = length(legend))
   for (n in 1:length(legend)){
     lGrobs[[n]] <- textGrob(legend[n], x=0, just="left",
-                            gp=gpar(cex=cex))
+                            gp=do.call(gpar, gp[[n]]))
 
     gw <- convertUnit(grobWidth(lGrobs[[n]]), "mm", valueOnly=TRUE)
     gh <- convertUnit(grobHeight(lGrobs[[n]]), "mm", valueOnly=TRUE)
@@ -463,8 +485,7 @@ prFpGetLegendGrobs <- function(legend,
   # Do title stuff if present
   if (is.character(title)){
     title <- textGrob(title, x=0, just="left",
-                      gp=gpar(fontface = "bold",
-                              cex = cex*1.1))
+                      gp=do.call(gpar, txt_gp$legend.title))
     attr(lGrobs, "title") <- title
 
     attr(lGrobs, "titleHeight") <- grobHeight(title)
@@ -485,8 +506,8 @@ prFpGetLegendGrobs <- function(legend,
 #' @param lGrobs A list with all the grobs, see \code{\link{prFpGetLegendGrobs}}
 #' @param col The colors of the legends.
 #' @param colgap The gap between the box and the text
-#' @param legendMarkerFn The function for drawing the marker
-#' @param ... Passed to the legend \code{legendMarkerFn}
+#' @param fn.legend The function for drawing the marker
+#' @param ... Passed to the legend \code{fn.legend}
 #' @return \code{void}
 #'
 #' @inheritParams forestplot
@@ -500,7 +521,7 @@ prFpDrawLegend <- function (lGrobs,
                             gp,
                             r,
                             padding,
-                            legendMarkerFn,
+                            fn.legend,
                             ...) {
   if (!inherits(lGrobs, "Legend"))
     stop("The lGrobs object should be created by the internal Gmisc:::prFpGetLegendGrobs and be of class 'Legend'.")
@@ -528,7 +549,7 @@ prFpDrawLegend <- function (lGrobs,
     pushViewport(vp)
 
     call_list <-
-      list(legendMarkerFn[[i]],
+      list(fn.legend[[i]],
            lower_limit=0,
            estimate=.5,
            upper_limit=1,
@@ -713,6 +734,40 @@ prFpGetLabels <- function(label_type, labeltext, align,
                           col){
   labels <- vector("list", nc)
 
+  if (attr(txt_gp$label, "txt_dim") %in% 0:1){
+    txt_gp$label <-
+      prListRep(list(prListRep(txt_gp$label, nc)), sum(!is.summary))
+  }else{
+    ncols <- sapply(txt_gp$label, length)
+    if (all(ncols != ncols[1]))
+      stop("Your fpTxtGp$label list has invalid number of columns",
+           ", they should all be of equal length - yours have ",
+           "'", paste(ncols, collapse="', '"), "'")
+    if (length(txt_gp$label) != sum(!is.summary))
+      stop("Your fpTxtGp$label list has invalid number of rows",
+           ", the should be equal the of the number rows that aren't summaries.",
+           " you have '", length(txt_gp$label) , "' rows in the fpTxtGp$label",
+           ", while the labeltext argument has '", nr, "' rows",
+           " where '", sum(!is.summary), "' are not summaries.")
+  }
+
+  if (attr(txt_gp$summary, "txt_dim") %in% 0:1){
+    txt_gp$summary <-
+      prListRep(list(prListRep(txt_gp$summary, nc)), sum(is.summary))
+  }else{
+    ncols <- sapply(txt_gp$summary, length)
+    if (all(ncols != ncols[1]))
+      stop("Your fpTxtGp$summary list has invalid number of columns",
+           ", they should all be of equal length - yours have ",
+           "'", paste(ncols, collapse="', '"), "'")
+    if (length(txt_gp$summary) != sum(is.summary))
+      stop("Your fpTxtGp$summary list has invalid number of rows",
+           ", the should be equal the of the number rows that aren't summaries.",
+           " you have '", length(txt_gp$summary) , "' rows in the fpTxtGp$summary",
+           ", while the labeltext argument has '", nr, "' rows",
+           " where '", sum(is.summary), "' are not summaries.")
+  }
+
   max_height <- NULL
   max_width <- NULL
   # Walk through the labeltext
@@ -745,16 +800,17 @@ prFpGetLabels <- function(label_type, labeltext, align,
             x <- switch(align[j], l = 0, r = 1, c = 0.5)
           }
 
-          gp_list <- txt_gp$summary
+          gp_list <- txt_gp$summary[[sum(is.summary[1:i])]][[j]]
           gp_list[["col"]] <- rep(col$text, length = nr)[i]
 
           # Create a textGrob for the summary
+          # TODO: flip the row/column order to reflect matrix order
           labels[[j]][[i]] <-
             textGrob(txt_out, x = x,
                      just = just,
                      gp = do.call(gpar, gp_list))
         }else{
-          gp_list <- txt_gp$label
+          gp_list <- txt_gp$label[[sum(!is.summary[1:i])]][[j]]
           if (is.null(gp_list$col))
             gp_list[["col"]] <- rep(col$text, length = nr)[i]
 
@@ -780,8 +836,8 @@ prFpGetLabels <- function(label_type, labeltext, align,
   attr(labels, "max_height") <- max_height
   attr(labels, "max_width") <- max_width
   attr(labels, "cex") <- ifelse(any(is.summary),
-                                txt_gp$summary$cex,
-                                txt_gp$label$cex)
+                                txt_gp$summary[[1]][[1]]$cex,
+                                txt_gp$label[[1]][[1]]$cex)
   return(labels)
 }
 
@@ -995,50 +1051,50 @@ prFpGetLegendBoxPosition <- function (pos) {
 
 #' Prepares the legend marker function
 #'
-#' @param legendMarkerFn The unknown parameter
+#' @param fn.legend The unknown parameter
 #' @param col_no The number of columns
-#' @param confintNormalFn The original confintNormalFn input
+#' @param fn.ci_norm The original fn.ci_norm input
 #' @return \code{list}
 #'
 #' @keywords internal
-prFpPrepareLegendMarker <- function (legendMarkerFn, col_no, confintNormalFn) {
-  if (!missing(legendMarkerFn)){
-    if (is.function(legendMarkerFn)){
-      return(lapply(1:col_no, function(x) legendMarkerFn))
+prFpPrepareLegendMarker <- function (fn.legend, col_no, fn.ci_norm) {
+  if (!missing(fn.legend)){
+    if (is.function(fn.legend)){
+      return(lapply(1:col_no, function(x) fn.legend))
     }
-    if(is.character(legendMarkerFn)){
-      if (length(legendMarkerFn) == 1){
-        legendMarkerFn <- rep(legendMarkerFn, times=col_no)
-      }else if (length(legendMarkerFn) != col_no){
-        stop("The number of legend markers, ", length(legendMarkerFn),
+    if(is.character(fn.legend)){
+      if (length(fn.legend) == 1){
+        fn.legend <- rep(fn.legend, times=col_no)
+      }else if (length(fn.legend) != col_no){
+        stop("The number of legend markers, ", length(fn.legend),
              ", should be the same as the number of columns for the mean, ", col_no)
       }
 
       tmp <- list()
-      for (i in 1:length(legendMarkerFn)){
-        tmp[[i]] <- get(legendMarkerFn[i])
+      for (i in 1:length(fn.legend)){
+        tmp[[i]] <- get(fn.legend[i])
       }
 
       return(tmp)
     }
 
-    if(is.list(legendMarkerFn)){
-      if(length(legendMarkerFn) != col_no){
-        stop("The number of legend markers, ", length(legendMarkerFn), ",",
+    if(is.list(fn.legend)){
+      if(length(fn.legend) != col_no){
+        stop("The number of legend markers, ", length(fn.legend), ",",
              " should be the same as the number of columns for the mean, ", col_no)
-      }else if(!all(sapply(legendMarkerFn, function(x) is.function(x)))){
-        stop("If you provide a list for legendMarkerFn then each element should be a function")
+      }else if(!all(sapply(fn.legend, function(x) is.function(x)))){
+        stop("If you provide a list for fn.legend then each element should be a function")
       }
 
-      return(legendMarkerFn)
+      return(fn.legend)
     }
 
-    stop("The legend marked function designated by the legendMarkerFn",
+    stop("The legend marked function designated by the fn.legend",
          " is neither a character or a function")
   }
 
-  if (length(confintNormalFn) == col_no){
-    return(prFpGetConfintFnList(fn = confintNormalFn,
+  if (length(fn.ci_norm) == col_no){
+    return(prFpGetConfintFnList(fn = fn.ci_norm,
                                 no_rows = NROW(mean),
                                 no_cols = col_no)[[1]])
   }
@@ -1046,10 +1102,10 @@ prFpPrepareLegendMarker <- function (legendMarkerFn, col_no, confintNormalFn) {
   # Not sure what to do if the number don't match the number of legends
   # and it ain't 1 and it therefore defaults to the normal confidence
   # interval marker
-  if (length(confintNormalFn) != 1)
-    confintNormalFn <- fpDrawNormalCI
+  if (length(fn.ci_norm) != 1)
+    fn.ci_norm <- fpDrawNormalCI
 
-  return(lapply(1:col_no, function(x) confintNormalFn))
+  return(lapply(1:col_no, function(x) fn.ci_norm))
 }
 
 #' Converts a 2D or 3D array to mean, lower, upper
@@ -1180,7 +1236,7 @@ prGridPlotTitle <- function(title,
     tg_list$just <- gp$just
     gp$just <- NULL
   }
-  tg_list$gp <- gp
+  tg_list$gp <- do.call(gpar, gp)
 
   titleGrob <- do.call(textGrob,
                        tg_list)
@@ -1188,7 +1244,7 @@ prGridPlotTitle <- function(title,
   # The y/g/j letters are not included in the height
   gh <- unit(convertUnit(grobHeight(titleGrob), "mm", valueOnly=TRUE)*1.5, "mm")
   if (missing(space_below)){
-    space_below <- unit(convertUnit(gh, "mm", valueOnly=TRUE)/3, "mm")
+    space_below <- unit(convertUnit(gh, "mm", valueOnly=TRUE)/2, "mm")
   }else if (!is.unit(space_below)){
     space_below <- unit(space_below, "npc")
   }

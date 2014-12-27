@@ -4,7 +4,7 @@
 \alias{fpLegend}
 \title{A function for the legend used in forestplot()}
 \usage{
-fpLegend(pos = "top", cex = 0.8, gp = NULL, r = unit(0, "snpc"),
+fpLegend(pos = "top", gp = NULL, r = unit(0, "snpc"),
   padding = unit(ifelse(!is.null(gp), 3, 0), "mm"), title = NULL)
 }
 \arguments{
@@ -24,9 +24,6 @@ fpLegend(pos = "top", cex = 0.8, gp = NULL, r = unit(0, "snpc"),
   you want them to be in a line then you can specify the
   "align" option, e.g. \code{pos = list("topright",
   "inset"=.1, "align"="horizontal")}}
-
-  \item{cex}{The cex size of the legend, defaults to 80 \%
-  procent of cex parameter.}
 
   \item{gp}{The \code{\link[grid]{gpar}} options for the
   legend. If you want the background color to be light grey

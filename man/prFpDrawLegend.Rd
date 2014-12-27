@@ -4,7 +4,7 @@
 \alias{prFpDrawLegend}
 \title{Draw the forestplot legend}
 \usage{
-prFpDrawLegend(lGrobs, col, colgap, pos, gp, r, padding, legendMarkerFn, ...)
+prFpDrawLegend(lGrobs, col, colgap, pos, gp, r, padding, fn.legend, ...)
 }
 \arguments{
   \item{lGrobs}{A list with all the grobs, see
@@ -51,10 +51,9 @@ prFpDrawLegend(lGrobs, col, colgap, pos, gp, r, padding, legendMarkerFn, ...)
   if box is drawn. This is the distance from the border to
   the text/boxes of the legend.}
 
-  \item{legendMarkerFn}{The function for drawing the
-  marker}
+  \item{fn.legend}{The function for drawing the marker}
 
-  \item{...}{Passed to the legend \code{legendMarkerFn}}
+  \item{...}{Passed to the legend \code{fn.legend}}
 }
 \value{
 \code{void}

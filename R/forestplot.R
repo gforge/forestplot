@@ -1,6 +1,6 @@
 #' Draws a forest plot
 #'
-#' The \emph{forestplot} is based on the \pkg{rmeta} 2.16
+#' The \emph{forestplot} is based on the \pkg{rmeta}-package`s
 #' \code{\link[rmeta]{forestplot}} function. This
 #' function resolves some limitations of the original
 #' functions such as:
@@ -23,36 +23,40 @@
 #' The x-axis does not entirely respect the margin. Autosizing boxes is not
 #' always the best option, try to set these manually as much as possible.
 #'
+#' @section API-changes from \pkg{rmeta}-package`s \code{\link[rmeta]{forestplot}}:
+#' \itemize{
+#'   \item{xlog: }{The xlog outputs the axis in log() format but the input data should be in antilog/exp format}
+#'   \item{col: }{The corresponding function is \code{\link{fpColors}} for this package}
+#' }
+#'
 #' @param labeltext A list, matrix, vector or expression with the names of each
 #'  row. The list should be wrapped in m x n number to resemble a matrix:
-#'  \code{list(list("rowname 1 col 1", "rowname 2 col 1"), list("r1c2", expression(beta))}
+#'  \code{list(list("rowname 1 col 1", "rowname 2 col 1"), list("r1c2", expression(beta))}.
 #'  You can also provide a matrix although this cannot have expressions by design:
-#'  \code{matrix(c("rowname 1 col 1", "rowname 2 col 1", "r1c2", "beta"), ncol=2)}
-#'  Use NA:s for blank spaces and if you provide a full column with NA then
+#'  \code{matrix(c("rowname 1 col 1", "rowname 2 col 1", "r1c2", "beta"), ncol=2)}.
+#'  Use \code{NA}:s for blank spaces and if you provide a full column with \code{NA} then
 #'  that column is a empty column that adds some space. \emph{Note:} If you do not
 #'  provide the mean/lower/upper arguments the function expects the label text
 #'  to be a matrix containing the labeltext in the rownames and then columns for
-#'  mean, lower, and upper .
+#'  mean, lower, and upper
 #' @param mean A vector or a matrix with the averages. You can also provide a 2D/3D
 #'  matrix that is automatically converted to the lower/upper parameters. The values
 #'  should be in exponentiated form if they follow this interpretation, e.g. use
-#'  exp(mean) if you have the output from a logistic regression.
+#'  exp(mean) if you have the output from a logistic regression
 #' @param lower The lower bound of the confidence interval for the forestplot, needs
 #'   to be the same format as the mean, i.e. matrix/vector of equal columns & length
 #' @param upper The upper bound of the confidence interval for the forestplot, needs
 #'   to be the same format as the mean, i.e. matrix/vector of equal columns & length
-#' @param align Vector giving alignment (l,r,c) for columns of table
+#' @param align Vector giving alignment (l,r,c) for the table columns
 #' @param is.summary A vector indicating by TRUE/FALSE if the value is a summary
-#'   value which means that it will have a different font-style.
-#' @param fontfamily.summary The fontfamily of the summary
-#' @param fontfamily.labelrow The fontfamily of a regular row
+#'   value which means that it will have a different font-style
 #' @param clip Lower and upper limits for clipping confidence intervals to arrows
 #' @param xlab x-axis label
 #' @param zero x-axis coordinate for zero line. If you provide a vector of length 2 it
-#'   will print a rectangle instead of just a line.
-#' @param graphwidth Width of confidence interval graph, see \code{\link{unit}} for
+#'   will print a rectangle instead of just a line
+#' @param graphwidth Width of confidence interval graph, see \code{\link[grid]{unit}} for
 #'   details on how to utilize mm etc. The default is \code{auto}, that is it uses up whatever
-#'   space that is left after adjusting for text size and legend.
+#'   space that is left after adjusting for text size and legend
 #' @param lineheight Height of the graph. By default this is \code{auto} and adjustes to the
 #'   space that is left after adjusting for x-axis size and legend. Sometimes
 #'   it might be desireable to set the line height to a certain height, for
@@ -61,13 +65,14 @@
 #'   be provided as a \code{\link[grid]{unit}} object. A good option
 #'   is to set the line height to \code{unit(2, "cm")}. A third option
 #'   is to set line height to "lines" and then you get 50 % more than what the
-#'   text height is as your line height.
-#' @param line.margin Whe having multiple lines there needs to be a margin that
-#'   separates the rows from eachother in order to deduce which belong together.
+#'   text height is as your line height
+#' @param line.margin Set the margin between rows, provided in numeric or \code{\link[grid]{unit}} formar.
+#'   When having multiple confidence lines per row setting the correct
+#'   margin in order to visually separate rows
 #' @param col Set the colors for all the elements. See \code{\link{fpColors}} for
-#'   details.
+#'   details
 #' @param txt_gp Set the fonts etc for all text elements. See \code{\link{fpTxtGp}}
-#'   for details.
+#'   for details
 #' @param xlog If TRUE, x-axis tick marks are to follow a logarithmic scale, e.g. for
 #'   logistic regressoin (OR), survival estimates (HR), poisson regression etc.
 #'   \emph{Note:} This is an intentional break with the original \code{\link[rmeta]{forestplot}}
@@ -75,32 +80,32 @@
 #'   difficult to for non-statisticians and there are sometimes issues with rounding
 #'   the tick marks properly.
 #' @param xticks Optional user-specified x-axis tick marks. Specify NULL to use
-#'   the defaults, numeric(0) to omit the x-axis.
+#'   the defaults, numeric(0) to omit the x-axis
 #' @param xticks.digits The number of digits to allow in the x-axis if this
-#'   is created by default.
+#'   is created by default
 #' @param lwd.xaxis lwd for the xaxis
 #' @param lwd.zero  lwd for the vertical line that gives the no-effect line
 #' @param lwd.ci lwd for the confidence bands
 #' @param boxsize Override the default box size based on precision
-#' @param mar A numerical vector of the form c(bottom, left, top, right) of the type \code{unit()}
-#' @param main The title of the plot if any
-#' @param legend Legend corresponding to the number of bars.
+#' @param mar A numerical vector of the form \code{c(bottom, left, top, right)} of
+#'   the type \code{\link[grid]{unit}}
+#' @param title The title of the plot if any
+#' @param legend Legend corresponding to the number of bars
 #' @param legend_args The legend arguments as returned by the \code{\link{fpLegend}} function.
 #' @param new_page If you want the plot to appear on a new blank page then set this to \code{TRUE}, by
-#'  default it is \code{FALSE}.
-#' @param confintNormalFn You can specify exactly how the line with the box is
+#'  default it is \code{FALSE}
+#' @param fn.ci_norm You can specify exactly how the line with the box is
 #'  drawn for the normal (i.e. non-summary) confidence interval by changing this
 #'  parameter to your own function or some of the alternatives provided in the package.
-#'  It defaults to the box function \code{\link{fpDrawNormalCI}}.
-#' @param confintSummaryFn Same as previous argument but for the summary outputs
+#'  It defaults to the box function \code{\link{fpDrawNormalCI}}
+#' @param fn.ci_sum Same as previous argument but for the summary outputs
 #'  and it defaults to \code{\link{fpDrawSummaryCI}}.
-#' @param legendMarkerFn What type of function should be used for drawing the
+#' @param fn.legend What type of function should be used for drawing the
 #'  legends, this can be a list if you want different functions. It defaults to
 #'  a box if you have anything else than a single function or the number of columns
-#'  in the \code{mean} argument.
-#' @param ... Passed on to the \code{confintNormalFn} and
-#'  \code{confintSummaryFn} arguments
-#' @return void
+#'  in the \code{mean} argument
+#' @param ... Passed on to the \code{fn.ci_norm} and
+#'  \code{fn.ci_sum} arguments
 #'
 #' @import grid
 #'
@@ -129,15 +134,16 @@ forestplot <- function (labeltext,
                         lwd.ci,
                         boxsize,
                         mar                  = unit(rep(5, times=4), "mm"),
-                        main,
+                        title,
                         legend,
                         legend_args          = fpLegend(),
                         new_page             = FALSE,
-                        confintNormalFn      = fpDrawNormalCI,
-                        confintSummaryFn     = fpDrawSummaryCI,
-                        legendMarkerFn,
+                        fn.ci_norm      = fpDrawNormalCI,
+                        fn.ci_sum     = fpDrawSummaryCI,
+                        fn.legend,
                         ...)
 {
+  # Warnings due to interface changes in 1.0
   dot_args <- list(...)
   if (any(grepl("^legend\\.", names(dot_args)))){
     l_args <- names(dot_args)[grep("^legend\\.", names(dot_args))]
@@ -149,6 +155,28 @@ forestplot <- function (labeltext,
       short_name <- gsub("^legend\\.", "", n)
       legend_args[[short_name]] <- dot_args[[n]]
       dot_args[[n]] <- NULL
+    }
+  }
+  API_changes <-
+    c(confintNormalFn = "fn.ci_norm",
+      confintSummaryFn = "fn.ci_sum",
+      legendMarkerFn = "fn.legend",
+      main = "title")
+  fenv <- environment()
+  for (i in 1:length(API_changes)){
+    old_name <- names(API_changes)[i]
+    new_name <- API_changes[i]
+    if (old_name %in% names(dot_args)){
+      if (class(fenv[[new_name]]) == "name"){
+        fenv[[new_name]] <- dot_args[[old_name]]
+        dot_args[[old_name]] <- NULL
+        warning("Deprecated: '", old_name, "'",
+                " argument is now '", new_name ,"'",
+                " as of ver. 1.0")
+      }else{
+        stop("You have set both the old parameter name: '", old_name, "'",
+             " and the new parameter name: '", new_name, "'.")
+      }
     }
   }
 
@@ -212,17 +240,17 @@ forestplot <- function (labeltext,
 
   # Prepare the legend marker
   if (!missing(legend)){
-    legendMarkerFn <- prFpPrepareLegendMarker(legendMarkerFn = legendMarkerFn,
+    fn.legend <- prFpPrepareLegendMarker(fn.legend = fn.legend,
                                               col_no = NCOL(mean),
-                                              confintNormalFn = confintNormalFn)
+                                              fn.ci_norm = fn.ci_norm)
   }
 
-  confintNormalFn <-
-    prFpGetConfintFnList(fn = confintNormalFn,
+  fn.ci_norm <-
+    prFpGetConfintFnList(fn = fn.ci_norm,
                          no_rows = NROW(mean),
                          no_cols = NCOL(mean))
-  confintSummaryFn <-
-    prFpGetConfintFnList(fn = confintSummaryFn,
+  fn.ci_sum <-
+    prFpGetConfintFnList(fn = fn.ci_sum,
                          no_rows = NROW(mean),
                          no_cols = NCOL(mean))
 
@@ -305,15 +333,23 @@ forestplot <- function (labeltext,
     upper <- as.vector(upper)
   }
 
+  nr <- NROW(org_mean)
+
   # Get the number of columns (nc) and number of rows (nr)
   # if any columns are to be spacers the widthcolumn variable
   if (is.expression(labeltext)){
     widthcolumn <- c(TRUE)
     # Can't figure out multiple levels of expressions
     nc <- 1
-    nr <- length(labeltext)
     label_type = "expression"
   } else if (is.list(labeltext)){
+    if (all(sapply(labeltext, function(x){
+      length(x) == 1 &&
+        !is.list(x)
+    }))){
+      labeltext <-
+        list(labeltext)
+    }
     if (!prFpValidateLabelList(labeltext))
       stop("Invalid labellist, it has to be formed as a matrix m x n elements")
 
@@ -335,12 +371,10 @@ forestplot <- function (labeltext,
       widthcolumn <- append(widthcolumn, empty_row)
     }
 
-    nr <- length(labeltext[[1]])
     label_type = "list"
   } else if (is.vector(labeltext)){
     widthcolumn <- c(FALSE)
     nc = 1
-    nr = length(labeltext)
 
     labeltext <- matrix(labeltext, ncol=1)
     label_type = "matrix"
@@ -348,7 +382,6 @@ forestplot <- function (labeltext,
     # Original code for matrixes
     widthcolumn <- !apply(is.na(labeltext), 1, any)
     nc <- NCOL(labeltext)
-    nr <- NROW(labeltext)
     label_type = "matrix"
   }
 
@@ -431,14 +464,14 @@ forestplot <- function (labeltext,
     right = marList$right,
     name="forestplot_margins")
 
-  if (!missing(main)){
-    prGridPlotTitle(title=main, base_cex = cex)
+  if (!missing(title)){
+    prGridPlotTitle(title=title, gp = txt_gp$title)
   }
 
   # Initiate the legend
   if (!missing(legend)){
     lGrobs <- prFpGetLegendGrobs(legend = legend,
-                                 cex = legend_args$cex,
+                                 txt_gp = txt_gp,
                                  title = legend_args$title)
     legend_colgap <- colgap
     if (convertUnit(legend_colgap, unitTo = "mm", valueOnly = TRUE) >
@@ -515,7 +548,7 @@ forestplot <- function (labeltext,
                    gp = legend_args$gp,
                    r = legend_args$r,
                    padding = legend_args$padding,
-                   legendMarkerFn = legendMarkerFn,
+                   fn.legend = fn.legend,
                    ...)
     upViewport()
 
@@ -662,7 +695,7 @@ forestplot <- function (labeltext,
         current_y.offset <- y.offset_base + (length(low_values)-j)*y.offset_increase
         if (is.summary[i]){
           call_list <-
-            list(confintSummaryFn[[i]][[j]],
+            list(fn.ci_sum[[i]][[j]],
                  lower_limit=low_values[j],
                  estimate=mean_values[j],
                  upper_limit=up_values[j],
@@ -671,7 +704,7 @@ forestplot <- function (labeltext,
                  y.offset = current_y.offset)
         }else{
           call_list <-
-            list(confintNormalFn[[i]][[j]],
+            list(fn.ci_norm[[i]][[j]],
                  lower_limit=low_values[j],
                  estimate=mean_values[j],
                  upper_limit=up_values[j],
@@ -698,7 +731,7 @@ forestplot <- function (labeltext,
     }else{
       if (is.summary[i]){
         call_list <-
-          list(confintSummaryFn[[i]],
+          list(fn.ci_sum[[i]],
                lower_limit=low_values,
                estimate=mean_values,
                upper_limit=up_values,
@@ -706,7 +739,7 @@ forestplot <- function (labeltext,
                col=clr.summary)
       }else{
         call_list <-
-          list(confintNormalFn[[i]],
+          list(fn.ci_norm[[i]],
                lower_limit=low_values,
                estimate=mean_values,
                upper_limit=up_values,
@@ -779,7 +812,7 @@ forestplot <- function (labeltext,
                    gp = legend_args$gp,
                    r = legend_args$r,
                    padding = legend_args$padding,
-                   legendMarkerFn = legendMarkerFn,
+                   fn.legend = fn.legend,
                    ...)
     upViewport(2)
   }

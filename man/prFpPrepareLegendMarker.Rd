@@ -4,15 +4,14 @@
 \alias{prFpPrepareLegendMarker}
 \title{Prepares the legend marker function}
 \usage{
-prFpPrepareLegendMarker(legendMarkerFn, col_no, confintNormalFn)
+prFpPrepareLegendMarker(fn.legend, col_no, fn.ci_norm)
 }
 \arguments{
-  \item{legendMarkerFn}{The unknown parameter}
+  \item{fn.legend}{The unknown parameter}
 
   \item{col_no}{The number of columns}
 
-  \item{confintNormalFn}{The original confintNormalFn
-  input}
+  \item{fn.ci_norm}{The original fn.ci_norm input}
 }
 \value{
 \code{list}

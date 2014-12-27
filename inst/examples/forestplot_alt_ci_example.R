@@ -27,8 +27,8 @@ high <- with(test_data, cbind(high1, high2))
 
 # Change all to diamonds
 forestplot(row_names, coef, low, high,
-           confintNormalFn=fpDrawDiamondCI,
-           main="Cool study",
+           fn.ci_norm=fpDrawDiamondCI,
+           title="Cool study",
            zero = 1, boxsize=0.25,
            col=fpColors(box=c("royalblue", "gold"),
                         line=c("darkblue", "orange"),
@@ -43,10 +43,10 @@ forestplot(row_names, coef, low, high,
 
 # Change first to diamonds
 forestplot(row_names, coef, low, high,
-           confintNormalFn=c("fpDrawDiamondCI",
+           fn.ci_norm=c("fpDrawDiamondCI",
                              rep("fpDrawNormalCI",
                                  times=nrow(coef)-1)),
-           main="Cool study",
+           title="Cool study",
            zero = 1, boxsize=0.25,
            col=fpColors(box=c("royalblue", "gold"),
                         line=c("darkblue", "orange"),
@@ -65,11 +65,11 @@ forestplot(row_names, coef, low, high,
 # the software will reformat [[col]][[row]]
 # to [[row]][[col]]
 forestplot(row_names, coef, low, high,
-           confintNormalFn=list(list(fpDrawDiamondCI, fpDrawCircleCI),
+           fn.ci_norm=list(list(fpDrawDiamondCI, fpDrawCircleCI),
                                 list(fpDrawNormalCI, fpDrawNormalCI),
                                 list(fpDrawNormalCI, fpDrawCircleCI),
                                 list(fpDrawNormalCI, fpDrawNormalCI)),
-           main="Cool study",
+           title="Cool study",
            zero = 1, boxsize=0.25,
            col=fpColors(box=c("royalblue", "gold"),
                         line=c("darkblue", "orange"),

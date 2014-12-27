@@ -1,5 +1,5 @@
 ## ----, echo=FALSE--------------------------------------------------------
-knitr::opts_chunk$set(fig.width = 7, fig.height=3)
+knitr::opts_chunk$set(fig.width = 7, fig.height=3, dev='svg')
 
 ## ----, fig.height=4, fig.width=8, message=FALSE--------------------------
 library(forestplot)
@@ -57,6 +57,17 @@ forestplot(tabletext, new_page = TRUE,
 
 ## ------------------------------------------------------------------------
 forestplot(tabletext, new_page = TRUE, 
+           txt_gp = fpTxtGp(label = list(gpar(fontfamily = "HersheyScript"),
+                                         gpar(fontfamily = "",
+                                              col = "#660000")),
+                            ticks = gpar(fontfamily = "", cex=1),
+                            xlab  = gpar(fontfamily = "HersheySerif", cex = 1.5)),
+           rbind(HRQoL$Sweden),
+           col=clrs,
+           xlab="EQ-5D index")
+
+## ------------------------------------------------------------------------
+forestplot(tabletext, new_page = TRUE, 
            rbind(HRQoL$Sweden),
            clip =c(-.1, Inf),
            col=clrs,
@@ -75,7 +86,7 @@ forestplot(tabletext, new_page = TRUE,
 
 ## ------------------------------------------------------------------------
 forestplot(tabletext, new_page = TRUE, 
-            confintNormalFn = c(fpDrawNormalCI, fpDrawCircleCI),
+            fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
             boxsize = .25, # We set the box size to better visualize the type
             line.margin = .1, # We need to add this to avoid crowding
             mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
@@ -88,7 +99,7 @@ forestplot(tabletext, new_page = TRUE,
 ## ------------------------------------------------------------------------
 forestplot(tabletext, new_page = TRUE, 
             legend = c("Sweden", "Denmark"),
-            confintNormalFn = c(fpDrawNormalCI, fpDrawCircleCI),
+            fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
             boxsize = .25, # We set the box size to better visualize the type
             line.margin = .1, # We need to add this to avoid crowding
             mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
@@ -103,7 +114,7 @@ forestplot(tabletext, new_page = TRUE,
             legend_args = fpLegend(pos = list(x=.85, y=0.25), 
                                    gp=gpar(col="#CCCCCC", fill="#F9F9F9")),
             legend = c("Sweden", "Denmark"),
-            confintNormalFn = c(fpDrawNormalCI, fpDrawCircleCI),
+            fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
             boxsize = .25, # We set the box size to better visualize the type
             line.margin = .1, # We need to add this to avoid crowding
             mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),

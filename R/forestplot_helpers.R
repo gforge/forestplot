@@ -258,8 +258,8 @@ fpDrawSummaryCI <- function(lower_limit, estimate, upper_limit,
   # Convert size into 'npc' value only if
   # it is provided as a unit() object
   size <- ifelse(is.unit(size),
-      convertUnit(size, unitTo="npc", valueOnly=TRUE),
-      size)*.9
+                 convertUnit(size, unitTo="npc", valueOnly=TRUE),
+                 size)*.9
   grid.polygon(x = unit(c(lower_limit, estimate, upper_limit, estimate), "native"),
                y = unit(y.offset +
                           c(0, 0.5 * size, 0, -0.5 * size), "npc"),
@@ -300,6 +300,7 @@ fpDrawSummaryCI <- function(lower_limit, estimate, upper_limit,
 #' @author Max Gordon, Thomas Lumley
 #' @importFrom grDevices colorRampPalette
 #'
+#' @example inst/examples/fpColors_example.R
 #' @export
 #' @family forestplot functions
 fpColors <- function (all.elements,
@@ -322,7 +323,7 @@ fpColors <- function (all.elements,
       nl <- length(box)
       for (n in (nl+1):length(lines))
         box <- append(box,
-                        colorRampPalette(c(lines[n], par("fg")))(10)[2])
+                      colorRampPalette(c(lines[n], par("fg")))(10)[2])
     }
 
     if (length(summary) < length(box))
@@ -366,7 +367,6 @@ fpColors <- function (all.elements,
 #'  element or a value between 0 and 1. The default is to have the boxes aligned vertical, if
 #'  you want them to be in a line then you can specify the "align" option, e.g.
 #'  \code{pos = list("topright", "inset"=.1, "align"="horizontal")}
-#' @param cex The cex size of the legend, defaults to 80 \% procent of cex parameter.
 #' @param gp The \code{\link[grid]{gpar}} options for the legend. If you want
 #'  the background color to be light grey then use \code{gp = gpar(fill = "lightgrey")}.
 #'  If you want a border then set the col argument: \code{gp = gpar(fill = "lightgrey", col="black")}.
@@ -382,13 +382,11 @@ fpColors <- function (all.elements,
 #' @export
 #' @family forestplot functions
 fpLegend <- function(pos           = "top",
-                     cex           = .8,
                      gp            = NULL,
                      r             = unit(0, "snpc"),
                      padding       = unit(ifelse(!is.null(gp), 3, 0), "mm"),
                      title         = NULL){
   return(list(pos = pos,
-              cex = cex,
               gp = gp,
               r = r,
               padding = padding,
@@ -433,33 +431,75 @@ fpTxtGp <- function(label,
     }
     return(out)
   }
+  lMergeMultiLevel <- function(ret, element){
+    name <- deparse(substitute(element))
+    if (!inherits(element, "gpar")){
+      if (inherits(element, "list") &&
+            (inherits(element[[1]], "gpar") ||
+               (inherits(element[[1]], "list") &&
+                  inherits(element[[1]][[1]], "gpar")))){
+        if(inherits(element[[1]], "gpar")){
+          ret <-
+            lapply(element, function (x, l1)
+              lMerge(l1, x), l1 = ret)
+          attr(ret, "txt_dim") <- 1
+          default_element  <- ret[[1]]
+        }else{
+          el_len <- sapply(element, length, USE.NAMES = FALSE)
+          if (any(el_len != el_len[1]))
+            stop("It seems that you haven't provided a square list",
+                 " for '", name ,"'",
+                 ", ie all rows have the same number of elements.",
+                 " Currently the list lengths are:",
+                 " '", paste(el_len, collapse="', '"), "'")
+          ret <-
+            lapply(element, function(l) {
+              lapply(l, function (x, l1)
+                lMerge(l1, x), l1 = ret)
+            })
+          attr(ret, "txt_dim") <- 2
+          default_element  <- ret[[1]][[1]]
+        }
+      }else{
+        stop("You can only provide arguments from gpar() or a 1-2 dimensional list of gpars to the function")
+      }
+    }else{
+      ret <- lMerge(ret,
+                    element)
+      attr(ret, "txt_dim") <- 0
+      default_element <- ret
+    }
+    attr(ret, "ref") <- default_element
+    return(ret)
+  }
+
   ret <- list()
   ret$label <- list(fontface = "plain",
                     cex = cex)
+  attr(ret$label, "ref") <- ret$label
+  attr(ret$label, "txt_dim") <- 0
 
   if (!missing(label)){
-    if (class(label) != "gpar")
-      stop("You can only provide arguments from gpar() to the function")
-    ret$label <- lMerge(ret$label,
-                        label)
+    ret$label <- lMergeMultiLevel(ret$label,
+                                  label)
   }
 
   ret$summary <-
-    lMerge(ret$label,
+    lMerge(attr(ret$label, "ref"),
            list(fontface = "bold",
-                      cex = ret$label$cex*1.1))
+                cex = attr(ret$label, "ref")$cex*1.1))
+  attr(ret$summary, "ref") <- ret$summary
+  attr(ret$summary, "txt_dim") <- 0
 
   if (!missing(summary)){
-    if (class(summary) != "gpar")
-      stop("You can only provide arguments from gpar() to the function")
-    ret$summary <- lMerge(ret$summary,
-                          summary)
+    ret$summary <- lMergeMultiLevel(ret$summary,
+                                    summary)
   }
 
   ret$title <-
-    lMerge(ret$label,
+    lMerge(attr(ret$label, "ref"),
            list(fontface = "bold",
-                cex = ret$label$cex*1.2,
+                cex = attr(ret$label, "ref")$cex*1.2,
                 just = "center"))
 
   if (!missing(title)){
@@ -470,8 +510,8 @@ fpTxtGp <- function(label,
   }
 
   ret$xlab <-
-    lMerge(ret$label,
-           list(cex = ret$label$cex*0.6))
+    lMerge(attr(ret$label, "ref"),
+           list(cex = attr(ret$label, "ref")$cex*0.6))
 
   if (!missing(xlab)){
     if (class(xlab) != "gpar")
@@ -481,8 +521,8 @@ fpTxtGp <- function(label,
   }
 
   ret$ticks <-
-    lMerge(ret$label,
-           list(cex = ret$label$cex*0.5))
+    lMerge(attr(ret$label, "ref"),
+           list(cex = attr(ret$label, "ref")$cex*0.5))
 
   if (!missing(ticks)){
     if (class(ticks) != "gpar")
@@ -492,25 +532,29 @@ fpTxtGp <- function(label,
   }
 
   ret$legend <-
-    ret$label
+    lMerge(attr(ret$label, "ref"),
+           list(cex = attr(ret$label, "ref")$cex*0.8))
+  attr(ret$legend, "ref") <- ret$legend
+  attr(ret$legend, "txt_dim") <- 0
 
   if (!missing(legend)){
     if (class(legend) != "gpar")
       stop("You can only provide arguments from gpar() to the function")
-    ret$legend <- lMerge(ret$legend,
-                         legend)
+
+    ret$legend <- lMergeMultiLevel(ret$legend,
+                                   legend)
   }
 
   ret$legend.title <-
-    lMerge(ret$label,
+    lMerge(attr(ret$label, "ref"),
            list(fontface = "bold",
-                cex = ret$label$cex * 1.1))
+                cex = attr(ret$label, "ref")$cex * 1.1))
 
   if (!missing(legend.title)){
     if (class(legend.title) != "gpar")
       stop("You can only provide arguments from gpar() to the function")
     ret$legend.title <- lMerge(ret$legend.title,
-                         legend.title)
+                               legend.title)
   }
 
   return(structure(ret,

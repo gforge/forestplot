@@ -20,11 +20,11 @@ prFpXrange(upper, lower, clip, zero, xticks, xlog)
 
   \item{zero}{x-axis coordinate for zero line. If you
   provide a vector of length 2 it will print a rectangle
-  instead of just a line.}
+  instead of just a line}
 
   \item{xticks}{Optional user-specified x-axis tick marks.
   Specify NULL to use the defaults, numeric(0) to omit the
-  x-axis.}
+  x-axis}
 
   \item{xlog}{If TRUE, x-axis tick marks are to follow a
   logarithmic scale, e.g. for logistic regressoin (OR),

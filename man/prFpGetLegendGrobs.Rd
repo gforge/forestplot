@@ -4,16 +4,15 @@
 \alias{prFpGetLegendGrobs}
 \title{Gets the forestplot legend grobs}
 \usage{
-prFpGetLegendGrobs(legend, cex, title)
+prFpGetLegendGrobs(legend, txt_gp, title)
 }
 \arguments{
-  \item{legend}{Legend corresponding to the number of
-  bars.}
+  \item{legend}{Legend corresponding to the number of bars}
 
-  \item{cex}{The cex size of the legend, defaults to 80 \%
-  procent of cex parameter.}
+  \item{txt_gp}{Set the fonts etc for all text elements.
+  See \code{\link{fpTxtGp}} for details}
 
-  \item{title}{The title of the legend if any}
+  \item{title}{The title of the plot if any}
 }
 \value{
 \code{list} A "Legend" class that derives from a list with

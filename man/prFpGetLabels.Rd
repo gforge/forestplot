@@ -13,16 +13,16 @@ prFpGetLabels(label_type, labeltext, align, nc, nr, is.summary, txt_gp, col)
   with the names of each row. The list should be wrapped in
   m x n number to resemble a matrix:
   \code{list(list("rowname 1 col 1", "rowname 2 col 1"),
-  list("r1c2", expression(beta))} You can also provide a
+  list("r1c2", expression(beta))}. You can also provide a
   matrix although this cannot have expressions by design:
   \code{matrix(c("rowname 1 col 1", "rowname 2 col 1",
-  "r1c2", "beta"), ncol=2)} Use NA:s for blank spaces and
-  if you provide a full column with NA then that column is
-  a empty column that adds some space. \emph{Note:} If you
-  do not provide the mean/lower/upper arguments the
-  function expects the label text to be a matrix containing
-  the labeltext in the rownames and then columns for mean,
-  lower, and upper .}
+  "r1c2", "beta"), ncol=2)}. Use \code{NA}:s for blank
+  spaces and if you provide a full column with \code{NA}
+  then that column is a empty column that adds some space.
+  \emph{Note:} If you do not provide the mean/lower/upper
+  arguments the function expects the label text to be a
+  matrix containing the labeltext in the rownames and then
+  columns for mean, lower, and upper}
 
   \item{align}{Alignment, should be equal to
   \code{length(nc}}
@@ -33,13 +33,13 @@ prFpGetLabels(label_type, labeltext, align, nc, nr, is.summary, txt_gp, col)
 
   \item{is.summary}{A vector indicating by TRUE/FALSE if
   the value is a summary value which means that it will
-  have a different font-style.}
+  have a different font-style}
 
   \item{txt_gp}{Set the fonts etc for all text elements.
-  See \code{\link{fpTxtGp}} for details.}
+  See \code{\link{fpTxtGp}} for details}
 
   \item{col}{Set the colors for all the elements. See
-  \code{\link{fpColors}} for details.}
+  \code{\link{fpColors}} for details}
 }
 \value{
 \code{list} A list with \code{length(nc)} where each

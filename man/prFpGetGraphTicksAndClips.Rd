@@ -10,10 +10,10 @@ prFpGetGraphTicksAndClips(xticks, xticks.digits, xlog, xlab, lwd.xaxis, col,
 \arguments{
   \item{xticks}{Optional user-specified x-axis tick marks.
   Specify NULL to use the defaults, numeric(0) to omit the
-  x-axis.}
+  x-axis}
 
   \item{xticks.digits}{The number of digits to allow in the
-  x-axis if this is created by default.}
+  x-axis if this is created by default}
 
   \item{xlog}{If TRUE, x-axis tick marks are to follow a
   logarithmic scale, e.g. for logistic regressoin (OR),
@@ -29,17 +29,17 @@ prFpGetGraphTicksAndClips(xticks, xticks.digits, xlog, xlab, lwd.xaxis, col,
   \item{lwd.xaxis}{lwd for the xaxis}
 
   \item{col}{Set the colors for all the elements. See
-  \code{\link{fpColors}} for details.}
+  \code{\link{fpColors}} for details}
 
   \item{txt_gp}{Set the fonts etc for all text elements.
-  See \code{\link{fpTxtGp}} for details.}
+  See \code{\link{fpTxtGp}} for details}
 
   \item{clip}{Lower and upper limits for clipping
   confidence intervals to arrows}
 
   \item{zero}{x-axis coordinate for zero line. If you
   provide a vector of length 2 it will print a rectangle
-  instead of just a line.}
+  instead of just a line}
 
   \item{x_range}{The range that the values from the
   different confidence interval span}

@@ -11,7 +11,7 @@ prFpPrintXaxis(axisList, col, lwd.zero)
   \code{\link{prFpGetGraphTicksAndClips}}}
 
   \item{col}{Set the colors for all the elements. See
-  \code{\link{fpColors}} for details.}
+  \code{\link{fpColors}} for details}
 
   \item{lwd.zero}{lwd for the vertical line that gives the
   no-effect line}

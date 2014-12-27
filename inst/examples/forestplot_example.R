@@ -69,7 +69,7 @@ coef <- with(test_data, cbind(coef1, coef2))
 low <- with(test_data, cbind(low1, low2))
 high <- with(test_data, cbind(high1, high2))
 forestplot(row_names, coef, low, high,
-           main="Cool study",
+           title="Cool study",
            zero = c(0.98, 1.02), boxsize=0.25,
            col=fpColors(box=c("royalblue", "gold"),
                         line=c("darkblue", "orange"),

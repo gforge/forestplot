@@ -18,7 +18,7 @@ prFpGetLayoutVP(lineheight, labels, nr, legend_layout = NULL)
   option is to set the line height to \code{unit(2, "cm")}.
   A third option is to set line height to "lines" and then
   you get 50 % more than what the text height is as your
-  line height.}
+  line height}
 
   \item{labels}{The labels}
 
