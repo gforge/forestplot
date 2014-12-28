@@ -16,27 +16,31 @@ vignette: >
 knitr::opts_chunk$set(fig.width = 7, fig.height=3, dev='svg')
 ```
 
-[Forest plots](http://en.wikipedia.org/wiki/Forest_plot) date back to [1970s](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1120528/) and have most frequently been used for [meta-analysis](http://en.wikipedia.org/wiki/Meta-analysis), but are in no way restricted to these.  the `forestplot` function of this package is a development of the [rmeta](http://cran.r-project.org/web/packages/rmeta/index.html)-package's `forestplot` function, hence the name. With the forestplot you can:
+[Forest plots](http://en.wikipedia.org/wiki/Forest_plot) date back to [1970s](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1120528/) and are most frequently seen in [meta-analysis](http://en.wikipedia.org/wiki/Meta-analysis), but are in no way restricted to these.  The `forestplot` function of this package is a development of the ['rmeta'](http://cran.r-project.org/web/packages/rmeta/index.html)-package's `forestplot` function. 
+
+Apart from generating a basic forest plot merging text with confidence lines and summary indicators, the `forestplot` has a few additional capabilities:
 
 * **Text:**
-    + Use a table of text, i.e. the text can consist of several columns if needed&dagger;
-    + Use expressions within your text, e.g. `expression(beta)`
-    + Set fontfamily for both summary and regular rows
+    + Ability to use a table of text, i.e. the text can consist of several columns if needed&Dagger;
+    + Allows expressions within your text that permit mathematical symbols, e.g. `expression(beta)`
+    + Set gpar arguments (`fontfamily`, `fontface`, `cex`, etc)  for both summary and regular rows. This can be specified down to the each cell.
 * **Confidence intervals:**
-    + Clip confidence intervals to arrows when they exceed specified limits&dagger;
-    + Use multiple confidence bands for the same row
-    + Choose between boxes, diamonds, points etc as estimate indicator
+    + Clip confidence intervals to arrows when they exceed specified limits&Dagger;
+    + Multiple confidence bands for the same row
+    + Estimate marker choice between boxes, diamonds, points
     + Make your own custom confidence interval drawing functions
 * **Legends:**
-    + Have legend on top or to the left
-    + Have the legend within plot
+    + Have legend on top or to the left of the plot
+    + Have the legend within the plot's graph section
     + Put a box around legend (sharp or rounded corners)
 * **Other:**
-    + Automatically adapts graph to viewport (graph) size
-    + Have the zero-effect line as a line or a wide box
-    + All arguments can be within one array
+    + Choose line height to either adapt to viewport (graph) size or specify an exact height in `unit`s
+    + Choose between a zero-effect line line or an area box
+    + Use flexible arguments, you can choose if you want to provide mean, lower, and upper separately or within one array.
 
-&dagger; Features present int the original `forestplot` functions.
+&Dagger; Features present int the original `forestplot` functions.
+
+**Note:** An important difference from the original `forestplot` is that the current function interprets *xlog* as the x-axis being in log-format, i.e. you need to provide the data in the antilog/exp format.
 
 Text
 ====
@@ -108,17 +112,17 @@ Altering fonts may give a completely different feel to the table:
 ```{r}
 tabletext <- cbind(rownames(HRQoL$Sweden),
                    sprintf("%.2f", HRQoL$Sweden[,"coef"]))
-forestplot(tabletext, new_page = TRUE, 
+forestplot(tabletext, 
            txt_gp = fpTxtGp(label = gpar(fontfamily = "HersheyScript")),
            rbind(HRQoL$Sweden),
            col=clrs,
            xlab="EQ-5D index")
 ```
 
-There is also the possibility of beeing selective in gp-styles:
+There is also the possibility of being selective in gp-styles:
 
 ```{r}
-forestplot(tabletext, new_page = TRUE, 
+forestplot(tabletext, 
            txt_gp = fpTxtGp(label = list(gpar(fontfamily = "HersheyScript"),
                                          gpar(fontfamily = "",
                                               col = "#660000")),
@@ -135,7 +139,7 @@ Confidence intervals
 Clipping the interval is convenient for uncertain estimates in order to retain the resolution for those of more interest. The clipping simply adds an arrow to the confidence interval, see the bottom estimate below:
 
 ```{r}
-forestplot(tabletext, new_page = TRUE, 
+forestplot(tabletext, 
            rbind(HRQoL$Sweden),
            clip =c(-.1, Inf),
            col=clrs,
@@ -146,17 +150,17 @@ forestplot(tabletext, new_page = TRUE,
 Multiple confidence bands
 -------------------------
 
-When combining similar results for the same row I'm very fond of using multiple bands per row. This efficiently increases the data-ink ratio while making the comparison between the two bands trivial. The first time I've used this was in [my article](http://www.biomedcentral.com/1471-2474/14/316/abstract) comparing Swedish with Danish patients 1 year after total hip arthroplasty. Here the clipping also becomes obvious as the Danish sample was much smaller, resulting in wider confidence intervals.
+When combining similar outcomes for the same exposure I've found it useful to use multiple bands per row. This efficiently increases the data-ink ratio while making the comparison between the two bands trivial. The first time I've used this was in [my article](http://www.biomedcentral.com/1471-2474/14/316/abstract) comparing Swedish with Danish patients 1 year after total hip arthroplasty. Here the clipping also becomes obvious as the Danish sample was much smaller, resulting in wider confidence intervals.
 
 ```{r}
 tabletext <- tabletext[,1]
-forestplot(tabletext, new_page = TRUE, 
-            mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
-            lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
-            upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
-            clip =c(-.1, 0.075),
-            col=fpColors(box=c("blue", "darkred")),
-            xlab="EQ-5D index")
+forestplot(tabletext, 
+           mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
+           lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
+           upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
+           clip =c(-.1, 0.075),
+           col=fpColors(box=c("blue", "darkred")),
+           xlab="EQ-5D index")
 
 ```
 
@@ -167,7 +171,7 @@ Estimate indicator
 You can choose between a number of different estimate indicators. Using the example above we can set the Danish results to circles.
 
 ```{r}
-forestplot(tabletext, new_page = TRUE, 
+forestplot(tabletext, 
             fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
             boxsize = .25, # We set the box size to better visualize the type
             line.margin = .1, # We need to add this to avoid crowding
@@ -187,7 +191,7 @@ Legends
 Adding a basic legend is done through the `legend` argument:
 
 ```{r}
-forestplot(tabletext, new_page = TRUE, 
+forestplot(tabletext, 
             legend = c("Sweden", "Denmark"),
             fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
             boxsize = .25, # We set the box size to better visualize the type
@@ -203,7 +207,7 @@ forestplot(tabletext, new_page = TRUE,
 This can be further customized by setting the `legend_args` argument using the `fpLegend` function:
 
 ```{r}
-forestplot(tabletext, new_page = TRUE, 
+forestplot(tabletext, 
             legend_args = fpLegend(pos = list(x=.85, y=0.25), 
                                    gp=gpar(col="#CCCCCC", fill="#F9F9F9")),
             legend = c("Sweden", "Denmark"),
@@ -218,4 +222,4 @@ forestplot(tabletext, new_page = TRUE,
             xlab="EQ-5D index")
 ```
 
-Ok, that's it. I hope you find the additions to the original forestplot useful.
+Ok, that's it. I hope you find the additions to the original `forestplot` useful.

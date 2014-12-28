@@ -3,7 +3,7 @@ knitr::opts_chunk$set(fig.width = 7, fig.height=3, dev='svg')
 
 ## ----, fig.height=4, fig.width=8, message=FALSE--------------------------
 library(forestplot)
-# Cochrane data from the rmeta-package
+# Cochrane data from the 'rmeta'-package
 cochrane_from_rmeta <- 
   structure(list(
     mean  = c(NA, NA, 0.578, 0.165, 0.246, 0.700, 0.348, 0.139, 1.017, NA, 0.531), 
@@ -49,14 +49,14 @@ forestplot(tabletext, new_page = TRUE,
 ## ------------------------------------------------------------------------
 tabletext <- cbind(rownames(HRQoL$Sweden),
                    sprintf("%.2f", HRQoL$Sweden[,"coef"]))
-forestplot(tabletext, new_page = TRUE, 
+forestplot(tabletext, 
            txt_gp = fpTxtGp(label = gpar(fontfamily = "HersheyScript")),
            rbind(HRQoL$Sweden),
            col=clrs,
            xlab="EQ-5D index")
 
 ## ------------------------------------------------------------------------
-forestplot(tabletext, new_page = TRUE, 
+forestplot(tabletext, 
            txt_gp = fpTxtGp(label = list(gpar(fontfamily = "HersheyScript"),
                                          gpar(fontfamily = "",
                                               col = "#660000")),
@@ -67,7 +67,7 @@ forestplot(tabletext, new_page = TRUE,
            xlab="EQ-5D index")
 
 ## ------------------------------------------------------------------------
-forestplot(tabletext, new_page = TRUE, 
+forestplot(tabletext, 
            rbind(HRQoL$Sweden),
            clip =c(-.1, Inf),
            col=clrs,
@@ -75,17 +75,17 @@ forestplot(tabletext, new_page = TRUE,
 
 ## ------------------------------------------------------------------------
 tabletext <- tabletext[,1]
-forestplot(tabletext, new_page = TRUE, 
-            mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
-            lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
-            upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
-            clip =c(-.1, 0.075),
-            col=fpColors(box=c("blue", "darkred")),
-            xlab="EQ-5D index")
+forestplot(tabletext, 
+           mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
+           lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
+           upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
+           clip =c(-.1, 0.075),
+           col=fpColors(box=c("blue", "darkred")),
+           xlab="EQ-5D index")
 
 
 ## ------------------------------------------------------------------------
-forestplot(tabletext, new_page = TRUE, 
+forestplot(tabletext, 
             fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
             boxsize = .25, # We set the box size to better visualize the type
             line.margin = .1, # We need to add this to avoid crowding
@@ -97,7 +97,7 @@ forestplot(tabletext, new_page = TRUE,
             xlab="EQ-5D index")
 
 ## ------------------------------------------------------------------------
-forestplot(tabletext, new_page = TRUE, 
+forestplot(tabletext, 
             legend = c("Sweden", "Denmark"),
             fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
             boxsize = .25, # We set the box size to better visualize the type
@@ -110,7 +110,7 @@ forestplot(tabletext, new_page = TRUE,
             xlab="EQ-5D index")
 
 ## ------------------------------------------------------------------------
-forestplot(tabletext, new_page = TRUE, 
+forestplot(tabletext, 
             legend_args = fpLegend(pos = list(x=.85, y=0.25), 
                                    gp=gpar(col="#CCCCCC", fill="#F9F9F9")),
             legend = c("Sweden", "Denmark"),
