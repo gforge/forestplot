@@ -5,12 +5,15 @@ Title: Advanced Forest Plot Using 'grid' Graphics
 Authors@R: c(person(given = "Max",
                     family = "Gordon",
                     role = c("aut", "cre"),
-                    email = "max@gforge.se"),
+                    email = "max@gforge.se",
+                    comment = "Responsible for any changes beyond the 'rmeta' package.
+                    See the vignette('forestplot') for details."),
              person(given = "Thomas",
                     family = "Lumley",
                     role = c("aut", "ctb"),
-                    comment = "The original code from the 'rmeta' package
-                    corresponds to <25% of the current code base."))
+                    comment = "Author of the original code in the 'rmeta' package
+                    that included basic plot functions, allowed for a table of text,
+                    and clipped confidence intervals."))
 Description: The plot allows for multiple confidence intervals per row,
   custom fonts for each text element,
   custom confidence intervals,

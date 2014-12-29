@@ -38,7 +38,7 @@ Apart from generating a basic forest plot merging text with confidence lines and
     + Choose between a zero-effect line line or an area box
     + Use flexible arguments, you can choose if you want to provide mean, lower, and upper separately or within one array.
 
-&Dagger; Features present int the original `forestplot` functions.
+&Dagger; Features present int the original `rmeta::forestplot` function.
 
 **Note:** An important difference from the original `forestplot` is that the current function interprets *xlog* as the x-axis being in log-format, i.e. you need to provide the data in the antilog/exp format.
 
