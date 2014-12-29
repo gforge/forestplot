@@ -7,9 +7,9 @@
 fpTxtGp(label, summary, xlab, title, ticks, legend, legend.title, cex = 1)
 }
 \arguments{
-  \item{label}{The text labels}
+  \item{label}{The text labels (see details below)}
 
-  \item{summary}{The summary labels}
+  \item{summary}{The summary labels (see details below)}
 
   \item{xlab}{The xlab text}
 
@@ -27,9 +27,22 @@ fpTxtGp(label, summary, xlab, title, ticks, legend, legend.title, cex = 1)
 A list of the \code{fpTxtGp} class
 }
 \description{
-This function autogenerates all the
-\code{\link[grid]{gpar}()} elements for the different text
-elements within the graph.
+This function generates all the \code{\link[grid]{gpar}()}
+elements for the different text elements within the graph.
+Elements not specified inherit their default settings from
+the \code{label} argument.
+}
+\section{List arguments for \code{label}/\code{summary}}{
+  You can provide a \code{list} of elements for the
+  \code{label} and \code{summary} in order to specify
+  separate elements. If you provide a \code{list} in one
+  dimension the \code{gpar} elements are assummed to follow
+  the columns. If you provide a \code{list} of 2 dimensions
+  the structure assumes is \code{list[[row]][[column]]} and
+  the number of elements should correspond to the number of
+  labels for the \code{label} argument, i.e. without the
+  rows marked as summary elements. The same goes for
+  \code{summary} arguments.
 }
 \examples{
 fpTxtGp(label=gpar(fontfamily="HersheySerif"))

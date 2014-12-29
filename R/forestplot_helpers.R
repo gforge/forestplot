@@ -396,11 +396,24 @@ fpLegend <- function(pos           = "top",
 
 #' Get font settings for forestplot
 #'
-#' This function autogenerates all the \code{\link[grid]{gpar}()}
+#' This function generates all the \code{\link[grid]{gpar}()}
 #' elements for the different text elements within the graph.
+#' Elements not specified inherit their default settings from the
+#' \code{label} argument.
 #'
-#' @param label The text labels
-#' @param summary The summary labels
+#' @section List arguments for \code{label}/\code{summary}:
+#'
+#' You can provide a \code{list} of elements for the \code{label}
+#' and \code{summary} in order to specify separate elements. If you
+#' provide a \code{list} in one dimension the \code{gpar} elements are assummed
+#' to follow the columns. If you provide a \code{list} of 2 dimensions the
+#' structure assumes is \code{list[[row]][[column]]} and the number of elements
+#' should correspond to the number of labels for the \code{label} argument, i.e.
+#' without the rows marked as summary elements. The same goes for \code{summary}
+#' arguments.
+#'
+#' @param label The text labels (see details below)
+#' @param summary The summary labels (see details below)
 #' @param xlab The xlab text
 #' @param title The plot title
 #' @param ticks The ticks associated with the xlab
