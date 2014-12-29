@@ -1,8 +1,8 @@
-#' Coefficients and confidence interval for HRQoL in Sweden
+#' Regression coefficients and confidence intervals from HRQoL study
 #'
 #' The data is a list containing the Swedish and the Danish coefficients
-#' for health related quality of life 1 year after surgery. The age is modelled
-#' as a spline and is therefore presented as a contrast.
+#' for health related quality of life (HRQoL) 1 year after total hip arthroplasty surgery.
+#' The age is modelled as a spline and is therefore presented as a contrast.
 #'
 #' @name HRQoL
 #' @docType data
