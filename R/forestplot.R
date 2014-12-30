@@ -48,8 +48,10 @@
 #' @param upper The upper bound of the confidence interval for the forestplot, needs
 #'   to be the same format as the mean, i.e. matrix/vector of equal columns & length
 #' @param align Vector giving alignment (l,r,c) for the table columns
-#' @param is.summary A vector indicating by TRUE/FALSE if the value is a summary
-#'   value which means that it will have a different font-style
+#' @param is.summary A vector indicating by \code{TRUE}/\code{FALSE} if
+#'   the value is a summary value which means that it will have a different
+#'   font-style
+#' @param lines Add horizontal lines to graph. If TRUE
 #' @param clip Lower and upper limits for clipping confidence intervals to arrows
 #' @param xlab x-axis label
 #' @param zero x-axis coordinate for zero line. If you provide a vector of length 2 it
@@ -118,6 +120,7 @@ forestplot <- function (labeltext,
                         mean, lower, upper,
                         align,
                         is.summary           = FALSE,
+                        lines,
                         clip                 = c(-Inf, Inf),
                         xlab                 = "",
                         zero                 = ifelse(xlog, 1, 0),
@@ -138,8 +141,8 @@ forestplot <- function (labeltext,
                         legend,
                         legend_args          = fpLegend(),
                         new_page             = FALSE,
-                        fn.ci_norm      = fpDrawNormalCI,
-                        fn.ci_sum     = fpDrawSummaryCI,
+                        fn.ci_norm           = fpDrawNormalCI,
+                        fn.ci_sum            = fpDrawSummaryCI,
                         fn.legend,
                         ...)
 {
