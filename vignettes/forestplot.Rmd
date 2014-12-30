@@ -24,6 +24,7 @@ Apart from generating a basic forest plot merging text with confidence lines and
     + Ability to use a table of text, i.e. the text can consist of several columns if needed&Dagger;
     + Allows expressions within your text that permit mathematical symbols, e.g. `expression(beta)`
     + Set gpar arguments (`fontfamily`, `fontface`, `cex`, etc)  for both summary and regular rows. This can be specified down to the each cell.
+    + Draw horizontal lines
 * **Confidence intervals:**
     + Clip confidence intervals to arrows when they exceed specified limits&Dagger;
     + Multiple confidence bands for the same row

@@ -2,6 +2,7 @@ NEWS for the forestplot package
 
 Changes for 1.0.1
 -----------------
+* Added ability to generate horizontal lines
 * Minor documentation changes
 
 Changes for 1.0
