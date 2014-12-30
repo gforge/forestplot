@@ -804,7 +804,9 @@ prFpGetLabels <- function(label_type, labeltext, align,
           gp_list[["col"]] <- rep(col$text, length = nr)[i]
 
           # Create a textGrob for the summary
-          # TODO: flip the row/column order to reflect matrix order
+          # The row/column order is in this order
+          # in order to make the following possible:
+          # list(rownames(x), list(expression(1 >= a), "b", "c"))
           labels[[j]][[i]] <-
             textGrob(txt_out, x = x,
                      just = just,
