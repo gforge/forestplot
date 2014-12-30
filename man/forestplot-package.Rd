@@ -3,11 +3,14 @@
 \docType{package}
 \name{forestplot-package}
 \alias{forestplot-package}
-\title{The forest plot function, \code{\link{forestplot}}, is a more general
-version of the original \pkg{rmeta}-packages \code{\link[rmeta]{forestplot}}
-implementation. The aim is at using forest plots for more than
-just meta-analyses.}
+\title{Package description}
 \description{
+The forest plot function, \code{\link{forestplot}}, is a
+more general version of the original \pkg{rmeta}-packages
+\code{\link[rmeta]{forestplot}} implementation. The aim is
+at using forest plots for more than just meta-analyses.
+}
+\details{
 The forestplot: \enumerate{ \item Allows for multiple
 confidence intervals per row \item Custom fonts for each
 text element \item Custom confidence intervals \item Text
@@ -17,9 +20,10 @@ including auto-adapt height \item Graph width that
 auto-adapts \item Flexible arguments \item and more }
 }
 \section{Additional functions}{
-  The getTicks tries to format ticks for plots in a nicer
-  way. The major use is for exponentials where ticks are
-  generated using the \eqn{2^n} since a doubling is a
-  concept easy to grasp even for non-statisticians. <d
+  The \code{\link{getTicks}} tries to format ticks for
+  plots in a nicer way. The major use is for exponentials
+  where ticks are generated using the \eqn{2^n} since a
+  doubling is a concept easy to grasp for less
+  mathematical-savvy readers.
 }
 

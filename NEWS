@@ -1,5 +1,9 @@
 NEWS for the forestplot package
 
+Changes for 1.0.1
+-----------------
+* Minor documentation changes
+
 Changes for 1.0
 ---------------
 * Separation from the Gmisc-package
@@ -8,7 +12,6 @@ Changes for 1.0
 * The fontfamily arguments are now embedded in the txt_gp that takes input from the
   fpTxtGp function. The fonts for the labels/summaries can be specified down to the
   cell level.
-* The xlog argument changed back to match the original from the forestplot-package
 * If provided a vector of length two for the zero argumente you get an area for the zero-effect
 * There is a maximum colgap length for the box corresponding to the box height
 * confintNormalFn, confintSummaryFn, legendMarkerFn are now called fn.ci_norm, fn.ci_sum, fn.legend

@@ -1,3 +1,5 @@
+#' Package description
+#'
 #' The forest plot function, \code{\link{forestplot}}, is a more general
 #' version of the original \pkg{rmeta}-packages \code{\link[rmeta]{forestplot}}
 #' implementation. The aim is at using forest plots for more than
@@ -18,9 +20,11 @@
 #'
 #' @section Additional functions:
 #'
-#' The getTicks tries to format ticks for plots in a nicer way. The major use is for exponentials where ticks are generated using the
-#' \eqn{2^n} since a doubling is a concept easy to grasp even for non-statisticians.
-#'<d
+#' The \code{\link{getTicks}} tries to format ticks for plots in a nicer way.
+#' The major use is for exponentials where ticks are generated using the
+#' \eqn{2^n} since a doubling is a concept easy to grasp for less mathematical-savvy
+#' readers.
+#'
 #' @name forestplot-package
 #' @docType package
 NULL
