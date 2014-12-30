@@ -1274,3 +1274,188 @@ prGetTextGrobCex <-  function(x) {
 
   return(cex)
 }
+
+
+#' Prepares the lines for the plot
+#'
+#' @param total_columns Total number of columns
+#' @inheritParams forestplot
+#' @keywords internal
+prFpGetLines <- function(lines,
+                         is.summary,
+                         total_columns,
+                         col){
+  ret_lines <- lapply(1:(length(is.summary) + 1), function(x) NULL)
+  if (missing(lines) ||
+        (is.logical(lines) &&
+           all(lines == FALSE)) ||
+        (is.list(lines) &&
+           all(sapply(lines, is.null)))){
+    return(ret_lines)
+  }
+
+  std_line <- gpar(lty=1, lwd=1, col=col$hrz_lines, columns = 1:total_columns)
+  if (inherits(lines, "gpar")){
+    std_line <- prGparMerge(std_line, lines)
+    lines <- TRUE
+  }
+
+  # If provided with TRUE alone
+  # Note that FALSE has already been processed above
+  if (is.logical(lines) &&
+        length(lines) == 1){
+      if (is.summary[1] == TRUE){
+        line_pos <- which(is.summary == FALSE)[1]
+        ret_lines[[line_pos]] <-
+          std_line
+
+        is.summary[1:line_pos] <- FALSE
+      }
+
+      if (tail(is.summary, 1)){
+        line_pos <- length(is.summary) + 1-
+          (which(rev(is.summary) == FALSE)[1] - 1)
+
+        ret_lines[[line_pos]] <-
+          std_line
+
+        ret_lines[[length(ret_lines)]] <-
+          std_line
+
+        is.summary[line_pos:length(is.summary)] <- FALSE
+      }
+
+      for (line_pos in which(is.summary == TRUE)){
+        if (is.summary[line_pos + 1]){
+          line_pos <-
+            line_pos +
+            tail(which(is.summary[(line_pos + 1):length(is.summary)]), 1)
+        }
+        ret_lines[[line_pos + 1]] <-
+          std_line
+      }
+
+      return(ret_lines)
+  }
+
+  if (is.logical(lines)){
+    if (length(lines) == (length(is.summary) + 1)){
+      ret_lines[[lines]] <-
+        std_line
+      return(ret_lines)
+    }else{
+      stop("You have provided a logical lines input of length '", length(lines), "'",
+           " but the software expects the length to be number of rows + 1",
+           " i.e. ", length(is.summary), " + 1 = ", length(is.summary) + 1)
+    }
+  }
+
+  if (!is.list(lines)){
+    stop("You have provided an invalid argument, expected a list but got a ", class(lines))
+  }
+
+  if (is.null(names(lines))){
+    if (length(lines) == (length(is.summary) + 1)){
+      return(lapply(lines, function(x, std) {
+        if (is.null(x)) {
+          x
+        }else if (inherits(x, "gpar")){
+          prGparMerge(std, x)
+        }else{
+          std
+        }
+      }
+      , std = std_line))
+    }else{
+      stop("You have provided a logical lines input of length '", length(lines), "'",
+           " but the software expects the length to be number of rows + 1",
+           " i.e. ", length(is.summary), " + 1 = ", length(is.summary) + 1)
+    }
+  }
+
+  if (!all(sapply(lines, function(x) inherits(x, "gpar") || x == TRUE)))
+    stop("The list must consist of only gpar or logical TRUE elements")
+
+  for (n in names(lines)){
+    nn <- as.integer(n)
+    if (is.na(nn))
+      stop("Your name '", n ,"' for the list gpars cannot be converted to an integer")
+    if (!nn %in% 1:(length(is.summary) + 1))
+      stop("The integer that you have provided '", n, "'",
+           " falls outside the scope of possible values 1:", length(is.summary) + 1)
+    if (is.logical(lines[[n]])){
+      ret_lines[[nn]] <-
+        std_line
+    }else{
+      ret_lines[[nn]] <-
+        prGparMerge(std_line, lines[[n]])
+    }
+  }
+
+  return(ret_lines)
+}
+
+prFpDrawLines <- function(lines, nr, colwidths){
+  getCSpan <- function (columns, colwidths) {
+    span_cols <- c()
+    col_pos <- NULL
+    for (i in 1:length(columns)){
+      pos <- columns[i]
+      pos <- pos*2 - 1
+      span_cols <- c(span_cols, pos)
+
+      if (pos < length(colwidths) &&
+            i != length(columns) &&
+            columns[i] + 1 == columns[i + 1])
+        span_cols <- c(span_cols, pos + 1)
+    }
+
+    span_cols
+  }
+
+  for (i in 1:nr) {
+    if (!is.null(lines[[i]])){
+      span_cols <- getCSpan(lines[[i]]$columns, colwidths)
+
+      line_vp <- viewport(layout.pos.row = i,
+                          layout.pos.col = span_cols)
+      pushViewport(line_vp)
+      grid.lines(y = unit(c(1,1), "npc"), gp = lines[[i]])
+      popViewport()
+    }
+
+    if (i == nr &&
+          !is.null(lines[[i + 1]])){
+      span_cols <- getCSpan(lines[[i + 1]]$columns, colwidths)
+
+      line_vp <- viewport(layout.pos.row = i,
+                          layout.pos.col = span_cols)
+      pushViewport(line_vp)
+      grid.lines(y = unit(c(0,0), "npc"), gp = lines[[i + 1]])
+      popViewport()
+    }
+  }
+}
+
+#' Merges two \code{\link[grid]{gpar}} elements
+#'
+#' The second elements overrides any conflicting elements within the first
+#'
+#' @param l1 A \code{\link[grid]{gpar}} element
+#' @param l2 A \code{\link[grid]{gpar}} element
+#' @return Returns a \code{\link[grid]{gpar}} element
+#' @keywords internal
+prGparMerge <- function(l1, l2){
+  out <- c(l1, l2)
+  if (!any(duplicated(names(out))))
+    return(out)
+
+  dups <- unique(names(out)[duplicated(names(out))])
+  for (n in dups){
+    wd <- which(names(out) == n)
+    out <- out[-wd[1:(length(wd) - 1)]]
+  }
+  class(out) <- unique(c(class(out), class(l1)))
+  return(out)
+}
+

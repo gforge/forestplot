@@ -5,7 +5,8 @@
 \title{A function for the color elements used in forestplot()}
 \usage{
 fpColors(all.elements, box = "black", lines = "gray", summary = "black",
-  zero = "lightgray", text = "black", axes = "black")
+  zero = "lightgray", text = "black", axes = "black",
+  hrz_lines = "black")
 }
 \arguments{
   \item{all.elements}{A color for all the elements. If set
@@ -22,6 +23,8 @@ fpColors(all.elements, box = "black", lines = "gray", summary = "black",
   \item{text}{The color of the text}
 
   \item{axes}{The color of the x-axis at the bottom}
+
+  \item{hrz_lines}{The color of the horizontal lines}
 }
 \value{
 list A list with the elements: \item{box}{the color of the

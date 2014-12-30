@@ -18,6 +18,25 @@
 #' have two bands on top of eachother. Another useful implementation is to show
 #' crude and adjusted estimates as separate bands.
 #'
+#' @section Horizontal lines:
+#'
+#' The argument \code{lines} can be either \code{TRUE} or a \code{list} with \code{\link[grid]{gpar}}
+#' elements:
+#'
+#' \itemize{
+#'  \item{\code{TRUE}}{A line will be added based upon the \code{is.summary} rows. If the first line is a summary it}
+#'  \item{\code{\link[grid]{gpar}}}{The same as above but the lines will be formatted according to the
+#'                                  \code{\link[grid]{gpar}} element}
+#'  \item{\code{list}}{The list must either be numbered, i.e. \code{list("2" = gpar(lty=1))}, or have the same length
+#'                     as the \code{NROW(mean) + 1}. If the list is numbered the numbers should not exceed the \code{NROW(mean) + 1}.
+#'                     The no. \emph{1 row designates the top}, i.e. the line above the first row, all other correspond  to
+#'                     \emph{the row below}. Each element in the list needs to be \code{TRUE}, \code{NULL}, or
+#'                     \code{\link[grid]{gpar}} element. The \code{TRUE} defaults to a standard line, the \code{NULL}
+#'                     skips a line, while \code{\link[grid]{gpar}} corresponds to the fully customized line. Apart from
+#'                     allowing standard \code{\link[grid]{gpar}} line descriptions, \code{lty}, \code{lwd}, \code{col}, and more
+#'                     you can also specify \code{gpar(columns = c(1:3, 5))} if you for instance want the line to skip a column.}
+#' }
+#'
 #' @section Known issues:
 #'
 #' The x-axis does not entirely respect the margin. Autosizing boxes is not
@@ -51,7 +70,8 @@
 #' @param is.summary A vector indicating by \code{TRUE}/\code{FALSE} if
 #'   the value is a summary value which means that it will have a different
 #'   font-style
-#' @param lines Add horizontal lines to graph. If TRUE
+#' @param lines Add horizontal lines to graph. Can either be \code{TRUE} or a \code{list}
+#'   of \code{\link[grid]{gpar}}. See line section below for details.
 #' @param clip Lower and upper limits for clipping confidence intervals to arrows
 #' @param xlab x-axis label
 #' @param zero x-axis coordinate for zero line. If you provide a vector of length 2 it
@@ -397,6 +417,10 @@ forestplot <- function (labeltext,
 
   is.summary <- rep(is.summary, length = nr)
 
+  lines <- prFpGetLines(lines = lines,
+                        is.summary = is.summary,
+                        total_columns = nc + 1,
+                        col = col)
 
   labels <- prFpGetLabels(label_type = label_type,
                           labeltext = labeltext, align = align,
@@ -648,6 +672,8 @@ forestplot <- function (labeltext,
 
   prFpPrintXaxis(axisList=axisList,
                  col=col, lwd.zero=lwd.zero)
+
+  prFpDrawLines(lines = lines, nr = nr, colwidths = colwidths)
 
   # Output the different confidence intervals
   for (i in 1:nr) {

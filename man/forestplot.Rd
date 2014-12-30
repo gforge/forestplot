@@ -4,7 +4,7 @@
 \alias{forestplot}
 \title{Draws a forest plot}
 \usage{
-forestplot(labeltext, mean, lower, upper, align, is.summary = FALSE,
+forestplot(labeltext, mean, lower, upper, align, is.summary = FALSE, lines,
   clip = c(-Inf, Inf), xlab = "", zero = ifelse(xlog, 1, 0),
   graphwidth = "auto", lineheight = "auto", line.margin, col = fpColors(),
   txt_gp = fpTxtGp(), xlog = FALSE, xticks, xticks.digits = 2, lwd.xaxis,
@@ -46,9 +46,13 @@ forestplot(labeltext, mean, lower, upper, align, is.summary = FALSE,
   \item{align}{Vector giving alignment (l,r,c) for the
   table columns}
 
-  \item{is.summary}{A vector indicating by TRUE/FALSE if
-  the value is a summary value which means that it will
-  have a different font-style}
+  \item{is.summary}{A vector indicating by
+  \code{TRUE}/\code{FALSE} if the value is a summary value
+  which means that it will have a different font-style}
+
+  \item{lines}{Add horizontal lines to graph. Can either be
+  \code{TRUE} or a \code{list} of \code{\link[grid]{gpar}}.
+  See line section below for details.}
 
   \item{clip}{Lower and upper limits for clipping
   confidence intervals to arrows}
@@ -166,6 +170,32 @@ label} \item{Autosize: }{Adapts to viewport (graph) size} }
   be useful to have two bands on top of eachother. Another
   useful implementation is to show crude and adjusted
   estimates as separate bands.
+}
+
+\section{Horizontal lines}{
+  The argument \code{lines} can be either \code{TRUE} or a
+  \code{list} with \code{\link[grid]{gpar}} elements:
+
+  \itemize{ \item{\code{TRUE}}{A line will be added based
+  upon the \code{is.summary} rows. If the first line is a
+  summary it} \item{\code{\link[grid]{gpar}}}{The same as
+  above but the lines will be formatted according to the
+  \code{\link[grid]{gpar}} element} \item{\code{list}}{The
+  list must either be numbered, i.e. \code{list("2" =
+  gpar(lty=1))}, or have the same length as the
+  \code{NROW(mean) + 1}. If the list is numbered the
+  numbers should not exceed the \code{NROW(mean) + 1}.  The
+  no. \emph{1 row designates the top}, i.e. the line above
+  the first row, all other correspond to \emph{the row
+  below}. Each element in the list needs to be \code{TRUE},
+  \code{NULL}, or \code{\link[grid]{gpar}} element. The
+  \code{TRUE} defaults to a standard line, the \code{NULL}
+  skips a line, while \code{\link[grid]{gpar}} corresponds
+  to the fully customized line. Apart from allowing
+  standard \code{\link[grid]{gpar}} line descriptions,
+  \code{lty}, \code{lwd}, \code{col}, and more you can also
+  specify \code{gpar(columns = c(1:3, 5))} if you for
+  instance want the line to skip a column.} }
 }
 
 \section{Known issues}{

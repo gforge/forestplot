@@ -31,9 +31,9 @@ prFpGetLabels(label_type, labeltext, align, nc, nr, is.summary, txt_gp, col)
 
   \item{nr}{Number of rows}
 
-  \item{is.summary}{A vector indicating by TRUE/FALSE if
-  the value is a summary value which means that it will
-  have a different font-style}
+  \item{is.summary}{A vector indicating by
+  \code{TRUE}/\code{FALSE} if the value is a summary value
+  which means that it will have a different font-style}
 
   \item{txt_gp}{Set the fonts etc for all text elements.
   See \code{\link{fpTxtGp}} for details}

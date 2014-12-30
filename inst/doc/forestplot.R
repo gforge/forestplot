@@ -34,6 +34,24 @@ forestplot(tabletext,
            xlog=TRUE,
            col=fpColors(box="royalblue",line="darkblue", summary="royalblue"))
 
+## ----, fig.height=4, fig.width=8, message=FALSE--------------------------
+forestplot(tabletext, lines = gpar(col="#444444"),
+           cochrane_from_rmeta,new_page = TRUE,
+           is.summary=c(TRUE,TRUE,rep(FALSE,8),TRUE),
+           clip=c(0.1,2.5), 
+           xlog=TRUE,
+           col=fpColors(box="royalblue",line="darkblue", summary="royalblue"))
+
+## ----, fig.height=4, fig.width=8, message=FALSE--------------------------
+forestplot(tabletext, 
+           lines = list("3" = gpar(lty=2), 
+                        "11" = gpar(lwd=1, columns=1:4, col = "#000044")),
+           cochrane_from_rmeta,new_page = TRUE,
+           is.summary=c(TRUE,TRUE,rep(FALSE,8),TRUE),
+           clip=c(0.1,2.5), 
+           xlog=TRUE,
+           col=fpColors(box="royalblue",line="darkblue", summary="royalblue", hrz_lines = "#444444"))
+
 ## ------------------------------------------------------------------------
 data(HRQoL)
 clrs <- fpColors(box="royalblue",line="darkblue", summary="royalblue")
