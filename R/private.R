@@ -1276,34 +1276,34 @@ prGetTextGrobCex <-  function(x) {
 }
 
 
-#' Prepares the lines for the plot
+#' Prepares the hrzl_lines for the plot
 #'
 #' @param total_columns Total number of columns
 #' @inheritParams forestplot
 #' @keywords internal
-prFpGetLines <- function(lines,
+prFpGetLines <- function(hrzl_lines,
                          is.summary,
                          total_columns,
                          col){
   ret_lines <- lapply(1:(length(is.summary) + 1), function(x) NULL)
-  if (missing(lines) ||
-        (is.logical(lines) &&
-           all(lines == FALSE)) ||
-        (is.list(lines) &&
-           all(sapply(lines, is.null)))){
+  if (missing(hrzl_lines) ||
+        (is.logical(hrzl_lines) &&
+           all(hrzl_lines == FALSE)) ||
+        (is.list(hrzl_lines) &&
+           all(sapply(hrzl_lines, is.null)))){
     return(ret_lines)
   }
 
   std_line <- gpar(lty=1, lwd=1, col=col$hrz_lines, columns = 1:total_columns)
-  if (inherits(lines, "gpar")){
-    std_line <- prGparMerge(std_line, lines)
-    lines <- TRUE
+  if (inherits(hrzl_lines, "gpar")){
+    std_line <- prGparMerge(std_line, hrzl_lines)
+    hrzl_lines <- TRUE
   }
 
   # If provided with TRUE alone
   # Note that FALSE has already been processed above
-  if (is.logical(lines) &&
-        length(lines) == 1){
+  if (is.logical(hrzl_lines) &&
+        length(hrzl_lines) == 1){
       if (is.summary[1] == TRUE){
         line_pos <- which(is.summary == FALSE)[1]
         ret_lines[[line_pos]] <-
@@ -1338,25 +1338,25 @@ prFpGetLines <- function(lines,
       return(ret_lines)
   }
 
-  if (is.logical(lines)){
-    if (length(lines) == (length(is.summary) + 1)){
-      ret_lines[[lines]] <-
+  if (is.logical(hrzl_lines)){
+    if (length(hrzl_lines) == (length(is.summary) + 1)){
+      ret_lines[[hrzl_lines]] <-
         std_line
       return(ret_lines)
     }else{
-      stop("You have provided a logical lines input of length '", length(lines), "'",
+      stop("You have provided a logical hrzl_lines input of length '", length(hrzl_lines), "'",
            " but the software expects the length to be number of rows + 1",
            " i.e. ", length(is.summary), " + 1 = ", length(is.summary) + 1)
     }
   }
 
-  if (!is.list(lines)){
-    stop("You have provided an invalid argument, expected a list but got a ", class(lines))
+  if (!is.list(hrzl_lines)){
+    stop("You have provided an invalid argument, expected a list but got a ", class(hrzl_lines))
   }
 
-  if (is.null(names(lines))){
-    if (length(lines) == (length(is.summary) + 1)){
-      return(lapply(lines, function(x, std) {
+  if (is.null(names(hrzl_lines))){
+    if (length(hrzl_lines) == (length(is.summary) + 1)){
+      return(lapply(hrzl_lines, function(x, std) {
         if (is.null(x)) {
           x
         }else if (inherits(x, "gpar")){
@@ -1367,35 +1367,41 @@ prFpGetLines <- function(lines,
       }
       , std = std_line))
     }else{
-      stop("You have provided a logical lines input of length '", length(lines), "'",
+      stop("You have provided a logical hrzl_lines input of length '", length(hrzl_lines), "'",
            " but the software expects the length to be number of rows + 1",
            " i.e. ", length(is.summary), " + 1 = ", length(is.summary) + 1)
     }
   }
 
-  if (!all(sapply(lines, function(x) inherits(x, "gpar") || x == TRUE)))
+  if (!all(sapply(hrzl_lines, function(x) inherits(x, "gpar") || x == TRUE)))
     stop("The list must consist of only gpar or logical TRUE elements")
 
-  for (n in names(lines)){
+  for (n in names(hrzl_lines)){
     nn <- as.integer(n)
     if (is.na(nn))
       stop("Your name '", n ,"' for the list gpars cannot be converted to an integer")
     if (!nn %in% 1:(length(is.summary) + 1))
       stop("The integer that you have provided '", n, "'",
            " falls outside the scope of possible values 1:", length(is.summary) + 1)
-    if (is.logical(lines[[n]])){
+    if (is.logical(hrzl_lines[[n]])){
       ret_lines[[nn]] <-
         std_line
     }else{
       ret_lines[[nn]] <-
-        prGparMerge(std_line, lines[[n]])
+        prGparMerge(std_line, hrzl_lines[[n]])
     }
   }
 
   return(ret_lines)
 }
 
-prFpDrawLines <- function(lines, nr, colwidths){
+#' Draws the horizontal lines
+#'
+#' @param nr Number of rows
+#' @param colwidths Vector with column widths
+#' @inheritParams prFpGetLines
+#' @keywords internal
+prFpDrawLines <- function(hrzl_lines, nr, colwidths){
   getCSpan <- function (columns, colwidths) {
     span_cols <- c()
     col_pos <- NULL
@@ -1414,24 +1420,24 @@ prFpDrawLines <- function(lines, nr, colwidths){
   }
 
   for (i in 1:nr) {
-    if (!is.null(lines[[i]])){
-      span_cols <- getCSpan(lines[[i]]$columns, colwidths)
+    if (!is.null(hrzl_lines[[i]])){
+      span_cols <- getCSpan(hrzl_lines[[i]]$columns, colwidths)
 
       line_vp <- viewport(layout.pos.row = i,
                           layout.pos.col = span_cols)
       pushViewport(line_vp)
-      grid.lines(y = unit(c(1,1), "npc"), gp = lines[[i]])
+      grid.lines(y = unit(c(1,1), "npc"), gp = hrzl_lines[[i]])
       popViewport()
     }
 
     if (i == nr &&
-          !is.null(lines[[i + 1]])){
-      span_cols <- getCSpan(lines[[i + 1]]$columns, colwidths)
+          !is.null(hrzl_lines[[i + 1]])){
+      span_cols <- getCSpan(hrzl_lines[[i + 1]]$columns, colwidths)
 
       line_vp <- viewport(layout.pos.row = i,
                           layout.pos.col = span_cols)
       pushViewport(line_vp)
-      grid.lines(y = unit(c(0,0), "npc"), gp = lines[[i + 1]])
+      grid.lines(y = unit(c(0,0), "npc"), gp = hrzl_lines[[i + 1]])
       popViewport()
     }
   }

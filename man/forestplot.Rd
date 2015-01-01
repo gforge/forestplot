@@ -4,8 +4,8 @@
 \alias{forestplot}
 \title{Draws a forest plot}
 \usage{
-forestplot(labeltext, mean, lower, upper, align, is.summary = FALSE, lines,
-  clip = c(-Inf, Inf), xlab = "", zero = ifelse(xlog, 1, 0),
+forestplot(labeltext, mean, lower, upper, align, is.summary = FALSE,
+  hrzl_lines, clip = c(-Inf, Inf), xlab = "", zero = ifelse(xlog, 1, 0),
   graphwidth = "auto", lineheight = "auto", line.margin, col = fpColors(),
   txt_gp = fpTxtGp(), xlog = FALSE, xticks, xticks.digits = 2, lwd.xaxis,
   lwd.zero, lwd.ci, boxsize, mar = unit(rep(5, times = 4), "mm"), title,
@@ -50,9 +50,10 @@ forestplot(labeltext, mean, lower, upper, align, is.summary = FALSE, lines,
   \code{TRUE}/\code{FALSE} if the value is a summary value
   which means that it will have a different font-style}
 
-  \item{lines}{Add horizontal lines to graph. Can either be
-  \code{TRUE} or a \code{list} of \code{\link[grid]{gpar}}.
-  See line section below for details.}
+  \item{hrzl_lines}{Add horizontal lines to graph. Can
+  either be \code{TRUE} or a \code{list} of
+  \code{\link[grid]{gpar}}. See line section below for
+  details.}
 
   \item{clip}{Lower and upper limits for clipping
   confidence intervals to arrows}
@@ -173,8 +174,8 @@ label} \item{Autosize: }{Adapts to viewport (graph) size} }
 }
 
 \section{Horizontal lines}{
-  The argument \code{lines} can be either \code{TRUE} or a
-  \code{list} with \code{\link[grid]{gpar}} elements:
+  The argument \code{hrzl_lines} can be either \code{TRUE}
+  or a \code{list} with \code{\link[grid]{gpar}} elements:
 
   \itemize{ \item{\code{TRUE}}{A line will be added based
   upon the \code{is.summary} rows. If the first line is a

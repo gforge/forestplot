@@ -2,14 +2,15 @@
 % Please edit documentation in R/private.R
 \name{prFpGetLines}
 \alias{prFpGetLines}
-\title{Prepares the lines for the plot}
+\title{Prepares the hrzl_lines for the plot}
 \usage{
-prFpGetLines(lines, is.summary, total_columns, col)
+prFpGetLines(hrzl_lines, is.summary, total_columns, col)
 }
 \arguments{
-  \item{lines}{Add horizontal lines to graph. Can either be
-  \code{TRUE} or a \code{list} of \code{\link[grid]{gpar}}.
-  See line section below for details.}
+  \item{hrzl_lines}{Add horizontal lines to graph. Can
+  either be \code{TRUE} or a \code{list} of
+  \code{\link[grid]{gpar}}. See line section below for
+  details.}
 
   \item{is.summary}{A vector indicating by
   \code{TRUE}/\code{FALSE} if the value is a summary value
@@ -21,7 +22,7 @@ prFpGetLines(lines, is.summary, total_columns, col)
   \code{\link{fpColors}} for details}
 }
 \description{
-Prepares the lines for the plot
+Prepares the hrzl_lines for the plot
 }
 \keyword{internal}
 

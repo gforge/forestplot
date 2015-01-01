@@ -1,109 +1,120 @@
 library(testthat)
 context("prFpGetLines")
 
-test_that("No of lines for missing argument", {
+test_that("No of hrzl_lines for missing argument", {
   is.summary <- c(TRUE, FALSE, FALSE, TRUE)
-  lines <- prFpGetLines(is.summary = is.summary,
-                        nc = 3)
-  expect_equivalent(length(lines),
+  hrzl_lines <- prFpGetLines(is.summary = is.summary,
+                        total_columns = 3)
+  expect_equivalent(length(hrzl_lines),
                     length(is.summary) + 1)
-  expect_true(all(sapply(lines, is.null)))
+  expect_true(all(sapply(hrzl_lines, is.null)))
 
   is.summary <- c(TRUE, FALSE)
-  lines <- prFpGetLines(is.summary = is.summary,
-                        nc = 3)
-  expect_equivalent(length(lines),
+  hrzl_lines <- prFpGetLines(is.summary = is.summary,
+                        total_columns = 3)
+  expect_equivalent(length(hrzl_lines),
                     length(is.summary) + 1)
-  expect_true(all(sapply(lines, is.null)))
+  expect_true(all(sapply(hrzl_lines, is.null)))
 
   is.summary <- c(TRUE, FALSE)
-  lines <- prFpGetLines(lines = list(NULL, NULL),
+  hrzl_lines <- prFpGetLines(hrzl_lines = list(NULL, NULL),
                         is.summary = is.summary,
-                        nc = 3)
-  expect_equivalent(length(lines),
+                        total_columns = 3)
+  expect_equivalent(length(hrzl_lines),
                     length(is.summary) + 1)
-  expect_true(all(sapply(lines, is.null)))
+  expect_true(all(sapply(hrzl_lines, is.null)))
 
 })
 
-test_that("Check correct lines for logical arguments",{
+test_that("Check correct hrzl_lines for logical arguments",{
   is.summary <- c(TRUE, FALSE, FALSE, TRUE)
-  lines <- prFpGetLines(lines = rep(FALSE, times = length(is.summary) + 1),
-                        is.summary = is.summary,
-                        nc = 3)
-  expect_equivalent(length(lines),
+  hrzl_lines <- prFpGetLines(hrzl_lines = rep(FALSE, times = length(is.summary) + 1),
+                             is.summary = is.summary,
+                             total_columns = 3,
+                             col = fpColors())
+  expect_equivalent(length(hrzl_lines),
                     length(is.summary) + 1)
-  expect_true(all(sapply(lines, is.null)))
+  expect_true(all(sapply(hrzl_lines, is.null)))
 
-  lines <- prFpGetLines(lines = FALSE,
-                        is.summary = is.summary,
-                        nc = 3)
-  expect_equivalent(length(lines),
+  hrzl_lines <- prFpGetLines(hrzl_lines = FALSE,
+                             is.summary = is.summary,
+                             total_columns = 3,
+                             col = fpColors())
+  expect_equivalent(length(hrzl_lines),
                     length(is.summary) + 1)
-  expect_true(all(sapply(lines, is.null)))
+  expect_true(all(sapply(hrzl_lines, is.null)))
 
 
-  lines <- prFpGetLines(lines = TRUE,
-                        is.summary = is.summary,
-                        nc = 3)
-  expect_equivalent(length(lines),
+  hrzl_lines <- prFpGetLines(hrzl_lines = TRUE,
+                             is.summary = is.summary,
+                             total_columns = 3,
+                             col = fpColors())
+  expect_equivalent(length(hrzl_lines),
                     length(is.summary) + 1)
-  expect_null(lines[[1]])
-  expect_true(inherits(lines[[2]], "gpar"))
-  expect_null(lines[[3]])
-  expect_true(inherits(lines[[4]], "gpar"))
-  expect_null(lines[[5]])
+  expect_null(hrzl_lines[[1]])
+  expect_true(inherits(hrzl_lines[[2]], "gpar"))
+  expect_null(hrzl_lines[[3]])
+  expect_true(inherits(hrzl_lines[[4]], "gpar"))
+  expect_true(inherits(hrzl_lines[[5]], "gpar"))
 
   is.summary <- c(TRUE, FALSE, FALSE, FALSE)
-  lines <- prFpGetLines(lines = TRUE,
-                        is.summary = is.summary,
-                        nc = 3)
-  expect_equivalent(length(lines),
+  hrzl_lines <- prFpGetLines(hrzl_lines = TRUE,
+                             is.summary = is.summary,
+                             total_columns = 3,
+                             col = fpColors())
+  expect_equivalent(length(hrzl_lines),
                     length(is.summary) + 1)
-  expect_null(lines[[1]])
-  expect_true(inherits(lines[[2]], "gpar"))
-  expect_null(lines[[3]])
-  expect_null(lines[[4]])
-  expect_null(lines[[5]])
+  expect_null(hrzl_lines[[1]])
+  expect_true(inherits(hrzl_lines[[2]], "gpar"))
+  expect_null(hrzl_lines[[3]])
+  expect_null(hrzl_lines[[4]])
+  expect_null(hrzl_lines[[5]])
 
   is.summary <- c(FALSE, FALSE, FALSE, FALSE)
-  lines <- prFpGetLines(lines = TRUE,
-                        is.summary = is.summary,
-                        nc = 3)
-  expect_equivalent(length(lines),
+  hrzl_lines <- prFpGetLines(hrzl_lines = TRUE,
+                             is.summary = is.summary,
+                             total_columns = 3,
+                             col = fpColors())
+  expect_equivalent(length(hrzl_lines),
                     length(is.summary) + 1)
-  expect_true(all(sapply(lines, is.null)))
+  expect_true(all(sapply(hrzl_lines, is.null)))
 })
 
 
 
-test_that("Check correct lines for list arguments",{
+test_that("Check correct hrzl_lines for list arguments",{
   is.summary <- c(TRUE, FALSE, FALSE, TRUE)
-  lines <- prFpGetLines(lines = list("2" = gpar(col="red")),
-                        is.summary = is.summary,
-                        nc = 3)
-  expect_equivalent(length(lines),
+  hrzl_lines <- prFpGetLines(hrzl_lines = list("2" = gpar(col="red")),
+                             is.summary = is.summary,
+                             total_columns = 3,
+                             col = fpColors())
+  expect_equivalent(length(hrzl_lines),
                     length(is.summary) + 1)
-  expect_null(lines[[1]])
-  expect_true(inherits(lines[[2]], "gpar"))
-  expect_null(lines[[3]])
-  expect_null(lines[[4]])
-  expect_null(lines[[5]])
+  expect_null(hrzl_lines[[1]])
+  expect_true(inherits(hrzl_lines[[2]], "gpar"))
+  expect_null(hrzl_lines[[3]])
+  expect_null(hrzl_lines[[4]])
+  expect_null(hrzl_lines[[5]])
 
 
   is.summary <- c(TRUE, FALSE, FALSE, TRUE)
-  lines <- list()
-  lines[[4]] <- gpar(col = "red")
-  lines[[5]] <- gpar(col = "red")
+  hrzl_lines <- list()
+  hrzl_lines[[4]] <- gpar(col = "red")
+  hrzl_lines[[5]] <- gpar(col = "red")
 
-  lines <- prFpGetLines(lines = lines,
-                        is.summary = is.summary,
-                        nc = 3)
-  expect_equivalent(length(lines),
+  hrzl_lines <- prFpGetLines(hrzl_lines = hrzl_lines,
+                             is.summary = is.summary,
+                             total_columns = 3,
+                             col = fpColors())
+  expect_equivalent(length(hrzl_lines),
                     length(is.summary) + 1)
-  expect_null(lines[[1]])
-  expect_true(inherits(lines[[2]], "gpar"))
-  expect_null(lines[[3]])
-  expect_null(lines[[4]])
-  expect_null(lines[[5]])
-}
+  expect_null(hrzl_lines[[1]])
+  expect_null(hrzl_lines[[2]])
+  expect_null(hrzl_lines[[3]])
+  expect_true(inherits(hrzl_lines[[4]], "gpar"))
+  expect_true(inherits(hrzl_lines[[5]], "gpar"))
+  expect_equivalent(hrzl_lines[[4]]$col,
+                    "red")
+  expect_equivalent(hrzl_lines[[5]]$col,
+                    "red")
+})

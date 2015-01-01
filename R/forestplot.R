@@ -20,7 +20,7 @@
 #'
 #' @section Horizontal lines:
 #'
-#' The argument \code{lines} can be either \code{TRUE} or a \code{list} with \code{\link[grid]{gpar}}
+#' The argument \code{hrzl_lines} can be either \code{TRUE} or a \code{list} with \code{\link[grid]{gpar}}
 #' elements:
 #'
 #' \itemize{
@@ -70,7 +70,7 @@
 #' @param is.summary A vector indicating by \code{TRUE}/\code{FALSE} if
 #'   the value is a summary value which means that it will have a different
 #'   font-style
-#' @param lines Add horizontal lines to graph. Can either be \code{TRUE} or a \code{list}
+#' @param hrzl_lines Add horizontal lines to graph. Can either be \code{TRUE} or a \code{list}
 #'   of \code{\link[grid]{gpar}}. See line section below for details.
 #' @param clip Lower and upper limits for clipping confidence intervals to arrows
 #' @param xlab x-axis label
@@ -140,7 +140,7 @@ forestplot <- function (labeltext,
                         mean, lower, upper,
                         align,
                         is.summary           = FALSE,
-                        lines,
+                        hrzl_lines,
                         clip                 = c(-Inf, Inf),
                         xlab                 = "",
                         zero                 = ifelse(xlog, 1, 0),
@@ -417,7 +417,7 @@ forestplot <- function (labeltext,
 
   is.summary <- rep(is.summary, length = nr)
 
-  lines <- prFpGetLines(lines = lines,
+  hrzl_lines <- prFpGetLines(hrzl_lines = hrzl_lines,
                         is.summary = is.summary,
                         total_columns = nc + 1,
                         col = col)
@@ -673,7 +673,7 @@ forestplot <- function (labeltext,
   prFpPrintXaxis(axisList=axisList,
                  col=col, lwd.zero=lwd.zero)
 
-  prFpDrawLines(lines = lines, nr = nr, colwidths = colwidths)
+  prFpDrawLines(hrzl_lines = hrzl_lines, nr = nr, colwidths = colwidths)
 
   # Output the different confidence intervals
   for (i in 1:nr) {
