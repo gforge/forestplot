@@ -35,7 +35,8 @@ forestplot(tabletext,
            col=fpColors(box="royalblue",line="darkblue", summary="royalblue"))
 
 ## ----, fig.height=4, fig.width=8, message=FALSE--------------------------
-forestplot(tabletext, lines = gpar(col="#444444"),
+forestplot(tabletext, 
+           hrzl_lines = gpar(col="#444444"),
            cochrane_from_rmeta,new_page = TRUE,
            is.summary=c(TRUE,TRUE,rep(FALSE,8),TRUE),
            clip=c(0.1,2.5), 
@@ -44,8 +45,20 @@ forestplot(tabletext, lines = gpar(col="#444444"),
 
 ## ----, fig.height=4, fig.width=8, message=FALSE--------------------------
 forestplot(tabletext, 
-           lines = list("3" = gpar(lty=2), 
-                        "11" = gpar(lwd=1, columns=1:4, col = "#000044")),
+           hrzl_lines = list("3" = gpar(lty=2), 
+                             "11" = gpar(lwd=1, columns=1:4, col = "#000044")),
+           cochrane_from_rmeta,new_page = TRUE,
+           is.summary=c(TRUE,TRUE,rep(FALSE,8),TRUE),
+           clip=c(0.1,2.5), 
+           xlog=TRUE,
+           col=fpColors(box="royalblue",line="darkblue", summary="royalblue", hrz_lines = "#444444"))
+
+## ------------------------------------------------------------------------
+forestplot(tabletext, 
+           graph.pos = 4,
+           hrzl_lines = list("3" = gpar(lty=2), 
+                             "11" = gpar(lwd=1, columns=c(1:3,5), col = "#000044"),
+                             "12" = gpar(lwd=1, lty=2, columns=c(1:3,5), col = "#000044")),
            cochrane_from_rmeta,new_page = TRUE,
            is.summary=c(TRUE,TRUE,rep(FALSE,8),TRUE),
            clip=c(0.1,2.5), 
@@ -129,16 +142,16 @@ forestplot(tabletext,
 
 ## ------------------------------------------------------------------------
 forestplot(tabletext, 
-            legend_args = fpLegend(pos = list(x=.85, y=0.25), 
-                                   gp=gpar(col="#CCCCCC", fill="#F9F9F9")),
-            legend = c("Sweden", "Denmark"),
-            fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
-            boxsize = .25, # We set the box size to better visualize the type
-            line.margin = .1, # We need to add this to avoid crowding
-            mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
-            lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
-            upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
-            clip =c(-.125, 0.075),
-            col=fpColors(box=c("blue", "darkred")),
-            xlab="EQ-5D index")
+           legend_args = fpLegend(pos = list(x=.85, y=0.25), 
+                                  gp=gpar(col="#CCCCCC", fill="#F9F9F9")),
+           legend = c("Sweden", "Denmark"),
+           fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+           boxsize = .25, # We set the box size to better visualize the type
+           line.margin = .1, # We need to add this to avoid crowding
+           mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
+           lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
+           upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
+           clip =c(-.125, 0.075),
+           col=fpColors(box=c("blue", "darkred")),
+           xlab="EQ-5D index")
 

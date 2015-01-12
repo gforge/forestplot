@@ -170,7 +170,6 @@ prFpGetConfintFnList <- function(fn, no_rows, no_cols){
 #'
 #' @param x_range The range that the values from the different confidence
 #'  interval span
-#' @param nc Number of columns
 #' @param mean The original means, either matrix or vector
 #' @return \code{list} Returns a list with axis_vp, axisGrob, labGrob, zero and clip
 #'
@@ -187,8 +186,8 @@ prFpGetGraphTicksAndClips <- function(xticks,
                                       clip,
                                       zero,
                                       x_range,
-                                      nc,
-                                      mean){
+                                      mean,
+                                      graph.pos){
 
   # Active rows are all excluding the top ones with NA in the mean value
   if (is.matrix(mean)){
@@ -234,7 +233,7 @@ prFpGetGraphTicksAndClips <- function(xticks,
       ticks <- xticks
     }
 
-    axis_vp <- viewport(layout.pos.col = 2 * nc + 1,
+    axis_vp <- viewport(layout.pos.col = graph.pos * 2 - 1,
                         layout.pos.row = from:to,
                         xscale         = x_range,
                         name           = "axis")
@@ -286,7 +285,7 @@ prFpGetGraphTicksAndClips <- function(xticks,
       ticklabels <- TRUE
     }
 
-    axis_vp <- viewport(layout.pos.col = 2 * nc + 1,
+    axis_vp <- viewport(layout.pos.col = 2 * graph.pos - 1,
                         layout.pos.row = from:to,
                         xscale         = x_range,
                         name           = "axis")
@@ -402,22 +401,27 @@ prFpPrintXaxis <- function(axisList,
 #' @param labels A list to the labels
 #' @param nc Number of columns
 #' @param nr Number of rows
+#' @inheritParams forestplot
 #' @return \code{void}
 #'
 #' @keywords internal
-prFpPrintLabels <- function(labels, nc, nr){
+prFpPrintLabels <- function(labels, nc, nr, graph.pos){
   # Output the labels
   # The column
-  for (j in 1:nc) {
+  cols <- 1:(nc + 1)
+  cols <- cols[cols !=  graph.pos]
+  cols <- cols*2-1
+  for (label_col in 1:nc) {
+    j <- cols[label_col]
     # The row
     for (i in 1:nr) {
-      if (!is.null(labels[[j]][[i]])) {
+      if (!is.null(labels[[label_col]][[i]])) {
         # The column position is 2 * j - 1 due to the column gap
         vp <- viewport(layout.pos.row = i,
-                       layout.pos.col = 2 * j - 1,
-                       name           = sprintf("Label_vp_%d_%d", i, 2*j-1))
+                       layout.pos.col = j,
+                       name           = sprintf("Label_vp_%d_%d", i, j))
         pushViewport(vp)
-        grid.draw(labels[[j]][[i]])
+        grid.draw(labels[[label_col]][[i]])
         upViewport()
       }
     }
@@ -1400,8 +1404,10 @@ prFpGetLines <- function(hrzl_lines,
 #' @param nr Number of rows
 #' @param colwidths Vector with column widths
 #' @inheritParams prFpGetLines
+#' @inheritParams forestplot
 #' @keywords internal
-prFpDrawLines <- function(hrzl_lines, nr, colwidths){
+prFpDrawLines <- function(hrzl_lines, nr, colwidths,
+                          graph.pos){
   getCSpan <- function (columns, colwidths) {
     span_cols <- c()
     col_pos <- NULL
@@ -1423,11 +1429,13 @@ prFpDrawLines <- function(hrzl_lines, nr, colwidths){
     if (!is.null(hrzl_lines[[i]])){
       span_cols <- getCSpan(hrzl_lines[[i]]$columns, colwidths)
 
-      line_vp <- viewport(layout.pos.row = i,
-                          layout.pos.col = span_cols)
-      pushViewport(line_vp)
-      grid.lines(y = unit(c(1,1), "npc"), gp = hrzl_lines[[i]])
-      popViewport()
+      for(c in span_cols){
+        line_vp <- viewport(layout.pos.row = i,
+                            layout.pos.col = c)
+        pushViewport(line_vp)
+        grid.lines(y = unit(c(1,1), "npc"), gp = hrzl_lines[[i]])
+        popViewport()
+      }
     }
 
     if (i == nr &&

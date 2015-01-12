@@ -70,6 +70,9 @@
 #' @param is.summary A vector indicating by \code{TRUE}/\code{FALSE} if
 #'   the value is a summary value which means that it will have a different
 #'   font-style
+#' @param graph.pos The position of the graph element within the table of text. The
+#'   position can be \code{1-(ncol(labeltext) + 1)}. You can also choose set the positin
+#'   to \code{"left"} or \code{"right"}.
 #' @param hrzl_lines Add horizontal lines to graph. Can either be \code{TRUE} or a \code{list}
 #'   of \code{\link[grid]{gpar}}. See line section below for details.
 #' @param clip Lower and upper limits for clipping confidence intervals to arrows
@@ -140,6 +143,7 @@ forestplot <- function (labeltext,
                         mean, lower, upper,
                         align,
                         is.summary           = FALSE,
+                        graph.pos            = "right",
                         hrzl_lines,
                         clip                 = c(-Inf, Inf),
                         xlab                 = "",
@@ -235,7 +239,6 @@ forestplot <- function (labeltext,
   if (is.null(labeltext))
     stop("You must provide labeltext either in the direct form as an argument",
          " or as rownames for the mean argument.")
-
   # Assume that lower and upper are contained within
   # the mean variable
   if (missing(lower) &&
@@ -408,19 +411,45 @@ forestplot <- function (labeltext,
     label_type = "matrix"
   }
 
+
+  if (is.character(graph.pos)){
+    graph.pos <-
+      switch(graph.pos,
+             right = nc + 1,
+             last = nc + 1,
+             left = 1,
+             first = 1,
+             stop("The graph.pos argument has an invalid text argument.",
+                  " The only values accepted are 'left'/'right' or 'first'/'last'.",
+                  " You have provided the value '", graph.pos, "'"))
+  }else if(is.numeric(graph.pos)){
+    if (!graph.pos %in% 1:(NCOL(labeltext) + 1))
+      stop("The graph position must be between 1 and ", (NCOL(labeltext) + 1), ".",
+           " You have provided the value '", graph.pos, "'.")
+  }else{
+    stop("The graph pos must either be a string consisting of 'left'/'right' (alt. 'first'/'last')",
+         ", or an integer value between 1 and ", (NCOL(labeltext) + 1))
+  }
+
   # Prepare the summary and align variables
   if (missing(align)){
-    align <- c("l", rep("r", nc - 1))
+    if (graph.pos == 1)
+      align <- rep("l", nc)
+    else if (graph.pos == nc + 1)
+      align <- c("l", rep("r", nc - 1))
+    else
+      align <- c("l",
+                 rep("c", nc - 1))
   } else {
-    align <- rep(align, length = nc)
+    align <- rep(align, length.out = nc)
   }
 
   is.summary <- rep(is.summary, length = nr)
 
   hrzl_lines <- prFpGetLines(hrzl_lines = hrzl_lines,
-                        is.summary = is.summary,
-                        total_columns = nc + 1,
-                        col = col)
+                             is.summary = is.summary,
+                             total_columns = nc + 1,
+                             col = col)
 
   labels <- prFpGetLabels(label_type = label_type,
                           labeltext = labeltext, align = align,
@@ -441,14 +470,14 @@ forestplot <- function (labeltext,
 
   # There is always at least one column so grab the widest one
   # and have that as the base for the column widths
-  colwidths <- unit.c(prFpFindWidestGrob(labels[[1]]), colgap)
+  colwidths <- unit.c(prFpFindWidestGrob(labels[[1]]))
 
   # If multiple row label columns, add the other column widths
   if (nc > 1) {
     for (i in 2:nc){
       colwidths <- unit.c(colwidths,
-                          prFpFindWidestGrob(labels[[i]]),
-                          colgap)
+                          colgap,
+                          prFpFindWidestGrob(labels[[i]]))
     }
   }
 
@@ -467,8 +496,8 @@ forestplot <- function (labeltext,
                                                            zero = zero,
                                                            xticks = xticks,
                                                            xlog = xlog),
-                                        nc = nc,
-                                        mean = org_mean)
+                                        mean = org_mean,
+                                        graph.pos = graph.pos)
   clip <- axisList$clip
 
   ###################
@@ -593,23 +622,29 @@ forestplot <- function (labeltext,
   # Normalize the widths to cover the whole #
   # width of the graph space.               #
   ###########################################
-  if (is.unit(graphwidth)){
-    # Add the base grapwh width to the total column width
-    # default is 2 inches
-    colwidths <- unit.c(colwidths, graphwidth)
-
-    npc_colwidths <- convertUnit(colwidths, "npc", valueOnly=TRUE)
-    colwidths <- unit(npc_colwidths/sum(npc_colwidths), "npc")
-  }else if(graphwidth=="auto"){
+  if(graphwidth=="auto"){
     # If graph width is not provided as a unit the autosize it to the
     # rest of the space available
-    npc_colwidths <- convertUnit(colwidths, "npc", valueOnly=TRUE)
+    npc_colwidths <- convertUnit(unit.c(colwidths, colgap), "npc", valueOnly=TRUE)
     graphwidth <- unit(1 - sum(npc_colwidths), "npc")
-    colwidths <- unit.c(colwidths, graphwidth)
-  }else{
-    stop("You have to provide graph width either as a unit() object or as auto.",
+  }else if(!is.unit(graphwidth)){
+    stop("You have to provide graph width either as a unit() object or as 'auto'.",
       " Auto sizes the graph to maximally use the available space.",
       " If you want to have exact mm width then use graphwidth = unit(34, 'mm').")
+  }
+
+  # Add the base grapwh width to the total column width
+  # default is 2 inches
+  if (graph.pos == 1){
+    colwidths <- unit.c(graphwidth, colgap, colwidths)
+  }else if (graph.pos == nc + 1){
+    colwidths <- unit.c(colwidths, colgap, graphwidth)
+  }else{
+    spl_position <- ((graph.pos-1)*2 - 1)
+    colwidths <- unit.c(colwidths[1:spl_position],
+                        colgap,
+                        graphwidth,
+                        colwidths[(spl_position + 1):length(colwidths)])
   }
 
   # Add space for the axis and the label
@@ -666,14 +701,16 @@ forestplot <- function (labeltext,
     info[is.summary] <- 1/NCOL(org_mean)
   }
 
-  prFpPrintLabels(labels=labels,
-                  nc=nc,
-                  nr=nr)
+  prFpPrintLabels(labels = labels,
+                  nc = nc,
+                  nr = nr,
+                  graph.pos = graph.pos)
 
   prFpPrintXaxis(axisList=axisList,
                  col=col, lwd.zero=lwd.zero)
 
-  prFpDrawLines(hrzl_lines = hrzl_lines, nr = nr, colwidths = colwidths)
+  prFpDrawLines(hrzl_lines = hrzl_lines, nr = nr, colwidths = colwidths,
+                graph.pos = graph.pos)
 
   # Output the different confidence intervals
   for (i in 1:nr) {
@@ -698,9 +735,9 @@ forestplot <- function (labeltext,
     clr.summary <- rep(col$summary, length.out=length(low_values))
 
     line_vp <- viewport(layout.pos.row = i,
-                        layout.pos.col = length(colwidths),
+                        layout.pos.col = graph.pos * 2 - 1,
                         xscale = axisList$x_range,
-                        name = sprintf("Line_%d_%d", i, 2 * nc + 1))
+                        name = sprintf("Line_%d_%d", i, graph.pos*2-1))
     pushViewport(line_vp)
 
     # Draw multiple confidence intervals
@@ -800,7 +837,7 @@ forestplot <- function (labeltext,
   if (!missing(legend) &&
         is.list(legend_args$pos)){
     plot_vp <- viewport(layout.pos.row = 1:nr,
-      layout.pos.col = 2 * nc + 1,
+      layout.pos.col = 2 * graph.pos - 1,
       name = "main_plot_area")
     pushViewport(plot_vp)
 

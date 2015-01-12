@@ -1,5 +1,9 @@
 NEWS for the forestplot package
 
+Changes for 1.0.2
+-----------------
+* Added ability to position the graph
+
 Changes for 1.0.1
 -----------------
 * Added ability to generate horizontal lines
