@@ -714,9 +714,6 @@ forestplot <- function (labeltext,
 
   # Output the different confidence intervals
   for (i in 1:nr) {
-    if (is.na(mean[i]))
-      next
-
     if (is.matrix(org_mean)){
       low_values <- org_lower[i,]
       mean_values <- org_mean[i,]
@@ -759,6 +756,9 @@ forestplot <- function (labeltext,
         # the one on top should always be
         # above the one below
         current_y.offset <- y.offset_base + (length(low_values)-j)*y.offset_increase
+        if (is.na(mean_values[j]))
+          next;
+
         if (is.summary[i]){
           call_list <-
             list(fn.ci_sum[[i]][[j]],
@@ -826,8 +826,8 @@ forestplot <- function (labeltext,
       }
 
       # Do the actual drawing of the object
-      eval(as.call(call_list))
-
+      if (!is.na(mean_values))
+        eval(as.call(call_list))
     }
 
     upViewport()
