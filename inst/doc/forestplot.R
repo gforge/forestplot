@@ -1,5 +1,6 @@
 ## ----, echo=FALSE--------------------------------------------------------
-knitr::opts_chunk$set(fig.width = 7, fig.height=3, dev='svg')
+knitr::opts_chunk$set(fig.width = 7, 
+                      fig.height=3, dev='png', dev.args=list(type="cairo"))
 
 ## ----, fig.height=4, fig.width=8, message=FALSE--------------------------
 library(forestplot)

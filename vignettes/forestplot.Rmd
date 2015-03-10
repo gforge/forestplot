@@ -13,35 +13,34 @@ vignette: >
 ---
 
 ```{r, echo=FALSE}
-knitr::opts_chunk$set(fig.width = 7, fig.height=3, dev='svg')
+knitr::opts_chunk$set(fig.width = 7, 
+                      fig.height=3, dev='png', dev.args=list(type="cairo"))
 ```
 
-[Forest plots](http://en.wikipedia.org/wiki/Forest_plot) date back to [1970s](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1120528/) and are most frequently seen in [meta-analysis](http://en.wikipedia.org/wiki/Meta-analysis), but are in no way restricted to these.  The `forestplot` function of this package is a development of the ['rmeta'](http://cran.r-project.org/web/packages/rmeta/index.html)-package's `forestplot` function. 
-
-Apart from generating a basic forest plot merging text with confidence lines and summary indicators, the `forestplot` has a few additional capabilities:
+[Forest plots](http://en.wikipedia.org/wiki/Forest_plot) date back to [1970s](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1120528/) and are most frequently seen in [meta-analysis](http://en.wikipedia.org/wiki/Meta-analysis), but are in no way restricted to these.  The `forestplot` package is all about providing these in R. It originated form the ['rmeta'](http://cran.r-project.org/web/packages/rmeta/index.html)-package's `forestplot` function and has a part from generating a standard forest plot, a few interesting features:
 
 * **Text:**
     + Ability to use a table of text, i.e. the text can consist of several columns if needed&Dagger;
-    + Allows expressions within your text that permit mathematical symbols, e.g. `expression(beta)`
-    + Set gpar arguments (`fontfamily`, `fontface`, `cex`, etc)  for both summary and regular rows. This can be specified down to the each cell.
-    + Draw horizontal lines
+    + Ability to use expressions within your text that permit mathematical symbols, e.g. `expression(beta)`
+    + Set the gpar arguments (`fontfamily`, `fontface`, `cex`, etc)  for both summary and regular rows. This can be specified down to the each cell.
 * **Confidence intervals:**
     + Clip confidence intervals to arrows when they exceed specified limits&Dagger;
     + Multiple confidence bands for the same row
-    + Estimate marker choice between boxes, diamonds, points
-    + Make your own custom confidence interval drawing functions
+    + Choose between different estimate markers such as boxes, diamonds, points
+    + Custom confidence interval drawing functions
 * **Legends:**
-    + Have legend on top or to the left of the plot
+    + Have a legend on top or to the left of the plot
     + Have the legend within the plot's graph section
     + Put a box around legend (sharp or rounded corners)
 * **Other:**
+    + Dividing the graph visually by adding horizontal lines
     + Choose line height to either adapt to viewport (graph) size or specify an exact height in `unit`s
     + Choose between a zero-effect line line or an area box
     + Use flexible arguments, you can choose if you want to provide mean, lower, and upper separately or within one array.
 
 &Dagger; Features present int the original `rmeta::forestplot` function.
 
-**Note:** An important difference from the original `forestplot` is that the current function interprets *xlog* as the x-axis being in log-format, i.e. you need to provide the data in the antilog/exp format.
+**Note:** An important difference from the original `forestplot` is that the current function interprets *xlog* as the x-axis being in log-format, i.e. you need to provide the *data in the antilog/exp* format.
 
 Text
 ====
@@ -102,7 +101,7 @@ forestplot(tabletext,
            col=fpColors(box="royalblue",line="darkblue", summary="royalblue"))
 ```
 
-We can also choose what lines we want:
+We can also choose what lines we want by provifing a list where the name is the line number affected, in the example below 3rd line and 11th counting the first line to be above the first row (not that there is an empty row before summary):
 
 ```{r, fig.height=4, fig.width=8, message=FALSE}
 forestplot(tabletext, 
@@ -269,4 +268,4 @@ forestplot(tabletext,
            xlab="EQ-5D index")
 ```
 
-Ok, that's it. I hope you find the additions to the original `forestplot` useful.
+Ok, that's it. I hope you find the package `forestplot` useful.

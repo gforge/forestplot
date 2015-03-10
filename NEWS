@@ -1,12 +1,9 @@
 NEWS for the forestplot package
 
-Changes for 1.0.2
+Changes for 1.1
 -----------------
-* Added ability to position the graph
 * Multiple lines can now have NA values
-
-Changes for 1.0.1
------------------
+* Added ability to position the graph
 * Added ability to generate horizontal lines
 * Minor documentation changes
 

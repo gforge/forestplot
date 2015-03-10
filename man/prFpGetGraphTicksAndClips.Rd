@@ -5,7 +5,7 @@
 \title{A helper function to forestplot}
 \usage{
 prFpGetGraphTicksAndClips(xticks, xticks.digits, xlog, xlab, lwd.xaxis, col,
-  txt_gp, clip, zero, x_range, nc, mean)
+  txt_gp, clip, zero, x_range, mean, graph.pos)
 }
 \arguments{
   \item{xticks}{Optional user-specified x-axis tick marks.
@@ -44,9 +44,12 @@ prFpGetGraphTicksAndClips(xticks, xticks.digits, xlog, xlab, lwd.xaxis, col,
   \item{x_range}{The range that the values from the
   different confidence interval span}
 
-  \item{nc}{Number of columns}
-
   \item{mean}{The original means, either matrix or vector}
+
+  \item{graph.pos}{The position of the graph element within
+  the table of text. The position can be
+  \code{1-(ncol(labeltext) + 1)}. You can also choose set
+  the positin to \code{"left"} or \code{"right"}.}
 }
 \value{
 \code{list} Returns a list with axis_vp, axisGrob, labGrob,

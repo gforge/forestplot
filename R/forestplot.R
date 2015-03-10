@@ -10,6 +10,8 @@
 #'   \item{Autosize: }{Adapts to viewport (graph) size}
 #' }
 #'
+#' See \code{vignette("forestplot")} for details.
+#'
 #' @section Multiple bands:
 #'
 #' Using multiple bands, i.e. multiple lines, per variable can be interesting when

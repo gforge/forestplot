@@ -5,12 +5,13 @@
 \title{Draws a forest plot}
 \usage{
 forestplot(labeltext, mean, lower, upper, align, is.summary = FALSE,
-  hrzl_lines, clip = c(-Inf, Inf), xlab = "", zero = ifelse(xlog, 1, 0),
-  graphwidth = "auto", lineheight = "auto", line.margin, col = fpColors(),
-  txt_gp = fpTxtGp(), xlog = FALSE, xticks, xticks.digits = 2, lwd.xaxis,
-  lwd.zero, lwd.ci, boxsize, mar = unit(rep(5, times = 4), "mm"), title,
-  legend, legend_args = fpLegend(), new_page = FALSE,
-  fn.ci_norm = fpDrawNormalCI, fn.ci_sum = fpDrawSummaryCI, fn.legend, ...)
+  graph.pos = "right", hrzl_lines, clip = c(-Inf, Inf), xlab = "",
+  zero = ifelse(xlog, 1, 0), graphwidth = "auto", lineheight = "auto",
+  line.margin, col = fpColors(), txt_gp = fpTxtGp(), xlog = FALSE, xticks,
+  xticks.digits = 2, lwd.xaxis, lwd.zero, lwd.ci, boxsize, mar = unit(rep(5,
+  times = 4), "mm"), title, legend, legend_args = fpLegend(),
+  new_page = FALSE, fn.ci_norm = fpDrawNormalCI,
+  fn.ci_sum = fpDrawSummaryCI, fn.legend, ...)
 }
 \arguments{
   \item{labeltext}{A list, matrix, vector or expression
@@ -49,6 +50,11 @@ forestplot(labeltext, mean, lower, upper, align, is.summary = FALSE,
   \item{is.summary}{A vector indicating by
   \code{TRUE}/\code{FALSE} if the value is a summary value
   which means that it will have a different font-style}
+
+  \item{graph.pos}{The position of the graph element within
+  the table of text. The position can be
+  \code{1-(ncol(labeltext) + 1)}. You can also choose set
+  the positin to \code{"left"} or \code{"right"}.}
 
   \item{hrzl_lines}{Add horizontal lines to graph. Can
   either be \code{TRUE} or a \code{list} of
@@ -162,6 +168,9 @@ as: \itemize{ \item{Adding expressions: }{Allows use of
 expressions, e.g. \code{expression(beta)}} \item{Multiple
 bands: }{Using multiple confidence bands for the same
 label} \item{Autosize: }{Adapts to viewport (graph) size} }
+}
+\details{
+See \code{vignette("forestplot")} for details.
 }
 \section{Multiple bands}{
   Using multiple bands, i.e. multiple lines, per variable
