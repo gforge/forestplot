@@ -19,6 +19,51 @@
 #'
 #' @keywords internal
 prFpGetConfintFnList <- function(fn, no_rows, no_cols){
+  ret <- prPopulateList(fn, no_rows = no_rows, no_cols = no_cols)
+
+  makeCalleable <- function(value){
+    if (is.function(value)){
+      return(value)
+    }
+
+    if (is.character(value)){
+      return(get(value))
+    }
+
+    if (!is.list(value)){
+      stop("Cannot handle non-list/character/function elements in this function")
+    }
+
+    for (i in 1:length(value)){
+      value[[i]] <- makeCalleable(value[[i]])
+    }
+    return(value)
+  }
+  ret <- makeCalleable(ret)
+
+  return(ret)
+}
+
+#' Populate a list corresponding to matrix specs
+#'
+#' This function helps the \code{\link{forestplot}}
+#' to deal with different arguments for the
+#' confidence intervals.
+#'
+#' @param elmnt The element item/list/matrix. If a list it
+#'  should be in the format [[row]][[col]], the function
+#'  tries to handle this but in cases where the columns
+#'  and rows are the same it will not know what is a column
+#'  and what is a row.
+#' @param no_rows Number of rows
+#' @param no_cols Number of columns
+#' @return \code{list} The function returns a list that has
+#'  the format [[row]][[col]] where each element contains the
+#'  corresponding element
+#'
+#'
+#' @keywords internal
+prPopulateList <- function(elmnt, no_rows, no_cols){
   # Return a list that has
   # a two dim structure of [[row]][[col]]
   # if you have a matrix provided but if you
@@ -26,81 +71,82 @@ prFpGetConfintFnList <- function(fn, no_rows, no_cols){
   # get the [[row]] by default
   # If the fn is a character or a matrix then
   ret <- list()
-  if (is.function(fn)){
+  if (is.function(elmnt)){
     if (no_cols == 1){
       for (i in 1:no_rows){
-        ret[[i]] <- fn
+        ret[[i]] <- elmnt
       }
     }else{
       for (i in 1:no_rows){
         ret[[i]] <- list()
         for (ii in 1:no_cols){
-          ret[[i]][[ii]] <- fn
+          ret[[i]][[ii]] <- elmnt
         }
       }
     }
-  }else if (typeof(fn) == "character"){
-    if (is.matrix(fn)){
-      if (ncol(fn) != no_cols)
+  }else if (is.character(elmnt) ||
+            is.numeric(elmnt)){
+    if (is.matrix(elmnt)){
+      if (ncol(elmnt) != no_cols)
         stop("Your columns do not add upp for your",
              " confidence interval funcitons, ",
-             ncol(fn), " != ", no_cols)
-      if (nrow(fn) != no_rows)
+             ncol(elmnt), " != ", no_cols)
+      if (nrow(elmnt) != no_rows)
         stop("Your rows do not add upp for your",
              " confidence interval funcitons, ",
-             nrow(fn), " != ", no_rows)
+             nrow(elmnt), " != ", no_rows)
 
-    }else if (length(fn) %in% c(1, no_rows)){
-      fn <- matrix(fn, nrow=no_rows, ncol=no_cols)
-    }else if (length(fn) == no_cols){
-      fn <- matrix(fn, nrow=no_rows, ncol=no_cols, byrow=TRUE)
+    }else if (length(elmnt) %in% c(1, no_rows)){
+      elmnt <- matrix(elmnt, nrow=no_rows, ncol=no_cols)
+    }else if (length(elmnt) == no_cols){
+      elmnt <- matrix(elmnt, nrow=no_rows, ncol=no_cols, byrow=TRUE)
     }else{
       stop("You have not provided the expected",
-           " number of funciton names: ",
-           length(fn), " is not 1, ", no_cols, ", or ", no_rows)
+           " number of elements: ",
+           length(elmnt), " is not 1, ", no_cols, " (columns), or ", no_rows, " (rows)")
 
     }
 
     # Convert into function format
     for (i in 1:no_rows){
       if (no_cols == 1){
-        ret[[i]] <- get(fn[i, 1])
+        ret[[i]] <- elmnt[i, 1]
       }else{
         ret[[i]] <- list()
         for (ii in 1:no_cols){
-          ## Go by row for the fn
-          ret[[i]][[ii]] <- get(fn[i, ii])
+          ## Go by row for the elmnt
+          ret[[i]][[ii]] <- elmnt[i, ii]
         }
       }
     }
 
-  }else if (is.list(fn)){
+  }else if (is.list(elmnt)){
     if (no_cols == 1){
       # Actually correct if the lengths add up
-      if (length(fn) != no_rows)
+      if (length(elmnt) != no_rows)
         stop("You do not have the same number of ",
              "confidence interval functions as you have ",
-             "number of rows: ", length(fn), "!=", no_rows,
+             "number of rows: ", length(elmnt), "!=", no_rows,
              " You should provide the same number.")
-      ret <- fn
+      ret <- elmnt
     }else{
-      # Populate a new fn list
-      if (length(fn) == no_rows){
+      # Populate a new elmnt list
+      if (length(elmnt) == no_rows){
         # One dim-list provided
         # now generate a two-dim list
-        if (!is.list(fn[[1]])){
+        if (!is.list(elmnt[[1]])){
           for (i in 1:no_rows){
             ret[[i]] <- list()
             for (ii in 1:no_cols){
-              ## Go by row for the fn
-              ret[[i]][[ii]] <- fn[[i]]
+              ## Go by row for the elmnt
+              ret[[i]][[ii]] <- elmnt[[i]]
             }
           }
         }else{
           # Verify that the list structure
           # is provided as a valid matrix
           # with the correct size
-          n <- sapply(fn, length)
+          n <- sapply(elmnt, length)
           if (any(n != no_cols)){
             stop("You need to provide a 'square' list (of dim. n x m)",
                  " of the same dimension as the number of lines",
@@ -111,23 +157,23 @@ prFpGetConfintFnList <- function(fn, no_rows, no_cols){
                  " equal to ", no_cols)
           }
 
-          ret <- fn
+          ret <- elmnt
         }
-      }else if (length(fn) == no_cols){
+      }else if (length(elmnt) == no_cols){
         # One dim-list provided
         # now generate a two-dim list
-        if (!is.list(fn[[1]])){
+        if (!is.list(elmnt[[1]])){
           for (i in 1:no_rows){
             ret[[i]] <- list()
             for (ii in 1:no_cols){
-              ## Go by row for the fn
-              ret[[i]][[ii]] <- fn[[ii]]
+              ## Go by row for the elmnt
+              ret[[i]][[ii]] <- elmnt[[ii]]
             }
           }
         }else{
           # Verify that the list structure
           # is provided as a matrix
-          n <- sapply(fn, length)
+          n <- sapply(elmnt, length)
           if (any(n != no_rows)){
             stop("You need to provide a 'square' list (of dim. n x m)",
                  " of the same dimension as the number of lines",
@@ -142,14 +188,14 @@ prFpGetConfintFnList <- function(fn, no_rows, no_cols){
           for (i in 1:no_rows){
             ret[[i]] <- list()
             for (ii in 1:no_cols){
-              ## Go by row for the fn
-              ret[[i]][[ii]] <- fn[[ii]][[i]]
+              ## Go by row for the elmnt
+              ret[[i]][[ii]] <- elmnt[[ii]][[i]]
             }
           }
         }
       }else{
         stop("The number of provided confidence intervals",
-             " functions, ", length(fn), ", ",
+             " functions, ", length(elmnt), ", ",
              " does not seem to match up with either",
              " number of rows, ", no_rows,
              " or number of cols, ", no_cols)
@@ -158,7 +204,7 @@ prFpGetConfintFnList <- function(fn, no_rows, no_cols){
   }else{
     stop("You have provided something else than",
          " a function, list or function name: ",
-         class(fn))
+         class(elmnt))
   }
 
   return(ret)

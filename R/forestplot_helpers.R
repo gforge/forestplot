@@ -29,7 +29,14 @@
 #'  the y-direction.
 #' @param clr.line The color of the line.
 #' @param clr.marker The color of the estimate marker
-#' @param lwd Line width
+#' @param lwd Line width, see \code{\link[grid]{gpar}}
+#' @param lty Line type, see \code{\link[grid]{gpar}}
+#' @param vertices Set this to TRUE if you want the ends of the confidence
+#'  intervals to be shaped as a T. This is set default to TRUE if you have
+#'  any other line type than 1 since there is a risk of a dash occurring
+#'  at the very end, i.e. showing incorrectly narrow confidence interval.
+#' @param vertices.height The height hoft the vertices. Defaults to npc units
+#'  corresponding to 10\% of the row height.
 #' @param ... Allows additional parameters for sibling functions
 #' @return \code{void} The function outputs the line using grid compatible
 #'  functions and does not return anything.
@@ -46,6 +53,9 @@ fpDrawNormalCI <- function(lower_limit,
                            y.offset = 0.5,
                            clr.line, clr.marker,
                            lwd,
+                           lty = 1,
+                           vertices,
+                           vertices.height = .1,
                            ...) {
 
   # Funciton for drawing the confidence line
@@ -53,7 +63,10 @@ fpDrawNormalCI <- function(lower_limit,
                upper_limit = upper_limit,
                clr.line = clr.line,
                lwd = lwd,
-               y.offset = y.offset)
+               lty = lty,
+               y.offset = y.offset,
+               vertices = vertices,
+               vertices.height = vertices.height)
 
   # If the box is outside the plot the it shouldn't be plotted
   box <- convertX(unit(estimate, "native"), "npc", valueOnly = TRUE)
@@ -86,11 +99,25 @@ fpDrawNormalCI <- function(lower_limit,
 #' @inheritParams fpDrawNormalCI
 #' @keywords internal
 #' @return \code{void}
-prFpDrawLine <- function (lower_limit, upper_limit, clr.line, lwd, y.offset) {
+prFpDrawLine <- function (lower_limit, upper_limit, clr.line, lwd, lty, y.offset,
+                          vertices, vertices.height = .1) {
   # Draw the lines if the lower limit is
   # actually below the upper limit
   if (lower_limit >= upper_limit)
     return()
+
+  if (any(vertices.height < 0))
+    stop("The vertices height cannot be negative")
+
+  if (inherits(vertices.height, "unit")){
+    vertices.height <- convertY(vertices.height,
+                                unitTo = "npc",
+                                valueOnly = TRUE)
+  }
+
+  if (!inherits(y.offset, "unit")){
+    y.offset <- unit(y.offset, "npc")
+  }
 
   # If the limit is outside the 0-1 range in npc-units
   # then that part is outside the box and it should
@@ -105,12 +132,15 @@ prFpDrawLine <- function (lower_limit, upper_limit, clr.line, lwd, y.offset) {
              "npc",
              valueOnly = TRUE) < 0
 
-  gp_list <- list(col = clr.line)
+  gp_list <- list(col = clr.line,
+                  fill = clr.line,
+                  lty = lty)
   if (!missing(lwd))
     gp_list$lwd <- lwd
 
   grid_line_args <- list(y = y.offset,
                          gp = do.call(gpar, gp_list))
+  verticals = "none"
   if (clipupper || cliplower) {
     # A version where arrows are added to the part outside
     # the limits of the graph
@@ -118,22 +148,93 @@ prFpDrawLine <- function (lower_limit, upper_limit, clr.line, lwd, y.offset) {
     lims <- unit(c(0, 1), c("npc", "npc"))
     if (!clipupper) {
       ends <- "first"
+      verticals <- "right"
       lims <- unit(c(0, upper_limit), c("npc", "native"))
     }
     if (!cliplower) {
       ends <- "last"
+      verticals <- "left"
       lims <- unit(c(lower_limit, 1), c("native", "npc"))
     }
     grid_line_args$x <- lims
-    grid_line_args$arrow <-
-      arrow(ends = ends,
-            length = unit(0.05, "inches"))
   } else {
+    verticals <- "both"
     grid_line_args$x <- unit(c(lower_limit, upper_limit), "native")
   }
 
   do.call(grid.lines, grid_line_args)
+
+  # The arrows should not have dashed line type
+  # and it seems that the simples solution is just to do
+  # an arrow of my own through the line-call
+  if (clipupper || cliplower){
+    # Make arrow the same height the intended vertices
+    # Old code: unit(0.05, "inches")
+    radians = 30 * pi/180
+    vertices.height_mm = convertY(unit(vertices.height, "npc"),
+                                  "mm",
+                                  valueOnly = TRUE)
+    arrow_length = max(abs(vertices.height_mm)) / tan(radians)
+    y_mm <- convertY(grid_line_args$y[1], "mm", valueOnly = TRUE)
+    arrow_args <-
+        list(y =
+               unit(c(y_mm + vertices.height_mm,
+                      y_mm,
+                      y_mm - vertices.height_mm),
+                    "mm"))
+    gp_list$lty = 1
+    arrow_args$gp = do.call(gpar, gp_list)
+
+    if (clipupper){
+      x <- max(grid_line_args$x)
+      x <- unit.c(x - unit(arrow_length, "mm"),
+                  x,
+                  x - unit(arrow_length, "mm"))
+      arrow_args$x = x
+      do.call(grid.lines, arrow_args)
+    }
+
+    if (cliplower){
+      x <- min(grid_line_args$x)
+      x <- unit.c(x + unit(arrow_length, "mm"),
+                  x,
+                  x + unit(arrow_length, "mm"))
+      arrow_args$x <- x
+      do.call(grid.lines, arrow_args)
+    }
+  }
+
+  if (missing(vertices)){
+    if (lty != 1)
+      vertices = TRUE
+    else
+      vertices = FALSE
+  }
+
+  if (vertices && verticals != "none"){
+
+    if (length(vertices.height) == 1){
+      vertices.height <- c(vertices.height, - vertices.height)
+    }else{
+      vertices.height <- range(vertices.height)
+    }
+    y <- convertY(grid_line_args$y[1], "npc", valueOnly = TRUE)
+    y_spread <- y + vertices.height
+    gp_list$lty = 1
+    if (verticals != "right"){
+      grid.lines(x = rep(grid_line_args$x[1], 2),
+                 y = y_spread,
+                 gp = do.call(gpar, gp_list))
+    }
+    if (verticals != "left"){
+      grid.lines(x = rep(grid_line_args$x[2], 2),
+                 y = y_spread,
+                 gp = do.call(gpar, gp_list))
+    }
+
+  }
 }
+
 
 #' @rdname fpDrawCI
 #' @export
@@ -144,13 +245,19 @@ fpDrawDiamondCI <- function(lower_limit,
                             y.offset = 0.5,
                             clr.line, clr.marker,
                             lwd,
+                            lty = 1,
+                            vertices,
+                            vertices.height = .1,
                             ...) {
   # Funciton for drawing the confidence line
   prFpDrawLine(lower_limit = lower_limit,
                upper_limit = upper_limit,
                clr.line = clr.line,
                lwd = lwd,
-               y.offset = y.offset)
+               lty = lty,
+               y.offset = y.offset,
+               vertices = vertices,
+               vertices.height = vertices.height)
 
   # If the box is outside the plot the it shouldn't be plotted
   box <- convertX(unit(estimate, "native"), "npc", valueOnly = TRUE)
@@ -183,13 +290,19 @@ fpDrawCircleCI <- function(lower_limit,
                            y.offset = 0.5,
                            clr.line, clr.marker,
                            lwd,
+                           lty = 1,
+                           vertices,
+                           vertices.height = .1,
                            ...) {
   # Funciton for drawing the confidence line
   prFpDrawLine(lower_limit = lower_limit,
                upper_limit = upper_limit,
                clr.line = clr.line,
                lwd = lwd,
-               y.offset = y.offset)
+               lty = lty,
+               y.offset = y.offset,
+               vertices = vertices,
+               vertices.height = vertices.height)
 
   # If the box is outside the plot the it shouldn't be plotted
   box <- convertX(unit(estimate, "native"), "npc", valueOnly = TRUE)
@@ -222,6 +335,9 @@ fpDrawPointCI <- function(lower_limit,
                           y.offset = 0.5,
                           clr.line, clr.marker,
                           lwd,
+                          lty = 1,
+                          vertices,
+                          vertices.height = .1,
                           pch = 1,
                           ...) {
   # Funciton for drawing the confidence line
@@ -229,7 +345,10 @@ fpDrawPointCI <- function(lower_limit,
                upper_limit = upper_limit,
                clr.line = clr.line,
                lwd = lwd,
-               y.offset = y.offset)
+               lty = lty,
+               y.offset = y.offset,
+               vertices = vertices,
+               vertices.height = vertices.height)
 
   # If the box is outside the plot the it shouldn't be plotted
   box <- convertX(unit(estimate, "native"), "npc", valueOnly = TRUE)
@@ -255,7 +374,8 @@ fpDrawPointCI <- function(lower_limit,
 #' @param col The color of the summary diamond.
 #' @export
 fpDrawSummaryCI <- function(lower_limit, estimate, upper_limit,
-                            size, col, y.offset = 0.5, ...) {
+                            size, col, y.offset = 0.5,
+                            ...) {
   # Convert size into 'npc' value only if
   # it is provided as a unit() object
   size <- ifelse(is.unit(size),
@@ -277,7 +397,7 @@ fpDrawSummaryCI <- function(lower_limit, estimate, upper_limit,
 #' If you have several values per row in a forestplot you can set
 #' a color to a vector where the first value represents the first
 #' line/box, second the second line/box etc. The vectors are only
-#' valid for the \code{box} & \code{lines} options.
+#' valid for the \code{box} \& \code{lines} options.
 #'
 #' This function is a copy of the \code{\link[rmeta]{meta.colors}}
 #' function in the \pkg{rmeta} package.

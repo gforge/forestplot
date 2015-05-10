@@ -30,6 +30,14 @@ lower_limit for details.}
 
 \item{y.offset}{If you have multiple lines they need an offset in
 the y-direction.}
+
+\item{vertices}{Set this to TRUE if you want the ends of the confidence
+intervals to be shaped as a T. This is set default to TRUE if you have
+any other line type than 1 since there is a risk of a dash occurring
+at the very end, i.e. showing incorrectly narrow confidence interval.}
+
+\item{vertices.height}{The height hoft the vertices. Defaults to npc units
+corresponding to 10\% of the row height.}
 }
 \value{
 \code{void}

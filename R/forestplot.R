@@ -59,7 +59,7 @@
 #'  that column is a empty column that adds some space. \emph{Note:} If you do not
 #'  provide the mean/lower/upper arguments the function expects the label text
 #'  to be a matrix containing the labeltext in the rownames and then columns for
-#'  mean, lower, and upper
+#'  mean, lower, and upper.
 #' @param mean A vector or a matrix with the averages. You can also provide a 2D/3D
 #'  matrix that is automatically converted to the lower/upper parameters. The values
 #'  should be in exponentiated form if they follow this interpretation, e.g. use
@@ -67,7 +67,7 @@
 #' @param lower The lower bound of the confidence interval for the forestplot, needs
 #'   to be the same format as the mean, i.e. matrix/vector of equal columns & length
 #' @param upper The upper bound of the confidence interval for the forestplot, needs
-#'   to be the same format as the mean, i.e. matrix/vector of equal columns & length
+#'   to be the same format as the mean, i.e. matrix/vector of equal columns \& length
 #' @param align Vector giving alignment (l,r,c) for the table columns
 #' @param is.summary A vector indicating by \code{TRUE}/\code{FALSE} if
 #'   the value is a summary value which means that it will have a different
@@ -91,7 +91,7 @@
 #'   line height, then you set this variable to a certain height, note this should
 #'   be provided as a \code{\link[grid]{unit}} object. A good option
 #'   is to set the line height to \code{unit(2, "cm")}. A third option
-#'   is to set line height to "lines" and then you get 50 % more than what the
+#'   is to set line height to "lines" and then you get 50 \% more than what the
 #'   text height is as your line height
 #' @param line.margin Set the margin between rows, provided in numeric or \code{\link[grid]{unit}} formar.
 #'   When having multiple confidence lines per row setting the correct
@@ -110,9 +110,17 @@
 #'   the defaults, numeric(0) to omit the x-axis
 #' @param xticks.digits The number of digits to allow in the x-axis if this
 #'   is created by default
-#' @param lwd.xaxis lwd for the xaxis
-#' @param lwd.zero  lwd for the vertical line that gives the no-effect line
-#' @param lwd.ci lwd for the confidence bands
+#' @param lwd.xaxis lwd for the xaxis, see \code{\link[grid]{gpar}}
+#' @param lwd.zero  lwd for the vertical line that gives the no-effect line, see \code{\link[grid]{gpar}}
+#' @param lwd.ci lwd for the confidence bands, see \code{\link[grid]{gpar}}
+#' @param lty.ci lty for the confidence bands, see \code{\link[grid]{gpar}}
+#' @param ci.vertices Set this to TRUE if you want the ends of the confidence
+#'  intervals to be shaped as a T. This is set default to TRUE if you have
+#'  any other line type than 1 since there is a risk of a dash occurring
+#'  at the very end, i.e. showing incorrectly narrow confidence interval.
+#' @param ci.vertices.height The height hoft the vertices. Defaults to npc units
+#'  corresponding to 10\% of the row height.
+#'  \emph{Note that the arrows correspond to the vertices heights.}
 #' @param boxsize Override the default box size based on precision
 #' @param mar A numerical vector of the form \code{c(bottom, left, top, right)} of
 #'   the type \code{\link[grid]{unit}}
@@ -161,6 +169,9 @@ forestplot <- function (labeltext,
                         lwd.xaxis,
                         lwd.zero,
                         lwd.ci,
+                        lty.ci = 1,
+                        ci.vertices,
+                        ci.vertices.height = .1,
                         boxsize,
                         mar                  = unit(rep(5, times=4), "mm"),
                         title,
@@ -281,6 +292,10 @@ forestplot <- function (labeltext,
     prFpGetConfintFnList(fn = fn.ci_sum,
                          no_rows = NROW(mean),
                          no_cols = NCOL(mean))
+
+  lty.ci <- prPopulateList(lty.ci,
+                           no_rows = NROW(mean),
+                           no_cols = NCOL(mean))
 
   if (!is.unit(lineheight) && !lineheight %in% c("auto", "lines"))
     stop("The argument lineheight must either be of type unit or set to 'auto',",
@@ -768,8 +783,8 @@ forestplot <- function (labeltext,
                  estimate=mean_values[j],
                  upper_limit=up_values[j],
                  size=info_values[j],
-                 col = clr.summary[j],
-                 y.offset = current_y.offset)
+                 y.offset = current_y.offset,
+                 col = clr.summary[j])
         }else{
           call_list <-
             list(fn.ci_norm[[i]][[j]],
@@ -779,10 +794,17 @@ forestplot <- function (labeltext,
                  size=info_values[j],
                  y.offset = current_y.offset,
                  clr.line = clr.line[j],
-                 clr.marker = clr.marker[j])
+                 clr.marker = clr.marker[j],
+                 lty = lty.ci[[i]][[j]],
+                 vertices.height = ci.vertices.height)
+
+          if (!missing(ci.vertices))
+            call_list$vertices = ci.vertices;
+
           if (!missing(lwd.ci))
             call_list$lwd <- lwd.ci
         }
+
 
         # Add additional arguments that are passed on
         # from the original parameters
@@ -813,7 +835,13 @@ forestplot <- function (labeltext,
                upper_limit=up_values,
                size=info_values,
                clr.line = clr.line,
-               clr.marker = clr.marker)
+               clr.marker = clr.marker,
+               lty = lty.ci[[i]],
+               vertices.height = ci.vertices.height)
+
+        if (!missing(ci.vertices))
+          call_list$vertices = ci.vertices;
+
         if (!missing(lwd.ci))
           call_list$lwd <- lwd.ci
       }

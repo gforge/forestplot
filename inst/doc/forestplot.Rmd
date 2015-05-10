@@ -143,7 +143,7 @@ clrs <- fpColors(box="royalblue",line="darkblue", summary="royalblue")
 tabletext <- 
   list(c(NA, rownames(HRQoL$Sweden)),
        append(list(expression(beta)), sprintf("%.2f", HRQoL$Sweden[,"coef"])))
-forestplot(tabletext, new_page = TRUE,
+forestplot(tabletext, 
            rbind(rep(NA, 3), 
                  HRQoL$Sweden),
            col=clrs,
@@ -180,7 +180,7 @@ forestplot(tabletext,
 ```
 
 Confidence intervals
---------------------
+====================
 
 Clipping the interval is convenient for uncertain estimates in order to retain the resolution for those of more interest. The clipping simply adds an arrow to the confidence interval, see the bottom estimate below:
 
@@ -230,6 +230,26 @@ forestplot(tabletext,
 ```
 
 The confidence interval/box drawing functions are fully customizeable. You can write your own function that accepts the parameters: lower_limit, estimate, upper_limit, size, y.offset, clr.line, clr.marker, and lwd.
+
+Choosing line type
+------------------
+
+You can furthermore choose between all available line types through the *lty.ci* that can also be specified element specific.
+
+```{r}
+forestplot(tabletext, 
+            fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+            boxsize = .25, # We set the box size to better visualize the type
+            line.margin = .1, # We need to add this to avoid crowding
+            mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
+            lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
+            upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
+            clip =c(-.125, 0.075),
+            lty.ci = c(1, 2),
+            col=fpColors(box=c("blue", "darkred")),
+            xlab="EQ-5D index")
+```
+
 
 Legends
 =======

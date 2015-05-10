@@ -101,8 +101,13 @@ is created by default}
 
 \item{lty.ci}{lty for the confidence bands, see \code{\link[grid]{gpar}}}
 
+\item{ci.vertices}{Set this to TRUE if you want the ends of the confidence
+intervals to be shaped as a T. This is set default to TRUE if you have
+any other line type than 1 since there is a risk of a dash occurring
+at the very end, i.e. showing incorrectly narrow confidence interval.}
+
 \item{ci.vertices.height}{The height hoft the vertices. Defaults to npc units
-corresponding to 10% of the row height.
+corresponding to 10\% of the row height.
 \emph{Note that the arrows correspond to the vertices heights.}}
 
 \item{boxsize}{Override the default box size based on precision}
@@ -134,11 +139,6 @@ in the \code{mean} argument}
 
 \item{...}{Passed on to the \code{fn.ci_norm} and
  \code{fn.ci_sum} arguments}
-
-\item{vertices}{Set this to TRUE if you want the ends of the confidence
-intervals to be shaped as a T. This is set default to TRUE if you have
-any other line type than 1 since there is a risk of a dash occurring
-at the very end, i.e. showing incorrectly narrow confidence interval.}
 }
 \description{
 The \emph{forestplot} is based on the \pkg{rmeta}-package`s
