@@ -7,15 +7,17 @@
 prFpGetLines(hrzl_lines, is.summary, total_columns, col)
 }
 \arguments{
-  \item{hrzl_lines}{Add horizontal lines to graph.
-  Can either be \code{TRUE} or a \code{list} of
-  \code{\link[grid]{gpar}}. See line section below for
-  details.} \item{is.summary}{A vector indicating by
-  \code{TRUE}/\code{FALSE} if the value is a summary
-  value which means that it will have a different font-
-  style} \item{total_columns}{Total number of columns}
-  \item{col}{Set the colors for all the elements. See
-  \code{\link{fpColors}} for details}
+\item{hrzl_lines}{Add horizontal lines to graph. Can either be \code{TRUE} or a \code{list}
+of \code{\link[grid]{gpar}}. See line section below for details.}
+
+\item{is.summary}{A vector indicating by \code{TRUE}/\code{FALSE} if
+the value is a summary value which means that it will have a different
+font-style}
+
+\item{total_columns}{Total number of columns}
+
+\item{col}{Set the colors for all the elements. See \code{\link{fpColors}} for
+details}
 }
 \description{
 Prepares the hrzl_lines for the plot

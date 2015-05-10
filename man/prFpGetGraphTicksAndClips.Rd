@@ -8,37 +8,45 @@ prFpGetGraphTicksAndClips(xticks, xticks.digits, xlog, xlab, lwd.xaxis, col,
   txt_gp, clip, zero, x_range, mean, graph.pos)
 }
 \arguments{
-  \item{xticks}{Optional user-specified x-axis tick marks.
-  Specify NULL to use the defaults, numeric(0) to omit
-  the x-axis} \item{xticks.digits}{The number of digits
-  to allow in the x-axis if this is created by default}
-  \item{xlog}{If TRUE, x-axis tick marks are to follow
-  a logarithmic scale, e.g. for logistic regressoin
-  (OR), survival estimates (HR), poisson regression etc.
-  \emph{Note:} This is an intentional break with the
-  original \code{\link[rmeta]{forestplot}} function as
-  I've found that exponentiated ticks/clips/zero effect
-  are more difficult to for non-statisticians and there are
-  sometimes issues with rounding the tick marks properly.}
-  \item{xlab}{x-axis label} \item{lwd.xaxis}{lwd for the
-  xaxis} \item{col}{Set the colors for all the elements. See
-  \code{\link{fpColors}} for details} \item{txt_gp}{Set the
-  fonts etc for all text elements. See \code{\link{fpTxtGp}}
-  for details} \item{clip}{Lower and upper limits for
-  clipping confidence intervals to arrows} \item{zero}{x-
-  axis coordinate for zero line. If you provide a vector
-  of length 2 it will print a rectangle instead of just
-  a line} \item{x_range}{The range that the values from
-  the different confidence interval span} \item{mean}{The
-  original means, either matrix or vector} \item{graph.pos}
-  {The position of the graph element within the table of
-  text. The position can be \code{1-(ncol(labeltext) + 1)}.
-  You can also choose set the positin to \code{"left"} or
-  \code{"right"}.}
+\item{xticks}{Optional user-specified x-axis tick marks. Specify NULL to use
+the defaults, numeric(0) to omit the x-axis}
+
+\item{xticks.digits}{The number of digits to allow in the x-axis if this
+is created by default}
+
+\item{xlog}{If TRUE, x-axis tick marks are to follow a logarithmic scale, e.g. for
+logistic regressoin (OR), survival estimates (HR), poisson regression etc.
+\emph{Note:} This is an intentional break with the original \code{\link[rmeta]{forestplot}}
+function as I've found that exponentiated ticks/clips/zero effect are more
+difficult to for non-statisticians and there are sometimes issues with rounding
+the tick marks properly.}
+
+\item{xlab}{x-axis label}
+
+\item{lwd.xaxis}{lwd for the xaxis, see \code{\link[grid]{gpar}}}
+
+\item{col}{Set the colors for all the elements. See \code{\link{fpColors}} for
+details}
+
+\item{txt_gp}{Set the fonts etc for all text elements. See \code{\link{fpTxtGp}}
+for details}
+
+\item{clip}{Lower and upper limits for clipping confidence intervals to arrows}
+
+\item{zero}{x-axis coordinate for zero line. If you provide a vector of length 2 it
+will print a rectangle instead of just a line}
+
+\item{x_range}{The range that the values from the different confidence
+interval span}
+
+\item{mean}{The original means, either matrix or vector}
+
+\item{graph.pos}{The position of the graph element within the table of text. The
+position can be \code{1-(ncol(labeltext) + 1)}. You can also choose set the positin
+to \code{"left"} or \code{"right"}.}
 }
 \value{
-\code{list} Returns a list with axis_vp, axisGrob, labGrob,
-zero and clip
+\code{list} Returns a list with axis_vp, axisGrob, labGrob, zero and clip
 }
 \description{
 Gets the x-label and zero-bar details

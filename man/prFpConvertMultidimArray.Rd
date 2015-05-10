@@ -7,7 +7,7 @@
 prFpConvertMultidimArray(x)
 }
 \arguments{
-  \item{x}{The array to convert}
+\item{x}{The array to convert}
 }
 \value{
 \code{list(mean = mean, lower = lower, upper = upper)}

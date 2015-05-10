@@ -7,15 +7,17 @@
 prListRep(x, length.out)
 }
 \arguments{
-  \item{x}{The list to be repeated} \item{length.out}{The
-  length of the resulting list}
+\item{x}{The list to be repeated}
+
+\item{length.out}{The length of the resulting list}
 }
 \value{
 \code{list}
 }
 \description{
-The rep() doesn't work with length.out when lists are
-supposed to be their own elements
+The rep() doesn't work with length.out
+when lists are supposed to be their own
+elements
 }
 \keyword{internal}
 

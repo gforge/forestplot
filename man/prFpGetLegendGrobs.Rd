@@ -7,17 +7,19 @@
 prFpGetLegendGrobs(legend, txt_gp, title)
 }
 \arguments{
-  \item{legend}{Legend corresponding to the number of bars}
-  \item{txt_gp}{Set the fonts etc for all text elements. See
-  \code{\link{fpTxtGp}} for details} \item{title}{The title
-  of the plot if any}
+\item{legend}{Legend corresponding to the number of bars}
+
+\item{txt_gp}{Set the fonts etc for all text elements. See \code{\link{fpTxtGp}}
+for details}
+
+\item{title}{The title of the plot if any}
 }
 \value{
-\code{list} A "Legend" class that derives from a list
-with all the different legends. The list also contains
-attributes such as height, width, max_height, max_width,
-line_height_and_spacing. The title of the legend is saved
-inside \code{attr("title")}
+\code{list} A "Legend" class that derives from a
+ list with all the different legends. The list also contains
+ attributes such as height, width, max_height,
+ max_width, line_height_and_spacing. The title of the
+ legend is saved inside \code{attr("title")}
 }
 \description{
 Gets the forestplot legend grobs

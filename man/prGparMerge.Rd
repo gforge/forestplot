@@ -7,15 +7,15 @@
 prGparMerge(l1, l2)
 }
 \arguments{
-  \item{l1}{A \code{\link[grid]{gpar}} element} \item{l2}{A
-  \code{\link[grid]{gpar}} element}
+\item{l1}{A \code{\link[grid]{gpar}} element}
+
+\item{l2}{A \code{\link[grid]{gpar}} element}
 }
 \value{
 Returns a \code{\link[grid]{gpar}} element
 }
 \description{
-The second elements overrides any conflicting elements
-within the first
+The second elements overrides any conflicting elements within the first
 }
 \keyword{internal}
 

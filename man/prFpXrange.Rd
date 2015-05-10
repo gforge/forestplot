@@ -7,35 +7,35 @@
 prFpXrange(upper, lower, clip, zero, xticks, xlog)
 }
 \arguments{
-  \item{upper}{The upper bound of the confidence interval
-  for the forestplot, needs to be the same format as the
-  mean, i.e. matrix/vector of equal columns & length}
-  \item{lower}{The lower bound of the confidence interval
-  for the forestplot, needs to be the same format as the
-  mean, i.e. matrix/vector of equal columns & length}
-  \item{clip}{Lower and upper limits for clipping confidence
-  intervals to arrows} \item{zero}{x-axis coordinate for
-  zero line. If you provide a vector of length 2 it will
-  print a rectangle instead of just a line} \item{xticks}
-  {Optional user-specified x-axis tick marks. Specify
-  NULL to use the defaults, numeric(0) to omit the x-
-  axis} \item{xlog}{If TRUE, x-axis tick marks are to
-  follow a logarithmic scale, e.g. for logistic regressoin
-  (OR), survival estimates (HR), poisson regression etc.
-  \emph{Note:} This is an intentional break with the
-  original \code{\link[rmeta]{forestplot}} function as I've
-  found that exponentiated ticks/clips/zero effect are more
-  difficult to for non-statisticians and there are sometimes
-  issues with rounding the tick marks properly.}
+\item{upper}{The upper bound of the confidence interval for the forestplot, needs
+to be the same format as the mean, i.e. matrix/vector of equal columns \& length}
+
+\item{lower}{The lower bound of the confidence interval for the forestplot, needs
+to be the same format as the mean, i.e. matrix/vector of equal columns & length}
+
+\item{clip}{Lower and upper limits for clipping confidence intervals to arrows}
+
+\item{zero}{x-axis coordinate for zero line. If you provide a vector of length 2 it
+will print a rectangle instead of just a line}
+
+\item{xticks}{Optional user-specified x-axis tick marks. Specify NULL to use
+the defaults, numeric(0) to omit the x-axis}
+
+\item{xlog}{If TRUE, x-axis tick marks are to follow a logarithmic scale, e.g. for
+logistic regressoin (OR), survival estimates (HR), poisson regression etc.
+\emph{Note:} This is an intentional break with the original \code{\link[rmeta]{forestplot}}
+function as I've found that exponentiated ticks/clips/zero effect are more
+difficult to for non-statisticians and there are sometimes issues with rounding
+the tick marks properly.}
 }
 \value{
 \code{vector} Contains a min and max value
 }
 \description{
-If the borders are smaller than the upper/lower limits then
-clip the graph. The line will have arrows indicating that
-it continues beyond the graph The zero bar has to be on the
-chart though!
+If the borders are smaller than the upper/lower limits
+then clip the graph. The line will have arrows indicating
+that it continues beyond the graph The zero bar has to
+be on the chart though!
 }
 \keyword{internal}
 

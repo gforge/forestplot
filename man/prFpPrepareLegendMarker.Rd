@@ -7,9 +7,11 @@
 prFpPrepareLegendMarker(fn.legend, col_no, fn.ci_norm)
 }
 \arguments{
-  \item{fn.legend}{The unknown parameter} \item{col_no}
-  {The number of columns} \item{fn.ci_norm}{The original
-  fn.ci_norm input}
+\item{fn.legend}{The unknown parameter}
+
+\item{col_no}{The number of columns}
+
+\item{fn.ci_norm}{The original fn.ci_norm input}
 }
 \value{
 \code{list}

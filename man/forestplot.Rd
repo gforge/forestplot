@@ -8,172 +8,196 @@ forestplot(labeltext, mean, lower, upper, align, is.summary = FALSE,
   graph.pos = "right", hrzl_lines, clip = c(-Inf, Inf), xlab = "",
   zero = ifelse(xlog, 1, 0), graphwidth = "auto", lineheight = "auto",
   line.margin, col = fpColors(), txt_gp = fpTxtGp(), xlog = FALSE, xticks,
-  xticks.digits = 2, lwd.xaxis, lwd.zero, lwd.ci, boxsize, mar = unit(rep(5,
-  times = 4), "mm"), title, legend, legend_args = fpLegend(),
-  new_page = FALSE, fn.ci_norm = fpDrawNormalCI,
-  fn.ci_sum = fpDrawSummaryCI, fn.legend, ...)
+  xticks.digits = 2, lwd.xaxis, lwd.zero, lwd.ci, lty.ci = 1, ci.vertices,
+  ci.vertices.height = 0.1, boxsize, mar = unit(rep(5, times = 4), "mm"),
+  title, legend, legend_args = fpLegend(), new_page = FALSE,
+  fn.ci_norm = fpDrawNormalCI, fn.ci_sum = fpDrawSummaryCI, fn.legend, ...)
 }
 \arguments{
-  \item{labeltext}{A list, matrix, vector or expression
-  with the names of each row. The list should be
-  wrapped in m x n number to resemble a matrix:
-  \code{list(list("rowname 1 col 1", "rowname 2 col 1"),
-  list("r1c2", expression(beta))}. You can also provide a
-  matrix although this cannot have expressions by design:
-  \code{matrix(c("rowname 1 col 1", "rowname 2 col 1",
-  "r1c2", "beta"), ncol=2)}. Use \code{NA}:s for blank
-  spaces and if you provide a full column with \code{NA}
-  then that column is a empty column that adds some space.
-  \emph{Note:} If you do not provide the mean/lower/upper
-  arguments the function expects the label text to be
-  a matrix containing the labeltext in the rownames and
-  then columns for mean, lower, and upper} \item{mean}
-  {A vector or a matrix with the averages. You can also
-  provide a 2D/3D matrix that is automatically converted
-  to the lower/upper parameters. The values should be in
-  exponentiated form if they follow this interpretation,
-  e.g. use exp(mean) if you have the output from a
-  logistic regression} \item{lower}{The lower bound of
-  the confidence interval for the forestplot, needs to
-  be the same format as the mean, i.e. matrix/vector of
-  equal columns & length} \item{upper}{The upper bound
-  of the confidence interval for the forestplot, needs
-  to be the same format as the mean, i.e. matrix/vector
-  of equal columns & length} \item{align}{Vector giving
-  alignment (l,r,c) for the table columns} \item{is.summary}
-  {A vector indicating by \code{TRUE}/\code{FALSE} if the
-  value is a summary value which means that it will have
-  a different font-style} \item{graph.pos}{The position
-  of the graph element within the table of text. The
-  position can be \code{1-(ncol(labeltext) + 1)}. You
-  can also choose set the positin to \code{"left"} or
-  \code{"right"}.} \item{hrzl_lines}{Add horizontal lines
-  to graph. Can either be \code{TRUE} or a \code{list}
-  of \code{\link[grid]{gpar}}. See line section below
-  for details.} \item{clip}{Lower and upper limits for
-  clipping confidence intervals to arrows} \item{xlab}
-  {x-axis label} \item{zero}{x-axis coordinate for zero
-  line. If you provide a vector of length 2 it will print
-  a rectangle instead of just a line} \item{graphwidth}
-  {Width of confidence interval graph, see \code{\link[grid]
-  {unit}} for details on how to utilize mm etc. The
-  default is \code{auto}, that is it uses up whatever space
-  that is left after adjusting for text size and legend}
-  \item{lineheight}{Height of the graph. By default this
-  is \code{auto} and adjustes to the space that is left
-  after adjusting for x-axis size and legend. Sometimes it
-  might be desireable to set the line height to a certain
-  height, for instance if you have several forestplots you
-  may want to standardize their line height, then you set
-  this variable to a certain height, note this should be
-  provided as a \code{\link[grid]{unit}} object. A good
-  option is to set the line height to \code{unit(2, "cm")}.
-  A third option is to set line height to "lines" and then
-  you get 50 % more than what the text height is as your
-  line height} \item{line.margin}{Set the margin between
-  rows, provided in numeric or \code{\link[grid]{unit}}
-  formar. When having multiple confidence lines per row
-  setting the correct margin in order to visually separate
-  rows} \item{col}{Set the colors for all the elements. See
-  \code{\link{fpColors}} for details} \item{txt_gp}{Set the
-  fonts etc for all text elements. See \code{\link{fpTxtGp}}
-  for details} \item{xlog}{If TRUE, x-axis tick marks
-  are to follow a logarithmic scale, e.g. for logistic
-  regressoin (OR), survival estimates (HR), poisson
-  regression etc. \emph{Note:} This is an intentional
-  break with the original \code{\link[rmeta]{forestplot}}
-  function as I've found that exponentiated ticks/clips/
-  zero effect are more difficult to for non-statisticians
-  and there are sometimes issues with rounding the tick
-  marks properly.} \item{xticks}{Optional user-specified
-  x-axis tick marks. Specify NULL to use the defaults,
-  numeric(0) to omit the x-axis} \item{xticks.digits}
-  {The number of digits to allow in the x-axis if this is
-  created by default} \item{lwd.xaxis}{lwd for the xaxis}
-  \item{lwd.zero}{lwd for the vertical line that gives
-  the no-effect line} \item{lwd.ci}{lwd for the confidence
-  bands} \item{boxsize}{Override the default box size
-  based on precision} \item{mar}{A numerical vector of
-  the form \code{c(bottom, left, top, right)} of the type
-  \code{\link[grid]{unit}}} \item{title}{The title of the
-  plot if any} \item{legend}{Legend corresponding to the
-  number of bars} \item{legend_args}{The legend arguments
-  as returned by the \code{\link{fpLegend}} function.}
-  \item{new_page}{If you want the plot to appear on a
-  new blank page then set this to \code{TRUE}, by default
-  it is \code{FALSE}} \item{fn.ci_norm}{You can specify
-  exactly how the line with the box is drawn for the normal
-  (i.e. non-summary) confidence interval by changing this
-  parameter to your own function or some of the alternatives
-  provided in the package. It defaults to the box
-  function \code{\link{fpDrawNormalCI}}} \item{fn.ci_sum}
-  {Same as previous argument but for the summary outputs
-  and it defaults to \code{\link{fpDrawSummaryCI}}.}
-  \item{fn.legend}{What type of function should be used
-  for drawing the legends, this can be a list if you want
-  different functions. It defaults to a box if you have
-  anything else than a single function or the number of
-  columns in the \code{mean} argument} \item{...}{Passed on
-  to the \code{fn.ci_norm} and \code{fn.ci_sum} arguments}
+\item{labeltext}{A list, matrix, vector or expression with the names of each
+row. The list should be wrapped in m x n number to resemble a matrix:
+\code{list(list("rowname 1 col 1", "rowname 2 col 1"), list("r1c2", expression(beta))}.
+You can also provide a matrix although this cannot have expressions by design:
+\code{matrix(c("rowname 1 col 1", "rowname 2 col 1", "r1c2", "beta"), ncol=2)}.
+Use \code{NA}:s for blank spaces and if you provide a full column with \code{NA} then
+that column is a empty column that adds some space. \emph{Note:} If you do not
+provide the mean/lower/upper arguments the function expects the label text
+to be a matrix containing the labeltext in the rownames and then columns for
+mean, lower, and upper.}
+
+\item{mean}{A vector or a matrix with the averages. You can also provide a 2D/3D
+matrix that is automatically converted to the lower/upper parameters. The values
+should be in exponentiated form if they follow this interpretation, e.g. use
+exp(mean) if you have the output from a logistic regression}
+
+\item{lower}{The lower bound of the confidence interval for the forestplot, needs
+to be the same format as the mean, i.e. matrix/vector of equal columns & length}
+
+\item{upper}{The upper bound of the confidence interval for the forestplot, needs
+to be the same format as the mean, i.e. matrix/vector of equal columns \& length}
+
+\item{align}{Vector giving alignment (l,r,c) for the table columns}
+
+\item{is.summary}{A vector indicating by \code{TRUE}/\code{FALSE} if
+the value is a summary value which means that it will have a different
+font-style}
+
+\item{graph.pos}{The position of the graph element within the table of text. The
+position can be \code{1-(ncol(labeltext) + 1)}. You can also choose set the positin
+to \code{"left"} or \code{"right"}.}
+
+\item{hrzl_lines}{Add horizontal lines to graph. Can either be \code{TRUE} or a \code{list}
+of \code{\link[grid]{gpar}}. See line section below for details.}
+
+\item{clip}{Lower and upper limits for clipping confidence intervals to arrows}
+
+\item{xlab}{x-axis label}
+
+\item{zero}{x-axis coordinate for zero line. If you provide a vector of length 2 it
+will print a rectangle instead of just a line}
+
+\item{graphwidth}{Width of confidence interval graph, see \code{\link[grid]{unit}} for
+details on how to utilize mm etc. The default is \code{auto}, that is it uses up whatever
+space that is left after adjusting for text size and legend}
+
+\item{lineheight}{Height of the graph. By default this is \code{auto} and adjustes to the
+space that is left after adjusting for x-axis size and legend. Sometimes
+it might be desireable to set the line height to a certain height, for
+instance if you have several forestplots you may want to standardize their
+line height, then you set this variable to a certain height, note this should
+be provided as a \code{\link[grid]{unit}} object. A good option
+is to set the line height to \code{unit(2, "cm")}. A third option
+is to set line height to "lines" and then you get 50 \% more than what the
+text height is as your line height}
+
+\item{line.margin}{Set the margin between rows, provided in numeric or \code{\link[grid]{unit}} formar.
+When having multiple confidence lines per row setting the correct
+margin in order to visually separate rows}
+
+\item{col}{Set the colors for all the elements. See \code{\link{fpColors}} for
+details}
+
+\item{txt_gp}{Set the fonts etc for all text elements. See \code{\link{fpTxtGp}}
+for details}
+
+\item{xlog}{If TRUE, x-axis tick marks are to follow a logarithmic scale, e.g. for
+logistic regressoin (OR), survival estimates (HR), poisson regression etc.
+\emph{Note:} This is an intentional break with the original \code{\link[rmeta]{forestplot}}
+function as I've found that exponentiated ticks/clips/zero effect are more
+difficult to for non-statisticians and there are sometimes issues with rounding
+the tick marks properly.}
+
+\item{xticks}{Optional user-specified x-axis tick marks. Specify NULL to use
+the defaults, numeric(0) to omit the x-axis}
+
+\item{xticks.digits}{The number of digits to allow in the x-axis if this
+is created by default}
+
+\item{lwd.xaxis}{lwd for the xaxis, see \code{\link[grid]{gpar}}}
+
+\item{lwd.zero}{lwd for the vertical line that gives the no-effect line, see \code{\link[grid]{gpar}}}
+
+\item{lwd.ci}{lwd for the confidence bands, see \code{\link[grid]{gpar}}}
+
+\item{lty.ci}{lty for the confidence bands, see \code{\link[grid]{gpar}}}
+
+\item{ci.vertices.height}{The height hoft the vertices. Defaults to npc units
+corresponding to 10% of the row height.
+\emph{Note that the arrows correspond to the vertices heights.}}
+
+\item{boxsize}{Override the default box size based on precision}
+
+\item{mar}{A numerical vector of the form \code{c(bottom, left, top, right)} of
+the type \code{\link[grid]{unit}}}
+
+\item{title}{The title of the plot if any}
+
+\item{legend}{Legend corresponding to the number of bars}
+
+\item{legend_args}{The legend arguments as returned by the \code{\link{fpLegend}} function.}
+
+\item{new_page}{If you want the plot to appear on a new blank page then set this to \code{TRUE}, by
+default it is \code{FALSE}}
+
+\item{fn.ci_norm}{You can specify exactly how the line with the box is
+drawn for the normal (i.e. non-summary) confidence interval by changing this
+parameter to your own function or some of the alternatives provided in the package.
+It defaults to the box function \code{\link{fpDrawNormalCI}}}
+
+\item{fn.ci_sum}{Same as previous argument but for the summary outputs
+and it defaults to \code{\link{fpDrawSummaryCI}}.}
+
+\item{fn.legend}{What type of function should be used for drawing the
+legends, this can be a list if you want different functions. It defaults to
+a box if you have anything else than a single function or the number of columns
+in the \code{mean} argument}
+
+\item{...}{Passed on to the \code{fn.ci_norm} and
+ \code{fn.ci_sum} arguments}
+
+\item{vertices}{Set this to TRUE if you want the ends of the confidence
+intervals to be shaped as a T. This is set default to TRUE if you have
+any other line type than 1 since there is a risk of a dash occurring
+at the very end, i.e. showing incorrectly narrow confidence interval.}
 }
 \description{
 The \emph{forestplot} is based on the \pkg{rmeta}-package`s
-\code{\link[rmeta]{forestplot}} function. This function
-resolves some limitations of the original functions such
-as: \itemize{ \item{Adding expressions: }{Allows use of
-expressions, e.g. \code{expression(beta)}} \item{Multiple
-bands: }{Using multiple confidence bands for the same label}
-\item{Autosize: }{Adapts to viewport (graph) size} }
+\code{\link[rmeta]{forestplot}} function. This
+function resolves some limitations of the original
+functions such as:
+\itemize{
+  \item{Adding expressions: }{Allows use of expressions, e.g. \code{expression(beta)}}
+  \item{Multiple bands: }{Using multiple confidence bands for the same label}
+  \item{Autosize: }{Adapts to viewport (graph) size}
+}
 }
 \details{
 See \code{vignette("forestplot")} for details.
 }
 \section{Multiple bands}{
-  Using multiple bands, i.e. multiple lines, per variable
-  can be interesting when you want to compare different
-  outcomes. E.g. if you want to compare survival specific
-  to heart disease to overall survival for smoking it may
-  be useful to have two bands on top of eachother. Another
-  useful implementation is to show crude and adjusted
-  estimates as separate bands.
+
+
+Using multiple bands, i.e. multiple lines, per variable can be interesting when
+you want to compare different outcomes. E.g. if you want to compare survival
+specific to heart disease to overall survival for smoking it may be useful to
+have two bands on top of eachother. Another useful implementation is to show
+crude and adjusted estimates as separate bands.
 }
 
 \section{Horizontal lines}{
-  The argument \code{hrzl_lines} can be either \code{TRUE}
-  or a \code{list} with \code{\link[grid]{gpar}} elements:
-  \itemize{ \item{\code{TRUE}}{A line will be added based
-  upon the \code{is.summary} rows. If the first line is
-  a summary it} \item{\code{\link[grid]{gpar}}}{The same
-  as above but the lines will be formatted according to
-  the \code{\link[grid]{gpar}} element} \item{\code{list}}
-  {The list must either be numbered, i.e. \code{list("2"
-  = gpar(lty=1))}, or have the same length as the
-  \code{NROW(mean) + 1}. If the list is numbered the
-  numbers should not exceed the \code{NROW(mean) + 1}. The
-  no. \emph{1 row designates the top}, i.e. the line above
-  the first row, all other correspond to \emph{the row
-  below}. Each element in the list needs to be \code{TRUE},
-  \code{NULL}, or \code{\link[grid]{gpar}} element. The
-  \code{TRUE} defaults to a standard line, the \code{NULL}
-  skips a line, while \code{\link[grid]{gpar}} corresponds
-  to the fully customized line. Apart from allowing standard
-  \code{\link[grid]{gpar}} line descriptions, \code{lty},
-  \code{lwd}, \code{col}, and more you can also specify
-  \code{gpar(columns = c(1:3, 5))} if you for instance want
-  the line to skip a column.} }
+
+
+The argument \code{hrzl_lines} can be either \code{TRUE} or a \code{list} with \code{\link[grid]{gpar}}
+elements:
+
+\itemize{
+ \item{\code{TRUE}}{A line will be added based upon the \code{is.summary} rows. If the first line is a summary it}
+ \item{\code{\link[grid]{gpar}}}{The same as above but the lines will be formatted according to the
+                                 \code{\link[grid]{gpar}} element}
+ \item{\code{list}}{The list must either be numbered, i.e. \code{list("2" = gpar(lty=1))}, or have the same length
+                    as the \code{NROW(mean) + 1}. If the list is numbered the numbers should not exceed the \code{NROW(mean) + 1}.
+                    The no. \emph{1 row designates the top}, i.e. the line above the first row, all other correspond  to
+                    \emph{the row below}. Each element in the list needs to be \code{TRUE}, \code{NULL}, or
+                    \code{\link[grid]{gpar}} element. The \code{TRUE} defaults to a standard line, the \code{NULL}
+                    skips a line, while \code{\link[grid]{gpar}} corresponds to the fully customized line. Apart from
+                    allowing standard \code{\link[grid]{gpar}} line descriptions, \code{lty}, \code{lwd}, \code{col}, and more
+                    you can also specify \code{gpar(columns = c(1:3, 5))} if you for instance want the line to skip a column.}
+}
 }
 
 \section{Known issues}{
-  The x-axis does not entirely respect the margin.
-  Autosizing boxes is not always the best option, try to set
-  these manually as much as possible.
+
+
+The x-axis does not entirely respect the margin. Autosizing boxes is not
+always the best option, try to set these manually as much as possible.
 }
 
 \section{API-changes from \pkg{rmeta}-package`s \code{\link[rmeta]{forestplot}}}{
-  \itemize{ \item{xlog: }{The xlog outputs the axis in
-  log() format but the input data should be in antilog/
-  exp format} \item{col: }{The corresponding function is
-  \code{\link{fpColors}} for this package} }
+
+\itemize{
+  \item{xlog: }{The xlog outputs the axis in log() format but the input data should be in antilog/exp format}
+  \item{col: }{The corresponding function is \code{\link{fpColors}} for this package}
+}
 }
 \examples{
 #############################################
@@ -288,8 +312,10 @@ Max Gordon, Thomas Lumley
 }
 \seealso{
 Other forestplot.functions: \code{\link{fpColors}};
-\code{\link{fpDrawCircleCI}}, \code{\link{fpDrawDiamondCI}},
-\code{\link{fpDrawNormalCI}}, \code{\link{fpDrawPointCI}},
-\code{\link{fpDrawSummaryCI}}; \code{\link{fpLegend}}
+  \code{\link{fpDrawCircleCI}},
+  \code{\link{fpDrawDiamondCI}},
+  \code{\link{fpDrawNormalCI}},
+  \code{\link{fpDrawPointCI}},
+  \code{\link{fpDrawSummaryCI}}; \code{\link{fpLegend}}
 }
 

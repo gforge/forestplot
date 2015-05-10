@@ -9,57 +9,72 @@
 \title{Draw standard confidence intervals}
 \usage{
 fpDrawNormalCI(lower_limit, estimate, upper_limit, size, y.offset = 0.5,
-  clr.line, clr.marker, lwd, ...)
+  clr.line, clr.marker, lwd, lty = 1, vertices, vertices.height = 0.1, ...)
 
 fpDrawDiamondCI(lower_limit, estimate, upper_limit, size, y.offset = 0.5,
-  clr.line, clr.marker, lwd, ...)
+  clr.line, clr.marker, lwd, lty = 1, vertices, vertices.height = 0.1, ...)
 
 fpDrawCircleCI(lower_limit, estimate, upper_limit, size, y.offset = 0.5,
-  clr.line, clr.marker, lwd, ...)
+  clr.line, clr.marker, lwd, lty = 1, vertices, vertices.height = 0.1, ...)
 
 fpDrawPointCI(lower_limit, estimate, upper_limit, size, y.offset = 0.5,
-  clr.line, clr.marker, lwd, pch = 1, ...)
+  clr.line, clr.marker, lwd, lty = 1, vertices, vertices.height = 0.1,
+  pch = 1, ...)
 
 fpDrawSummaryCI(lower_limit, estimate, upper_limit, size, col, y.offset = 0.5,
   ...)
 }
 \arguments{
-  \item{lower_limit}{The lower limit of the confidence line.
-  A native numeric variable that can actually be outside
-  the boundaries. If you want to see if it is outside then
-  convert it to 'npc' and see if the value ends up more
-  than 1 or less than 0. Here's how you do the conversion:
-  \code{convertX(unit(upper_limit, "native"), "npc",
-  valueOnly = TRUE)} and the \code{\link[grid]{convertX}}
-  together with \code{\link[grid]{unit}} is needed to get
-  the right values while you need to provide the valueOnly
-  as you cannot compare a unit object.} \item{estimate}
-  {The estimate indicating the placement of the actual box.
-  Note, this can also be outside bounds and is provided in
-  a numeric format the same way as the \code{lower_limit}.}
-  \item{upper_limit}{The upper limit of the confidence line.
-  See lower_limit for details.} \item{size}{The actual size
-  of the box/diamond/marker. This provided in the 'snpc'
-  format to generate a perfect marker. Although you can
-  provide it alternative units as well, this is useful for
-  the legends to work nicely.} \item{y.offset}{If you have
-  multiple lines they need an offset in the y-direction.}
-  \item{clr.line}{The color of the line.} \item{clr.marker}
-  {The color of the estimate marker} \item{lwd}{Line width}
-  \item{...}{Allows additional parameters for sibling
-  functions} \item{pch}{Type of point see \code{\link[grid]
-  {grid.points}} for details} \item{col}{The color of the
-  summary diamond.}
+\item{lower_limit}{The lower limit of the confidence line.
+A native numeric variable that can actually be
+outside the boundaries. If you want to see if it
+is outside then convert it to 'npc' and see if the
+value ends up more than 1 or less than 0. Here's how
+you do the conversion:
+\code{convertX(unit(upper_limit, "native"), "npc", valueOnly = TRUE)}
+and the \code{\link[grid]{convertX}} together with \code{\link[grid]{unit}}
+is needed to get the right values while you need to provide the valueOnly
+as you cannot compare a unit object.}
+
+\item{estimate}{The estimate indicating the placement
+of the actual box. Note, this can also be outside bounds
+and is provided in a numeric format the same way as the
+\code{lower_limit}.}
+
+\item{upper_limit}{The upper limit of the confidence line. See
+lower_limit for details.}
+
+\item{size}{The actual size of the box/diamond/marker.
+This provided in the 'snpc' format to generate a perfect
+marker. Although you can provide it alternative units as well,
+this is useful for the legends to work nicely.}
+
+\item{y.offset}{If you have multiple lines they need an offset in
+the y-direction.}
+
+\item{clr.line}{The color of the line.}
+
+\item{clr.marker}{The color of the estimate marker}
+
+\item{lwd}{Line width, see \code{\link[grid]{gpar}}}
+
+\item{lty}{Line type, see \code{\link[grid]{gpar}}}
+
+\item{...}{Allows additional parameters for sibling functions}
+
+\item{pch}{Type of point see \code{\link[grid]{grid.points}} for details}
+
+\item{col}{The color of the summary diamond.}
 }
 \value{
-\code{void} The function outputs the line using grid
-compatible functions and does not return anything.
+\code{void} The function outputs the line using grid compatible
+ functions and does not return anything.
 }
 \description{
 A function that is used to draw the different
-confidence intervals for the non-summary lines. Use the
-\code{fpDrawNormalCI} function as a template if you want to
-make your own funky line + marker.
+confidence intervals for the non-summary lines.
+Use the \code{fpDrawNormalCI} function as a
+template if you want to make your own funky line + marker.
 }
 \examples{
 ask <- par(ask=TRUE)
@@ -153,6 +168,6 @@ Max Gordon, Thomas Lumley
 }
 \seealso{
 Other forestplot.functions: \code{\link{forestplot}};
-\code{\link{fpColors}}; \code{\link{fpLegend}}
+  \code{\link{fpColors}}; \code{\link{fpLegend}}
 }
 

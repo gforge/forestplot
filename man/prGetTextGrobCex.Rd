@@ -7,7 +7,7 @@
 prGetTextGrobCex(x)
 }
 \arguments{
-  \item{x}{The text-grob of interest}
+\item{x}{The text-grob of interest}
 }
 \value{
 \code{numeric} The cex value, 1 if no cex was present

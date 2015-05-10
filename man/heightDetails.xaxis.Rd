@@ -7,15 +7,14 @@
 \method{heightDetails}{xaxis}(x)
 }
 \arguments{
-  \item{x}{The \code{\link[grid]{xaxisGrob}} object}
+\item{x}{The \code{\link[grid]{xaxisGrob}} object}
 }
 \value{
 \code{grid::unit} A \code{\link[grid]{unit}} object
 }
 \description{
-A function that gets the height of an \code{\link[grid]
-{xaxisGrob}}. It is for some reason not included by default
-in the \pkg{grid}-package.
+A function that gets the height of an \code{\link[grid]{xaxisGrob}}.
+It is for some reason not included by default in the \pkg{grid}-package.
 }
 \examples{
 library(grid)

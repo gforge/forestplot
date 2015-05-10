@@ -7,16 +7,16 @@
 prGridPlotTitle(title, gp, space_below)
 }
 \arguments{
-  \item{title}{The title as accepted by \code{\link[grid]
-  {textGrob}}} \item{space_below}{The space below, defaults
-  to 1/5 of the title height}
+\item{title}{The title as accepted by \code{\link[grid]{textGrob}}}
+
+\item{space_below}{The space below, defaults to 1/5 of the title height}
 }
 \value{
 \code{NULL} The function does not return a value
 }
 \description{
-Adds the title and generates a new main viewport below the
-title
+Adds the title and generates a new
+main viewport below the title
 }
 \keyword{internal}
 

@@ -9,35 +9,45 @@ fpColors(all.elements, box = "black", lines = "gray", summary = "black",
   hrz_lines = "black")
 }
 \arguments{
-  \item{all.elements}{A color for all the elements.
-  If set to NULL then it's set to the par("fg") color}
-  \item{box}{The color of the box indicating the estimate}
-  \item{lines}{The color of the confidence lines}
-  \item{summary}{The color of the summary} \item{zero}
-  {The color of the zero line} \item{text}{The color of the
-  text} \item{axes}{The color of the x-axis at the bottom}
-  \item{hrz_lines}{The color of the horizontal lines}
+\item{all.elements}{A color for all the elements. If set to NULL then
+it's set to the par("fg") color}
+
+\item{box}{The color of the box indicating the estimate}
+
+\item{lines}{The color of the confidence lines}
+
+\item{summary}{The color of the summary}
+
+\item{zero}{The color of the zero line}
+
+\item{text}{The color of the text}
+
+\item{axes}{The color of the x-axis at the bottom}
+
+\item{hrz_lines}{The color of the horizontal lines}
 }
 \value{
-list A list with the elements: \item{box}{the color of
-the box/marker} \item{lines}{the color of the lines}
-\item{summary}{the color of the summary} \item{zero}{the
-color of the zero vertical line} \item{text}{the color of
-the text} \item{axes}{the color of the axes}
+list A list with the elements:
+\item{box}{the color of the box/marker}
+\item{lines}{the color of the lines}
+\item{summary}{the color of the summary}
+\item{zero}{the color of the zero vertical line}
+\item{text}{the color of the text}
+\item{axes}{the color of the axes}
 }
 \description{
-This function encapsulates all the colors that are used in
-the \code{\link{forestplot}} function. As there are plenty
-of color options this function gathers them all in one
-place.
+This function encapsulates all the colors that are used in the
+\code{\link{forestplot}} function. As there are plenty of color
+options this function gathers them all in one place.
 }
 \details{
-If you have several values per row in a forestplot you can
-set a color to a vector where the first value represents
-the first line/box, second the second line/box etc. The
-vectors are only valid for the \code{box} & \code{lines}
-options. This function is a copy of the \code{\link[rmeta]
-{meta.colors}} function in the \pkg{rmeta} package.
+If you have several values per row in a forestplot you can set
+a color to a vector where the first value represents the first
+line/box, second the second line/box etc. The vectors are only
+valid for the \code{box} \& \code{lines} options.
+
+This function is a copy of the \code{\link[rmeta]{meta.colors}}
+function in the \pkg{rmeta} package.
 }
 \examples{
 ask <- par(ask=TRUE)
@@ -67,8 +77,10 @@ Max Gordon, Thomas Lumley
 }
 \seealso{
 Other forestplot.functions: \code{\link{forestplot}};
-\code{\link{fpDrawCircleCI}}, \code{\link{fpDrawDiamondCI}},
-\code{\link{fpDrawNormalCI}}, \code{\link{fpDrawPointCI}},
-\code{\link{fpDrawSummaryCI}}; \code{\link{fpLegend}}
+  \code{\link{fpDrawCircleCI}},
+  \code{\link{fpDrawDiamondCI}},
+  \code{\link{fpDrawNormalCI}},
+  \code{\link{fpDrawPointCI}},
+  \code{\link{fpDrawSummaryCI}}; \code{\link{fpLegend}}
 }
 
