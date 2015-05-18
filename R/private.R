@@ -224,6 +224,7 @@ prPopulateList <- function(elmnt, no_rows, no_cols){
 #' @keywords internal
 prFpGetGraphTicksAndClips <- function(xticks,
                                       xticks.digits,
+                                      grid,
                                       xlog,
                                       xlab,
                                       lwd.xaxis,
@@ -344,6 +345,16 @@ prFpGetGraphTicksAndClips <- function(xticks,
     ticks[ticks < .Machine$double.eps &
             ticks > -.Machine$double.eps] <- 0
 
+
+  # Prepare grid gpar option
+  grid_gp = gpar(lty = 2, col = "#DDDDDD")
+  if (inherits(grid, "gpar")){
+    grid_gp = grid
+    grid = TRUE
+  }else if (inherits(attr(grid, "gp"), "gpar")){
+    grid_gp = attr(grid, "gp")
+  }
+
   if (length(ticks) != 1 || ticks != 0){
     gp_list <- txt_gp$ticks
     gp_list$col <- col$axes
@@ -354,8 +365,36 @@ prFpGetGraphTicksAndClips <- function(xticks,
     dg <- xaxisGrob(at    = ticks,
                     label = ticklabels,
                     gp    = do.call(gpar, gp_list))
+    if (length(grid) == 1){
+      if (is.logical(grid) &&
+          grid == TRUE){
+        grid <- ticks
+      }
+    }
   }else{
     dg <- FALSE
+  }
+
+  gridList <- NULL
+  if (any(grid != FALSE)){
+    # Actually identical to the ticks viewport
+    grid_vp = viewport(layout.pos.col = 2 * graph.pos - 1,
+                       layout.pos.row = from:to,
+                       xscale         = x_range,
+                       name           = "grid_vp")
+    gridList <- gTree()
+    for (xpos in grid){
+      if (inherits(xpos, "unit")){
+        xpos <- convertX(xpos, unitTo = "native", valueOnly = TRUE)
+      }
+      if (!xpos %in% zero){
+        lg <- linesGrob(x = unit(rep(xpos, 2), units = "native"),
+                        y = unit(c(0,1), units = "npc"),
+                        gp = grid_gp,
+                        vp = grid_vp)
+        gridList <- addGrob(gridList, lg)
+      }
+    }
   }
 
   if (length(xlab) == 1 && nchar(xlab) > 0){
@@ -369,9 +408,9 @@ prFpGetGraphTicksAndClips <- function(xticks,
     labGrob <- FALSE
   }
 
-
   return(list(axis_vp = axis_vp,
               axisGrob = dg,
+              gridList = gridList,
               labGrob = labGrob,
               zero = zero,
               clip = clip,
@@ -410,6 +449,10 @@ prFpPrintXaxis <- function(axisList,
                            "native"),
                  y  = c(0, 0, 1, 1),
                  gp = do.call(gpar, gp_list))
+  }
+
+  if (is.grob(axisList$gridList)){
+    grid.draw(axisList$gridList)
   }
 
   lab_y <- unit(0, "mm")

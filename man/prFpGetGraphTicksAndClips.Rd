@@ -4,8 +4,8 @@
 \alias{prFpGetGraphTicksAndClips}
 \title{A helper function to forestplot}
 \usage{
-prFpGetGraphTicksAndClips(xticks, xticks.digits, xlog, xlab, lwd.xaxis, col,
-  txt_gp, clip, zero, x_range, mean, graph.pos)
+prFpGetGraphTicksAndClips(xticks, xticks.digits, grid, xlog, xlab, lwd.xaxis,
+  col, txt_gp, clip, zero, x_range, mean, graph.pos)
 }
 \arguments{
 \item{xticks}{Optional user-specified x-axis tick marks. Specify NULL to use
@@ -13,6 +13,13 @@ the defaults, numeric(0) to omit the x-axis}
 
 \item{xticks.digits}{The number of digits to allow in the x-axis if this
 is created by default}
+
+\item{grid}{If you want a discrete gray dashed grid at the level of the
+ticks you can set this parameter to \code{TRUE}. If you set the parameter
+to a vector of values lines will be drawn at the corresponding positions.
+If you want to specify the \code{\link[grid]{gpar}} of the lines then either
+directly pass a \code{\link[grid]{gpar}} object or set the gp attribute e.g.
+\code{attr(line_vector, "gp") <- \link[grid]{gpar}(lty=2, col = "red")}}
 
 \item{xlog}{If TRUE, x-axis tick marks are to follow a logarithmic scale, e.g. for
 logistic regressoin (OR), survival estimates (HR), poisson regression etc.
