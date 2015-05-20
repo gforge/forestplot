@@ -392,6 +392,7 @@ forestplot <- function (labeltext,
     # Can't figure out multiple levels of expressions
     nc <- 1
     label_type = "expression"
+    label_nr <- length(labeltext)
   } else if (is.list(labeltext)){
     if (all(sapply(labeltext, function(x){
       length(x) == 1 &&
@@ -422,19 +423,26 @@ forestplot <- function (labeltext,
     }
 
     label_type = "list"
+    label_nr <- length(labeltext[[1]])
   } else if (is.vector(labeltext)){
     widthcolumn <- c(FALSE)
     nc = 1
 
     labeltext <- matrix(labeltext, ncol=1)
     label_type = "matrix"
+    label_nr <- NROW(labeltext)
   } else {
     # Original code for matrixes
     widthcolumn <- !apply(is.na(labeltext), 1, any)
     nc <- NCOL(labeltext)
     label_type = "matrix"
+    label_nr <- NROW(labeltext)
   }
 
+  if (nr != label_nr){
+    stop("You have provided ", nr, " rows in your",
+         " mean arguement while the labels have ", label_nr, " rows")
+  }
 
   if (is.character(graph.pos)){
     graph.pos <-
