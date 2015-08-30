@@ -655,7 +655,8 @@ forestplot <- function (labeltext,
   # Normalize the widths to cover the whole #
   # width of the graph space.               #
   ###########################################
-  if(graphwidth=="auto"){
+  if(!is.unit(graphwidth) &&
+     graphwidth=="auto"){
     # If graph width is not provided as a unit the autosize it to the
     # rest of the space available
     npc_colwidths <- convertUnit(unit.c(colwidths, colgap), "npc", valueOnly=TRUE)

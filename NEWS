@@ -1,5 +1,9 @@
 NEWS for the forestplot package
 
+Changes for 1.2.1
+-----------------
+* Fixed bug when specifying graphwidth
+
 Changes for 1.2
 ---------------
 * Line-type can be specified
