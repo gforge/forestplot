@@ -107,7 +107,11 @@
 #'   difficult to for non-statisticians and there are sometimes issues with rounding
 #'   the tick marks properly.
 #' @param xticks Optional user-specified x-axis tick marks. Specify NULL to use
-#'   the defaults, numeric(0) to omit the x-axis
+#'   the defaults, numeric(0) to omit the x-axis. By adding a labels-attribute,
+#'   \code{attr(my_ticks, "labels") <- ...} you can dictate the outputted text
+#'   at each tick. If you specify a boolean vector then ticks indicated with
+#'   FALSE wont be printed. Note that the labels have to be the same length
+#'   as the main variable.
 #' @param xticks.digits The number of digits to allow in the x-axis if this
 #'   is created by default
 #' @param grid If you want a discrete gray dashed grid at the level of the

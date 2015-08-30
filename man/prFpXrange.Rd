@@ -19,7 +19,11 @@ to be the same format as the mean, i.e. matrix/vector of equal columns & length}
 will print a rectangle instead of just a line}
 
 \item{xticks}{Optional user-specified x-axis tick marks. Specify NULL to use
-the defaults, numeric(0) to omit the x-axis}
+the defaults, numeric(0) to omit the x-axis. By adding a labels-attribute,
+\code{attr(my_ticks, "labels") <- ...} you can dictate the outputted text
+at each tick. If you specify a boolean vector then ticks indicated with
+FALSE wont be printed. Note that the labels have to be the same length
+as the main variable.}
 
 \item{xlog}{If TRUE, x-axis tick marks are to follow a logarithmic scale, e.g. for
 logistic regressoin (OR), survival estimates (HR), poisson regression etc.

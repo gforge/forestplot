@@ -184,6 +184,23 @@ forestplot(tabletext,
            xlab="EQ-5D index")
 
 ## ------------------------------------------------------------------------
+xticks <- seq(from = -.1, to = .05, by = 0.025)
+xtlab <- rep(c(TRUE, FALSE), length.out = length(xticks))
+attr(xticks, "labels") <- xtlab
+forestplot(tabletext, 
+           legend = c("Sweden", "Denmark"),
+           fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+           boxsize = .25, # We set the box size to better visualize the type
+           line.margin = .1, # We need to add this to avoid crowding
+           mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
+           lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
+           upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
+           clip =c(-.125, 0.075),
+           col=fpColors(box=c("blue", "darkred")),
+           xticks = xticks,
+           xlab="EQ-5D index")
+
+## ------------------------------------------------------------------------
 forestplot(tabletext, 
            legend = c("Sweden", "Denmark"),
            fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),

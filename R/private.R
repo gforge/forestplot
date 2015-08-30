@@ -362,6 +362,23 @@ prFpGetGraphTicksAndClips <- function(xticks,
     if(!missing(lwd.xaxis))
       gp_list$lwd <- lwd.xaxis
 
+    if (!missing(xticks) &&
+        !is.null(attr(xticks, "labels"))){
+      labattr <- attr(xticks, "labels")
+      if (length(labattr) != length(ticks))
+        stop("You want to specify the tick labels but you have provided",
+             " '", length(labattr), "' labels while there are",
+             " '", length(labattr), "' ticks after processing xticks.",
+             " They should be identical.")
+      if (length(ticklabels) == 1){
+        ticklabels = ticks
+      }
+      if (all(is.logical(labattr))){
+        ticklabels[!labattr] <- ""
+      }else{
+        ticklabels <- labattr
+      }
+    }
     dg <- xaxisGrob(at    = ticks,
                     label = ticklabels,
                     gp    = do.call(gpar, gp_list))
