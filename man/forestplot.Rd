@@ -8,10 +8,11 @@ forestplot(labeltext, mean, lower, upper, align, is.summary = FALSE,
   graph.pos = "right", hrzl_lines, clip = c(-Inf, Inf), xlab = "",
   zero = ifelse(xlog, 1, 0), graphwidth = "auto", lineheight = "auto",
   line.margin, col = fpColors(), txt_gp = fpTxtGp(), xlog = FALSE, xticks,
-  xticks.digits = 2, lwd.xaxis, lwd.zero, lwd.ci, lty.ci = 1, ci.vertices,
-  ci.vertices.height = 0.1, boxsize, mar = unit(rep(5, times = 4), "mm"),
-  title, legend, legend_args = fpLegend(), new_page = FALSE,
-  fn.ci_norm = fpDrawNormalCI, fn.ci_sum = fpDrawSummaryCI, fn.legend, ...)
+  xticks.digits = 2, grid = FALSE, lwd.xaxis, lwd.zero, lwd.ci,
+  lty.ci = 1, ci.vertices, ci.vertices.height = 0.1, boxsize,
+  mar = unit(rep(5, times = 4), "mm"), title, legend,
+  legend_args = fpLegend(), new_page = FALSE, fn.ci_norm = fpDrawNormalCI,
+  fn.ci_sum = fpDrawSummaryCI, fn.legend, ...)
 }
 \arguments{
 \item{labeltext}{A list, matrix, vector or expression with the names of each
@@ -92,6 +93,13 @@ the defaults, numeric(0) to omit the x-axis}
 
 \item{xticks.digits}{The number of digits to allow in the x-axis if this
 is created by default}
+
+\item{grid}{If you want a discrete gray dashed grid at the level of the
+ticks you can set this parameter to \code{TRUE}. If you set the parameter
+to a vector of values lines will be drawn at the corresponding positions.
+If you want to specify the \code{\link[grid]{gpar}} of the lines then either
+directly pass a \code{\link[grid]{gpar}} object or set the gp attribute e.g.
+\code{attr(line_vector, "gp") <- \link[grid]{gpar}(lty=2, col = "red")}}
 
 \item{lwd.xaxis}{lwd for the xaxis, see \code{\link[grid]{gpar}}}
 

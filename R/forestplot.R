@@ -110,6 +110,12 @@
 #'   the defaults, numeric(0) to omit the x-axis
 #' @param xticks.digits The number of digits to allow in the x-axis if this
 #'   is created by default
+#' @param grid If you want a discrete gray dashed grid at the level of the
+#'   ticks you can set this parameter to \code{TRUE}. If you set the parameter
+#'   to a vector of values lines will be drawn at the corresponding positions.
+#'   If you want to specify the \code{\link[grid]{gpar}} of the lines then either
+#'   directly pass a \code{\link[grid]{gpar}} object or set the gp attribute e.g.
+#'   \code{attr(line_vector, "gp") <- \link[grid]{gpar}(lty=2, col = "red")}
 #' @param lwd.xaxis lwd for the xaxis, see \code{\link[grid]{gpar}}
 #' @param lwd.zero  lwd for the vertical line that gives the no-effect line, see \code{\link[grid]{gpar}}
 #' @param lwd.ci lwd for the confidence bands, see \code{\link[grid]{gpar}}
@@ -166,6 +172,7 @@ forestplot <- function (labeltext,
                         xlog                 = FALSE,
                         xticks,
                         xticks.digits        = 2,
+                        grid                 = FALSE,
                         lwd.xaxis,
                         lwd.zero,
                         lwd.ci,
@@ -385,6 +392,7 @@ forestplot <- function (labeltext,
     # Can't figure out multiple levels of expressions
     nc <- 1
     label_type = "expression"
+    label_nr <- length(labeltext)
   } else if (is.list(labeltext)){
     if (all(sapply(labeltext, function(x){
       length(x) == 1 &&
@@ -415,19 +423,26 @@ forestplot <- function (labeltext,
     }
 
     label_type = "list"
+    label_nr <- length(labeltext[[1]])
   } else if (is.vector(labeltext)){
     widthcolumn <- c(FALSE)
     nc = 1
 
     labeltext <- matrix(labeltext, ncol=1)
     label_type = "matrix"
+    label_nr <- NROW(labeltext)
   } else {
     # Original code for matrixes
     widthcolumn <- !apply(is.na(labeltext), 1, any)
     nc <- NCOL(labeltext)
     label_type = "matrix"
+    label_nr <- NROW(labeltext)
   }
 
+  if (nr != label_nr){
+    stop("You have provided ", nr, " rows in your",
+         " mean arguement while the labels have ", label_nr, " rows")
+  }
 
   if (is.character(graph.pos)){
     graph.pos <-
@@ -499,14 +514,15 @@ forestplot <- function (labeltext,
   }
 
 
-  axisList <- prFpGetGraphTicksAndClips(xticks=xticks,
-                                        xticks.digits=xticks.digits,
-                                        xlog=xlog,
-                                        xlab=xlab,
-                                        lwd.xaxis=lwd.xaxis,
+  axisList <- prFpGetGraphTicksAndClips(xticks = xticks,
+                                        xticks.digits = xticks.digits,
+                                        grid = grid,
+                                        xlog = xlog,
+                                        xlab = xlab,
+                                        lwd.xaxis = lwd.xaxis,
                                         txt_gp = txt_gp,
-                                        col=col,
-                                        clip=clip, zero=zero,
+                                        col = col,
+                                        clip = clip, zero = zero,
                                         x_range=prFpXrange(upper = upper,
                                                            lower = lower,
                                                            clip = clip,
@@ -639,7 +655,8 @@ forestplot <- function (labeltext,
   # Normalize the widths to cover the whole #
   # width of the graph space.               #
   ###########################################
-  if(graphwidth=="auto"){
+  if(!is.unit(graphwidth) &&
+     graphwidth=="auto"){
     # If graph width is not provided as a unit the autosize it to the
     # rest of the space available
     npc_colwidths <- convertUnit(unit.c(colwidths, colgap), "npc", valueOnly=TRUE)
@@ -723,11 +740,12 @@ forestplot <- function (labeltext,
                   nr = nr,
                   graph.pos = graph.pos)
 
-  prFpPrintXaxis(axisList=axisList,
-                 col=col, lwd.zero=lwd.zero)
-
   prFpDrawLines(hrzl_lines = hrzl_lines, nr = nr, colwidths = colwidths,
                 graph.pos = graph.pos)
+
+
+  prFpPrintXaxis(axisList=axisList,
+                 col=col, lwd.zero=lwd.zero)
 
   # Output the different confidence intervals
   for (i in 1:nr) {

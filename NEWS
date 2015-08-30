@@ -1,10 +1,15 @@
 NEWS for the forestplot package
 
+Changes for 1.2.1
+-----------------
+* Fixed bug when specifying graphwidth
+
 Changes for 1.2
 ---------------
 * Line-type can be specified
 * Line endings can now be marked by a T vertice, this default for all line types other than 1
 * The arrow height defaults to the same height as the vertices
+* Added a grid option
 * Improved documentation
 
 Changes for 1.1
