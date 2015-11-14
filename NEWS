@@ -1,9 +1,10 @@
 NEWS for the forestplot package
 
-Changes for 1.2.1
+Changes for 1.3
 -----------------
 * Fixed bug when specifying graphwidth
 * Added ability to tailor the tick text
+* Added vertices example to vignette
 
 Changes for 1.2
 ---------------
