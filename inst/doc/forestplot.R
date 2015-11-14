@@ -54,6 +54,17 @@ forestplot(tabletext,
            xlog=TRUE,
            col=fpColors(box="royalblue",line="darkblue", summary="royalblue", hrz_lines = "#444444"))
 
+## ---- fig.height=4, fig.width=8, message=FALSE---------------------------
+forestplot(tabletext, 
+           hrzl_lines = list("3" = gpar(lty=2), 
+                             "11" = gpar(lwd=1, columns=1:4, col = "#000044")),
+           cochrane_from_rmeta,new_page = TRUE,
+           is.summary=c(TRUE,TRUE,rep(FALSE,8),TRUE),
+           clip=c(0.1,2.5), 
+           xlog=TRUE,
+           col=fpColors(box="royalblue",line="darkblue", summary="royalblue", hrz_lines = "#444444"),
+           vertices = TRUE)
+
 ## ------------------------------------------------------------------------
 forestplot(tabletext, 
            graph.pos = 4,
