@@ -82,7 +82,7 @@ forestplot(tabletext,
            cochrane_from_rmeta,new_page = TRUE,
            is.summary=c(TRUE,TRUE,rep(FALSE,8),TRUE),
            clip=c(0.1,2.5), 
-           xlog=TRUE,
+           xlog=TRUE, 
            col=fpColors(box="royalblue",line="darkblue", summary="royalblue"))
 ```
 
@@ -114,6 +114,23 @@ forestplot(tabletext,
            col=fpColors(box="royalblue",line="darkblue", summary="royalblue", hrz_lines = "#444444"))
 ```
 
+Adding vertices to the whiskers
+-------------------------------
+
+For marking the start/end points it is common to add a vertical line at the end of each whisker. In forestplot you simply specify the `vertices` argument:
+
+```{r, fig.height=4, fig.width=8, message=FALSE}
+forestplot(tabletext, 
+           hrzl_lines = list("3" = gpar(lty=2), 
+                             "11" = gpar(lwd=1, columns=1:4, col = "#000044")),
+           cochrane_from_rmeta,new_page = TRUE,
+           is.summary=c(TRUE,TRUE,rep(FALSE,8),TRUE),
+           clip=c(0.1,2.5), 
+           xlog=TRUE,
+           col=fpColors(box="royalblue",line="darkblue", summary="royalblue", hrz_lines = "#444444"),
+           vertices = TRUE)
+```
+
 Positioning the graph element
 -----------------------------
 
@@ -143,7 +160,7 @@ clrs <- fpColors(box="royalblue",line="darkblue", summary="royalblue")
 tabletext <- 
   list(c(NA, rownames(HRQoL$Sweden)),
        append(list(expression(beta)), sprintf("%.2f", HRQoL$Sweden[,"coef"])))
-forestplot(tabletext, new_page = TRUE,
+forestplot(tabletext, 
            rbind(rep(NA, 3), 
                  HRQoL$Sweden),
            col=clrs,
@@ -180,7 +197,7 @@ forestplot(tabletext,
 ```
 
 Confidence intervals
---------------------
+====================
 
 Clipping the interval is convenient for uncertain estimates in order to retain the resolution for those of more interest. The clipping simply adds an arrow to the confidence interval, see the bottom estimate below:
 
@@ -231,14 +248,13 @@ forestplot(tabletext,
 
 The confidence interval/box drawing functions are fully customizeable. You can write your own function that accepts the parameters: lower_limit, estimate, upper_limit, size, y.offset, clr.line, clr.marker, and lwd.
 
-Legends
-=======
+Choosing line type
+------------------
 
-Adding a basic legend is done through the `legend` argument:
+You can furthermore choose between all available line types through the *lty.ci* that can also be specified element specific.
 
 ```{r}
 forestplot(tabletext, 
-            legend = c("Sweden", "Denmark"),
             fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
             boxsize = .25, # We set the box size to better visualize the type
             line.margin = .1, # We need to add this to avoid crowding
@@ -246,8 +262,29 @@ forestplot(tabletext,
             lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
             upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
             clip =c(-.125, 0.075),
+            lty.ci = c(1, 2),
             col=fpColors(box=c("blue", "darkred")),
             xlab="EQ-5D index")
+```
+
+
+Legends
+=======
+
+Adding a basic legend is done through the `legend` argument:
+
+```{r}
+forestplot(tabletext, 
+           legend = c("Sweden", "Denmark"),
+           fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+           boxsize = .25, # We set the box size to better visualize the type
+           line.margin = .1, # We need to add this to avoid crowding
+           mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
+           lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
+           upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
+           clip =c(-.125, 0.075),
+           col=fpColors(box=c("blue", "darkred")),
+           xlab="EQ-5D index")
 ```
 
 This can be further customized by setting the `legend_args` argument using the `fpLegend` function:
@@ -267,5 +304,96 @@ forestplot(tabletext,
            col=fpColors(box=c("blue", "darkred")),
            xlab="EQ-5D index")
 ```
+
+
+Ticks and grids
+===============
+
+If the automated ticks don't match the desired once it is easy to change these using the xticks argument:
+
+```{r}
+forestplot(tabletext, 
+           legend = c("Sweden", "Denmark"),
+           fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+           boxsize = .25, # We set the box size to better visualize the type
+           line.margin = .1, # We need to add this to avoid crowding
+           mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
+           lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
+           upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
+           clip =c(-.125, 0.075),
+           col=fpColors(box=c("blue", "darkred")),
+           xticks = c(-.1, -0.05, 0, .05),
+           xlab="EQ-5D index")
+```
+
+By adding a "labels" attribute to the ticks you can tailor the ticks even further, here's an example the supresses tick text for every other tick:
+
+```{r}
+xticks <- seq(from = -.1, to = .05, by = 0.025)
+xtlab <- rep(c(TRUE, FALSE), length.out = length(xticks))
+attr(xticks, "labels") <- xtlab
+forestplot(tabletext, 
+           legend = c("Sweden", "Denmark"),
+           fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+           boxsize = .25, # We set the box size to better visualize the type
+           line.margin = .1, # We need to add this to avoid crowding
+           mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
+           lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
+           upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
+           clip =c(-.125, 0.075),
+           col=fpColors(box=c("blue", "darkred")),
+           xticks = xticks,
+           xlab="EQ-5D index")
+```
+
+Sometimes you have a very tall graph and you want to add helper lines in order
+to make it easier to see the tick marks. You can do this through the `grid` argument:
+
+```{r}
+forestplot(tabletext, 
+           legend = c("Sweden", "Denmark"),
+           fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+           boxsize = .25, # We set the box size to better visualize the type
+           line.margin = .1, # We need to add this to avoid crowding
+           mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
+           lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
+           upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
+           clip =c(-.125, 0.075),
+           col=fpColors(box=c("blue", "darkred")),
+           grid = TRUE,
+           xticks = c(-.1, -0.05, 0, .05),
+           xlab="EQ-5D index")
+```
+
+You can easily customize both what grid lines to use and what type they should be by adding the gpar object to a vactor:
+
+```{r}
+forestplot(tabletext, 
+           legend = c("Sweden", "Denmark"),
+           fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+           boxsize = .25, # We set the box size to better visualize the type
+           line.margin = .1, # We need to add this to avoid crowding
+           mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
+           lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
+           upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
+           clip =c(-.125, 0.075),
+           col=fpColors(box=c("blue", "darkred")),
+           grid = structure(c(-.1, -.05, .05), 
+                    gp = gpar(lty = 2, col = "#CCCCFF")), 
+           xlab="EQ-5D index")
+```
+
+If you are unfamiliar with the structure call it is equivalent to generating a vector and then setting an attribute, eg:
+
+```{r, eval=FALSE, echo=TRUE}
+grid_arg <- c(-.1, -.05, .05) 
+attr(grid_arg, "gp") <- gpar(lty = 2, col = "#CCCCFF")
+
+identical(grid_arg, 
+          structure(c(-.1, -.05, .05), 
+                    gp = gpar(lty = 2, col = "#CCCCFF")))
+# Returns TRUE
+```
+
 
 Ok, that's it. I hope you find the package `forestplot` useful.
