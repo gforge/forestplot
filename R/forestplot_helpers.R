@@ -421,10 +421,12 @@ fpDrawSummaryCI <- function(lower_limit, estimate, upper_limit,
 #'
 #' @author Max Gordon, Thomas Lumley
 #' @importFrom grDevices colorRampPalette
+#' @importFrom graphics par
 #'
 #' @example inst/examples/fpColors_example.R
 #' @export
 #' @family forestplot functions
+#'
 fpColors <- function (all.elements,
                       box        = "black",
                       lines      = "gray",

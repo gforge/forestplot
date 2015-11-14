@@ -1391,6 +1391,7 @@ prGetTextGrobCex <-  function(x) {
 #' @param total_columns Total number of columns
 #' @inheritParams forestplot
 #' @keywords internal
+#' @importFrom utils tail
 prFpGetLines <- function(hrzl_lines,
                          is.summary,
                          total_columns,
