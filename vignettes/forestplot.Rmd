@@ -17,7 +17,7 @@ knitr::opts_chunk$set(fig.width = 7,
                       fig.height=3, dev='png', dev.args=list(type="cairo"))
 ```
 
-[Forest plots](http://en.wikipedia.org/wiki/Forest_plot) date back to [1970s](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1120528/) and are most frequently seen in [meta-analysis](http://en.wikipedia.org/wiki/Meta-analysis), but are in no way restricted to these.  The `forestplot` package is all about providing these in R. It originated form the ['rmeta'](http://cran.r-project.org/web/packages/rmeta/index.html)-package's `forestplot` function and has a part from generating a standard forest plot, a few interesting features:
+[Forest plots](http://en.wikipedia.org/wiki/Forest_plot) date back to [1970s](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1120528/) and are most frequently seen in [meta-analysis](http://en.wikipedia.org/wiki/Meta-analysis), but are in no way restricted to these.  The `forestplot` package is all about providing these in R. It originated form the ['rmeta'](https://cran.r-project.org/package=rmeta)-package's `forestplot` function and has a part from generating a standard forest plot, a few interesting features:
 
 * **Text:**
     + Ability to use a table of text, i.e. the text can consist of several columns if needed&Dagger;
