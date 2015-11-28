@@ -288,6 +288,11 @@ forestplot <- function (labeltext,
          " Lower bound columns:", ncol(lower),
          " Upper bound columns:", ncol(upper))
 
+  if (NCOL(mean) != length(col$box)){
+    col$box <- rep(col$box, length.out = NCOL(mean))
+    col$line <- rep(col$lines, length.out = NCOL(mean))
+  }
+
   # Prepare the legend marker
   if (!missing(legend)){
     fn.legend <- prFpPrepareLegendMarker(fn.legend = fn.legend,

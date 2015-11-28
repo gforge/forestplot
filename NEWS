@@ -1,7 +1,12 @@
 NEWS for the forestplot package
 
-Changes for 1.3
+
+Changes for 1.3.1
 -----------------
+* Added a bug fix for when number of colors isn't equal to the dimension of the input causing the box not to be drawn
+
+Changes for 1.3
+---------------
 * Fixed bug when specifying graphwidth
 * Added ability to tailor the tick text
 * Added vertices example to vignette
