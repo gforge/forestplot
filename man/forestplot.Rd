@@ -11,8 +11,9 @@ forestplot(labeltext, mean, lower, upper, align, is.summary = FALSE,
   xticks.digits = 2, grid = FALSE, lwd.xaxis, lwd.zero, lwd.ci,
   lty.ci = 1, ci.vertices, ci.vertices.height = 0.1, boxsize,
   mar = unit(rep(5, times = 4), "mm"), title, legend,
-  legend_args = fpLegend(), new_page = FALSE, fn.ci_norm = fpDrawNormalCI,
-  fn.ci_sum = fpDrawSummaryCI, fn.legend, ...)
+  legend_args = fpLegend(), new_page = getOption("forestplot_new_page",
+  FALSE), fn.ci_norm = fpDrawNormalCI, fn.ci_sum = fpDrawSummaryCI,
+  fn.legend, ...)
 }
 \arguments{
 \item{labeltext}{A list, matrix, vector or expression with the names of each
@@ -134,7 +135,8 @@ the type \code{\link[grid]{unit}}}
 \item{legend_args}{The legend arguments as returned by the \code{\link{fpLegend}} function.}
 
 \item{new_page}{If you want the plot to appear on a new blank page then set this to \code{TRUE}, by
-default it is \code{FALSE}}
+default it is \code{FALSE}. If you want to change this behavior for all plots then
+set the \code{options(forestplot_new_page = TRUE)}}
 
 \item{fn.ci_norm}{You can specify exactly how the line with the box is
 drawn for the normal (i.e. non-summary) confidence interval by changing this

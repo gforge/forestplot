@@ -138,7 +138,8 @@
 #' @param legend Legend corresponding to the number of bars
 #' @param legend_args The legend arguments as returned by the \code{\link{fpLegend}} function.
 #' @param new_page If you want the plot to appear on a new blank page then set this to \code{TRUE}, by
-#'  default it is \code{FALSE}
+#'  default it is \code{FALSE}. If you want to change this behavior for all plots then
+#'  set the \code{options(forestplot_new_page = TRUE)}
 #' @param fn.ci_norm You can specify exactly how the line with the box is
 #'  drawn for the normal (i.e. non-summary) confidence interval by changing this
 #'  parameter to your own function or some of the alternatives provided in the package.
@@ -188,7 +189,7 @@ forestplot <- function (labeltext,
                         title,
                         legend,
                         legend_args          = fpLegend(),
-                        new_page             = FALSE,
+                        new_page             = getOption("forestplot_new_page", FALSE),
                         fn.ci_norm           = fpDrawNormalCI,
                         fn.ci_sum            = fpDrawSummaryCI,
                         fn.legend,
