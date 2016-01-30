@@ -98,6 +98,7 @@ fpDrawNormalCI <- function(lower_limit,
 #'
 #' @inheritParams fpDrawNormalCI
 #' @keywords internal
+#' @import magrittr
 #' @return \code{void}
 prFpDrawLine <- function (lower_limit, upper_limit, clr.line, lwd, lty, y.offset,
                           vertices, vertices.height = .1) {
@@ -181,7 +182,8 @@ prFpDrawLine <- function (lower_limit, upper_limit, clr.line, lwd, lty, y.offset
                unit(c(y_mm + vertices.height_mm,
                       y_mm,
                       y_mm - vertices.height_mm),
-                    "mm"))
+                    "mm") %>%
+               convertY("npc"))
     gp_list$lty = 1
     arrow_args$gp = do.call(gpar, gp_list)
 
@@ -189,7 +191,8 @@ prFpDrawLine <- function (lower_limit, upper_limit, clr.line, lwd, lty, y.offset
       x <- max(grid_line_args$x)
       x <- unit.c(x - unit(arrow_length, "mm"),
                   x,
-                  x - unit(arrow_length, "mm"))
+                  x - unit(arrow_length, "mm")) %>%
+        convertX("npc")
       arrow_args$x = x
       do.call(grid.lines, arrow_args)
     }
@@ -198,7 +201,8 @@ prFpDrawLine <- function (lower_limit, upper_limit, clr.line, lwd, lty, y.offset
       x <- min(grid_line_args$x)
       x <- unit.c(x + unit(arrow_length, "mm"),
                   x,
-                  x + unit(arrow_length, "mm"))
+                  x + unit(arrow_length, "mm")) %>%
+        convertX("npc")
       arrow_args$x <- x
       do.call(grid.lines, arrow_args)
     }
