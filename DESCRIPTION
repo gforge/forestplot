@@ -26,9 +26,10 @@ Depends:
     magrittr
 Suggests:
     testthat,
-    knitr
+    knitr,
+    rmarkdown
 Roxygen: list(wrap = FALSE)
 Encoding: UTF-8
 NeedsCompilation: no
-VignetteBuilder: knitr
+VignetteBuilder: rmarkdown
 RoxygenNote: 5.0.1
