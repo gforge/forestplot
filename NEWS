@@ -1,5 +1,11 @@
 NEWS for the forestplot package
 
+Changes for 1.5
+-----------------
+* Changed new_page to default to TRUE
+* Removed warnings for compatibility
+* Fixed so that squared multiline tables should now follow color behavior
+
 Changes for 1.4
 -----------------
 * Added a bug fix for when number of colors isn't equal to the dimension of the input causing the box not to be drawn
