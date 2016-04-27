@@ -1278,8 +1278,6 @@ prFpConvertMultidimArray <- function(x){
                  length(upper_cnr) != 1)
              stop("Sorry did not manage to automatically identify",
                   " the upper/lower boundaries.")
-           lower_cnr <- which.min(x[1,,1])
-           upper_cnr <- which.max(x[1,,1])
            lower <- x[,lower_cnr,,drop=TRUE]
            upper <- x[,upper_cnr,,drop=TRUE]
            mean <- x[,-c(upper_cnr, lower_cnr),,drop=TRUE]},{
