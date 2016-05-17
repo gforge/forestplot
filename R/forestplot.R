@@ -84,6 +84,8 @@
 #' @param graphwidth Width of confidence interval graph, see \code{\link[grid]{unit}} for
 #'   details on how to utilize mm etc. The default is \code{auto}, that is it uses up whatever
 #'   space that is left after adjusting for text size and legend
+#' @param colgap Sets the gap between columns, defaults to 6 mm but for relative widths.
+#'   Note that the value should be in \code{\link[grid]{unit}(,"npc")}.
 #' @param lineheight Height of the graph. By default this is \code{auto} and adjustes to the
 #'   space that is left after adjusting for x-axis size and legend. Sometimes
 #'   it might be desireable to set the line height to a certain height, for
@@ -138,8 +140,8 @@
 #' @param legend Legend corresponding to the number of bars
 #' @param legend_args The legend arguments as returned by the \code{\link{fpLegend}} function.
 #' @param new_page If you want the plot to appear on a new blank page then set this to \code{TRUE}, by
-#'  default it is \code{FALSE}. If you want to change this behavior for all plots then
-#'  set the \code{options(forestplot_new_page = TRUE)}
+#'  default it is \code{TRUE}. If you want to change this behavior for all plots then
+#'  set the \code{options(forestplot_new_page = FALSE)}
 #' @param fn.ci_norm You can specify exactly how the line with the box is
 #'  drawn for the normal (i.e. non-summary) confidence interval by changing this
 #'  parameter to your own function or some of the alternatives provided in the package.
@@ -170,6 +172,7 @@ forestplot <- function (labeltext,
                         xlab                 = "",
                         zero                 = ifelse(xlog, 1, 0),
                         graphwidth           = "auto",
+                        colgap,
                         lineheight           = "auto",
                         line.margin,
                         col                  = fpColors(),
@@ -189,12 +192,26 @@ forestplot <- function (labeltext,
                         title,
                         legend,
                         legend_args          = fpLegend(),
-                        new_page             = getOption("forestplot_new_page", FALSE),
+                        new_page             = getOption("forestplot_new_page", TRUE),
                         fn.ci_norm           = fpDrawNormalCI,
                         fn.ci_sum            = fpDrawSummaryCI,
                         fn.legend,
                         ...)
 {
+  if (missing(colgap)){
+    colgap <- convertUnit(unit(6, "mm"), "npc", valueOnly=TRUE)
+    if (colgap < .1)
+      colgap <- unit(.05, "npc")
+    else
+      colgap <- unit(colgap, "npc")
+  }else if(!grid::is.unit(colgap)){
+    colgap <- as.numeric(colgap)
+    if (is.na(colgap))
+      stop("Invalid colgap argument")
+  }
+  colgap <- convertUnit(colgap, "mm")
+
+
   # Warnings due to interface changes in 1.0
   dot_args <- list(...)
   if (any(grepl("^legend\\.", names(dot_args)))){
@@ -499,16 +516,6 @@ forestplot <- function (labeltext,
                           is.summary = is.summary,
                           txt_gp = txt_gp,
                           col = col)
-
-  # Set the gap between columns, I set it to
-  # 6 mm but for relative widths we switch it
-  # to npc that adapts to the window size
-  colgap <- convertUnit(unit(6, "mm"), "npc", valueOnly=TRUE)
-  if (colgap < .1)
-    colgap <- unit(.05, "npc")
-  else
-    colgap <- unit(colgap, "npc")
-  colgap <- convertUnit(colgap, "mm")
 
   # There is always at least one column so grab the widest one
   # and have that as the base for the column widths

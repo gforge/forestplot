@@ -6,13 +6,13 @@
 \usage{
 forestplot(labeltext, mean, lower, upper, align, is.summary = FALSE,
   graph.pos = "right", hrzl_lines, clip = c(-Inf, Inf), xlab = "",
-  zero = ifelse(xlog, 1, 0), graphwidth = "auto", lineheight = "auto",
-  line.margin, col = fpColors(), txt_gp = fpTxtGp(), xlog = FALSE, xticks,
-  xticks.digits = 2, grid = FALSE, lwd.xaxis, lwd.zero, lwd.ci,
-  lty.ci = 1, ci.vertices, ci.vertices.height = 0.1, boxsize,
-  mar = unit(rep(5, times = 4), "mm"), title, legend,
+  zero = ifelse(xlog, 1, 0), graphwidth = "auto", colgap,
+  lineheight = "auto", line.margin, col = fpColors(), txt_gp = fpTxtGp(),
+  xlog = FALSE, xticks, xticks.digits = 2, grid = FALSE, lwd.xaxis,
+  lwd.zero, lwd.ci, lty.ci = 1, ci.vertices, ci.vertices.height = 0.1,
+  boxsize, mar = unit(rep(5, times = 4), "mm"), title, legend,
   legend_args = fpLegend(), new_page = getOption("forestplot_new_page",
-  FALSE), fn.ci_norm = fpDrawNormalCI, fn.ci_sum = fpDrawSummaryCI,
+  TRUE), fn.ci_norm = fpDrawNormalCI, fn.ci_sum = fpDrawSummaryCI,
   fn.legend, ...)
 }
 \arguments{
@@ -61,6 +61,9 @@ will print a rectangle instead of just a line}
 \item{graphwidth}{Width of confidence interval graph, see \code{\link[grid]{unit}} for
 details on how to utilize mm etc. The default is \code{auto}, that is it uses up whatever
 space that is left after adjusting for text size and legend}
+
+\item{colgap}{Sets the gap between columns, defaults to 6 mm but for relative widths.
+Note that the value should be in \code{\link[grid]{unit}(,"npc")}.}
 
 \item{lineheight}{Height of the graph. By default this is \code{auto} and adjustes to the
 space that is left after adjusting for x-axis size and legend. Sometimes
@@ -135,8 +138,8 @@ the type \code{\link[grid]{unit}}}
 \item{legend_args}{The legend arguments as returned by the \code{\link{fpLegend}} function.}
 
 \item{new_page}{If you want the plot to appear on a new blank page then set this to \code{TRUE}, by
-default it is \code{FALSE}. If you want to change this behavior for all plots then
-set the \code{options(forestplot_new_page = TRUE)}}
+default it is \code{TRUE}. If you want to change this behavior for all plots then
+set the \code{options(forestplot_new_page = FALSE)}}
 
 \item{fn.ci_norm}{You can specify exactly how the line with the box is
 drawn for the normal (i.e. non-summary) confidence interval by changing this

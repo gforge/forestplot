@@ -33,7 +33,37 @@ forestplot(row_names, coef, low, high,
                         line=c("darkblue", "orange"),
                         summary=c("darkblue", "red")),
            xlab="The estimates",
-           new_page = TRUE,
+           legend_args = fpLegend(title = "Group",
+                                  pos = list("topright"),
+                                  r = unit(.1, "snpc"),
+                                  gp = gpar(col="#CCCCCC", lwd=1.5)),
+           legend=c("Treatment", "Placebo"))
+
+# Check colgap
+forestplot(row_names, coef, low, high,
+           fn.ci_norm=fpDrawDiamondCI,
+           title="Cool study",
+           colgap = unit(2, "mm"),
+           zero = 1, boxsize=0.25,
+           col=fpColors(box=c("royalblue", "gold"),
+                        line=c("darkblue", "orange"),
+                        summary=c("darkblue", "red")),
+           xlab="The estimates",
+           legend_args = fpLegend(title = "Group",
+                                  pos = list("topright"),
+                                  r = unit(.1, "snpc"),
+                                  gp = gpar(col="#CCCCCC", lwd=1.5)),
+           legend=c("Treatment", "Placebo"))
+
+forestplot(row_names, coef, low, high,
+           fn.ci_norm=fpDrawDiamondCI,
+           title="Cool study",
+           colgap = unit(20, "mm"),
+           zero = 1, boxsize=0.25,
+           col=fpColors(box=c("royalblue", "gold"),
+                        line=c("darkblue", "orange"),
+                        summary=c("darkblue", "red")),
+           xlab="The estimates",
            legend_args = fpLegend(title = "Group",
                                   pos = list("topright"),
                                   r = unit(.1, "snpc"),
@@ -51,7 +81,6 @@ forestplot(row_names, coef, low, high,
                         line=c("darkblue", "orange"),
                         summary=c("darkblue", "red")),
            xlab="The estimates",
-           new_page = TRUE,
            legend=c("Treatment", "Placebo"),
            legend_args = fpLegend(title = "Group",
                                   pos = list("topright"),
@@ -74,7 +103,6 @@ forestplot(row_names, coef, low, high,
                         line=c("darkblue", "orange"),
                         summary=c("darkblue", "red")),
            xlab="The estimates",
-           new_page = TRUE,
            legend=c("Treatment", "Placebo"),
            legend_args = fpLegend(title = "Group",
                                   pos = list("topright"),
@@ -92,7 +120,6 @@ forestplot(row_names, coef, low, high,
                         line=c("darkblue", "orange"),
                         summary=c("darkblue", "red")),
            xlab="The estimates",
-           new_page = TRUE,
            legend=c("Treatment", "Placebo"),
            legend_args = fpLegend(title = "Group",
                                   pos = list("topright"),
@@ -108,7 +135,6 @@ forestplot(row_names, coef, low, high,
                         line=c("darkblue", "orange"),
                         summary=c("darkblue", "red")),
            xlab="The estimates",
-           new_page = TRUE,
            legend=c("Treatment", "Placebo"),
            legend_args = fpLegend(title = "Group",
                                   pos = list("topright"),
@@ -124,7 +150,6 @@ forestplot(row_names, coef, low, high,
                         line=c("darkblue", "orange"),
                         summary=c("darkblue", "red")),
            xlab="The estimates",
-           new_page = TRUE,
            legend=c("Treatment", "Placebo"),
            legend_args = fpLegend(title = "Group", pos="top"))
 
@@ -135,8 +160,7 @@ forestplot(row_names, coef, low, high,
            col=fpColors(box=c("royalblue", "gold"),
                         line=c("darkblue", "orange"),
                         summary=c("darkblue", "red")),
-           xlab="The estimates",
-           new_page = TRUE)
+           xlab="The estimates")
 
 
 # Check line-height
@@ -149,10 +173,7 @@ forestplot(row_names, coef, low, high,
            col=fpColors(box=c("royalblue", "gold"),
                         line=c("darkblue", "orange"),
                         summary=c("darkblue", "red")),
-           xlab="The estimates",
-           new_page = TRUE)
-
-
+           xlab="The estimates")
 
 forestplot(row_names, coef, low, high,
            line.margin = .1,
@@ -228,3 +249,19 @@ forestplot(row_names, coef, low, high,
            xlab="The estimates")
 grid.rect(gp=gpar(col="red", fill=NA, lwd=2))
 popViewport()
+
+row_names <- list(list("test = 1", expression(test >= 2)))
+
+test_data <- data.frame(coef=c(1.8, .8),
+                        low=c(1.4, 0.4),
+                        high=c(5, 1.55))
+
+forestplot(row_names,
+           test_data$coef,
+           test_data$low,
+           test_data$high,
+           zero = 1,
+           cex = 1,
+           lineheight = "auto",
+           xlab = "Odds",
+           xlog = TRUE)

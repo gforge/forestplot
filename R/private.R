@@ -273,7 +273,7 @@ prFpGetGraphTicksAndClips <- function(xticks,
       # Update the range so that it includes the ticks
       if (min(x_range) > log(min(ticks)))
         x_range[which.min(x_range)] <- log(min(ticks))
-      if (max(x_range) < max(ticks))
+      if (max(x_range) < log(max(ticks)))
         x_range[which.max(x_range)] <- log(max(ticks))
 
     } else {
