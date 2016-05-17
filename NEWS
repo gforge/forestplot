@@ -1,9 +1,15 @@
 NEWS for the forestplot package
 
-Changes for 1.4.1
+Changes for 1.5.1
 ------------------
 * Fixed xlog bug
 * Added a colgap option
+
+Changes for 1.5
+-----------------
+* Changed new_page to default to TRUE
+* Removed warnings for compatibility
+* Fixed so that squared multiline tables should now follow color behavior
 
 Changes for 1.4
 -----------------

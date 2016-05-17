@@ -238,7 +238,7 @@ forestplot(tabletext,
            clip =c(-.125, 0.075),
            col=fpColors(box=c("blue", "darkred")),
            grid = structure(c(-.1, -.05, .05), 
-                    gp = gpar(lty = 2, col = "#CCCCFF")), 
+                            gp = gpar(lty = 2, col = "#CCCCFF")), 
            xlab="EQ-5D index")
 
 ## ---- eval=FALSE, echo=TRUE----------------------------------------------

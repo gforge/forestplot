@@ -96,10 +96,10 @@ prPopulateList <- function(elmnt, no_rows, no_cols){
              " confidence interval funcitons, ",
              nrow(elmnt), " != ", no_rows)
 
-    }else if (length(elmnt) %in% c(1, no_rows)){
-      elmnt <- matrix(elmnt, nrow=no_rows, ncol=no_cols)
     }else if (length(elmnt) == no_cols){
       elmnt <- matrix(elmnt, nrow=no_rows, ncol=no_cols, byrow=TRUE)
+    }else if (length(elmnt) %in% c(1, no_rows)){
+      elmnt <- matrix(elmnt, nrow=no_rows, ncol=no_cols)
     }else{
       stop("You have not provided the expected",
            " number of elements: ",
@@ -425,13 +425,14 @@ prFpGetGraphTicksAndClips <- function(xticks,
     labGrob <- FALSE
   }
 
-  return(list(axis_vp = axis_vp,
-              axisGrob = dg,
-              gridList = gridList,
-              labGrob = labGrob,
-              zero = zero,
-              clip = clip,
-              x_range = x_range))
+  ret = list(axis_vp = axis_vp,
+             axisGrob = dg,
+             gridList = gridList,
+             labGrob = labGrob,
+             zero = zero,
+             clip = clip,
+             x_range = x_range)
+  return(ret)
 }
 
 #' Plots the x-axis for forestplot
@@ -1277,8 +1278,6 @@ prFpConvertMultidimArray <- function(x){
                  length(upper_cnr) != 1)
              stop("Sorry did not manage to automatically identify",
                   " the upper/lower boundaries.")
-           lower_cnr <- which.min(x[1,,1])
-           upper_cnr <- which.max(x[1,,1])
            lower <- x[,lower_cnr,,drop=TRUE]
            upper <- x[,upper_cnr,,drop=TRUE]
            mean <- x[,-c(upper_cnr, lower_cnr),,drop=TRUE]},{

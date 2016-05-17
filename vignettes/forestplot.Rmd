@@ -347,7 +347,8 @@ forestplot(tabletext,
 ```
 
 Sometimes you have a very tall graph and you want to add helper lines in order
-to make it easier to see the tick marks. You can do this through the `grid` argument:
+to make it easier to see the tick marks. This can be useful in non-inferiority 
+or equivalence studies. You can do this through the `grid` argument:
 
 ```{r}
 forestplot(tabletext, 
@@ -365,7 +366,7 @@ forestplot(tabletext,
            xlab="EQ-5D index")
 ```
 
-You can easily customize both what grid lines to use and what type they should be by adding the gpar object to a vactor:
+You can easily customize both what grid lines to use and what type they should be by adding the gpar object to a vector:
 
 ```{r}
 forestplot(tabletext, 
@@ -379,7 +380,7 @@ forestplot(tabletext,
            clip =c(-.125, 0.075),
            col=fpColors(box=c("blue", "darkred")),
            grid = structure(c(-.1, -.05, .05), 
-                    gp = gpar(lty = 2, col = "#CCCCFF")), 
+                            gp = gpar(lty = 2, col = "#CCCCFF")), 
            xlab="EQ-5D index")
 ```
 
