@@ -352,6 +352,9 @@ forestplot <- function (labeltext,
   if (is.data.frame(upper))
     upper <- as.matrix(upper)
 
+  # Instantiate a new page - forced if no device exists
+  if (new_page || dev.cur() == 1) grid.newpage()
+
   # Save the original values since the function due to it's inheritance
   # from the original forestplot needs some changing to the parameters
   if (xlog){
@@ -543,10 +546,9 @@ forestplot <- function (labeltext,
                                         graph.pos = graph.pos)
   clip <- axisList$clip
 
-  ###################
-  # Create the plot #
-  ###################
-  if (new_page) grid.newpage()
+  ##################
+  # Build the plot #
+  ##################
 
   # Adjust for the margins and the x-axis + label
   marList <- list()
@@ -670,7 +672,7 @@ forestplot <- function (labeltext,
     # If graph width is not provided as a unit the autosize it to the
     # rest of the space available
     npc_colwidths <- convertUnit(unit.c(colwidths, colgap), "npc", valueOnly=TRUE)
-    graphwidth <- unit(1 - sum(npc_colwidths), "npc")
+    graphwidth <- unit(max(.05, 1 - sum(npc_colwidths)), "npc")
   }else if(!is.unit(graphwidth)){
     stop("You have to provide graph width either as a unit() object or as 'auto'.",
       " Auto sizes the graph to maximally use the available space.",

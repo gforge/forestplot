@@ -1,5 +1,9 @@
 NEWS for the forestplot package
 
+Changes for 1.4.1
+-----------------
+* Bug fix for plots wider than the div (Thanks Michael Obeda for reporting)
+
 Changes for 1.4
 -----------------
 * Added a bug fix for when number of colors isn't equal to the dimension of the input causing the box not to be drawn
