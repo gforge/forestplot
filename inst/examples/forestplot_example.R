@@ -16,8 +16,7 @@ forestplot(row_names,
            zero = 1,
            cex  = 2,
            lineheight = "auto",
-           xlab = "Lab axis txt",
-           new_page = TRUE)
+           xlab = "Lab axis txt")
 
 # Print two plots side by side using the grid
 # package's layout option for viewports
@@ -31,7 +30,8 @@ forestplot(row_names,
            zero = 1,
            cex  = 2,
            lineheight = "auto",
-           xlab = "Lab axis txt")
+           xlab = "Lab axis txt",
+           new_page = FALSE)
 popViewport()
 pushViewport(viewport(layout.pos.col = 2))
 forestplot(row_names,
@@ -41,7 +41,8 @@ forestplot(row_names,
            zero = 1,
            cex  = 2,
            lineheight = "auto",
-           xlab = "Lab axis txt")
+           xlab = "Lab axis txt",
+           new_page = FALSE)
 popViewport(2)
 
 
@@ -70,7 +71,9 @@ low <- with(test_data, cbind(low1, low2))
 high <- with(test_data, cbind(high1, high2))
 forestplot(row_names, coef, low, high,
            title="Cool study",
-           zero = c(0.98, 1.02), boxsize=0.25,
+           zero = c(0.98, 1.02),
+           grid = structure(c(2^-.5, 2^.5), gp = gpar(col = "steelblue", lty=2)),
+           boxsize=0.25,
            col=fpColors(box=c("royalblue", "gold"),
                         line=c("darkblue", "orange"),
                         summary=c("darkblue", "red")),
@@ -97,8 +100,7 @@ forestplot(labeltext = row_names,
            boxsize   = test_data$boxsize,
            zero      = 1,
            xlog      = TRUE,
-           col = fpColors(lines="red", box="darkred"),
-           new_page = TRUE)
+           col = fpColors(lines="red", box="darkred"))
 
 
 par(ask=ask)
