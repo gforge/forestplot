@@ -156,6 +156,7 @@
 #'  \code{fn.ci_sum} arguments
 #'
 #' @import grid
+#' @importFrom grDevices dev.cur
 #'
 #' @author Max Gordon, Thomas Lumley
 #'
