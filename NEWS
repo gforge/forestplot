@@ -7,6 +7,7 @@ Changes for 1.5.2
 * When any of the inputs is missing for a line the line is skipped (issue #5)
 * Added checkmate for argument validation
 * Added option of just specifying the rows that the CI should be applied to (issue #7)
+* Added fpDrawBarCI (thanks Christian Röver)
 
 Changes for 1.5.1
 ------------------

@@ -395,7 +395,7 @@ fpDrawPointCI <- function(lower_limit,
 }
 
 #' @rdname fpDrawCI
-#' @param col The color of the summary diamond.
+#' @param col The color of the summary objecct
 #' @export
 fpDrawSummaryCI <- function(lower_limit, estimate, upper_limit,
                             size, col, y.offset = 0.5,
@@ -415,6 +415,16 @@ fpDrawSummaryCI <- function(lower_limit, estimate, upper_limit,
                           c(0, 0.5 * size, 0, -0.5 * size), "npc"),
                gp = gpar(fill = col,
                          col = col))
+}
+
+#' @rdname fpDrawCI
+#' @export
+fpDrawBarCI <- function (lower_limit, estimate, upper_limit, size, col, y.offset = 0.5, ...)
+{
+  size <- ifelse(is.unit(size), convertUnit(size, unitTo = "npc", valueOnly = TRUE), size) * 0.9
+  grid.polygon(x = unit(c(lower_limit, upper_limit, upper_limit, lower_limit), "native"),
+               y = unit(y.offset + 0.5*c(1, 1, -1, -1)* size, "npc"),
+               gp = gpar(fill = col, col = col))
 }
 
 #' A function for the color elements used in forestplot()
