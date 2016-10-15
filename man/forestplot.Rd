@@ -2,11 +2,14 @@
 % Please edit documentation in R/forestplot.R
 \name{forestplot}
 \alias{forestplot}
+\alias{forestplot.default}
 \title{Draws a forest plot}
 \usage{
-forestplot(labeltext, mean, lower, upper, align, is.summary = FALSE,
-  graph.pos = "right", hrzl_lines, clip = c(-Inf, Inf), xlab = "",
-  zero = ifelse(xlog, 1, 0), graphwidth = "auto", colgap,
+forestplot(...)
+
+\method{forestplot}{default}(labeltext, mean, lower, upper, align,
+  is.summary = FALSE, graph.pos = "right", hrzl_lines, clip = c(-Inf,
+  Inf), xlab = "", zero = ifelse(xlog, 1, 0), graphwidth = "auto", colgap,
   lineheight = "auto", line.margin, col = fpColors(), txt_gp = fpTxtGp(),
   xlog = FALSE, xticks, xticks.digits = 2, grid = FALSE, lwd.xaxis,
   lwd.zero, lwd.ci, lty.ci = 1, ci.vertices, ci.vertices.height = 0.1,
@@ -16,6 +19,9 @@ forestplot(labeltext, mean, lower, upper, align, is.summary = FALSE,
   fn.legend, ...)
 }
 \arguments{
+\item{...}{Passed on to the \code{fn.ci_norm} and
+\code{fn.ci_sum} arguments}
+
 \item{labeltext}{A list, matrix, vector or expression with the names of each
 row. The list should be wrapped in m x n number to resemble a matrix:
 \code{list(list("rowname 1 col 1", "rowname 2 col 1"), list("r1c2", expression(beta))}.
@@ -153,9 +159,9 @@ and it defaults to \code{\link{fpDrawSummaryCI}}.}
 legends, this can be a list if you want different functions. It defaults to
 a box if you have anything else than a single function or the number of columns
 in the \code{mean} argument}
-
-\item{...}{Passed on to the \code{fn.ci_norm} and
-\code{fn.ci_sum} arguments}
+}
+\value{
+\code{NULL}
 }
 \description{
 The \emph{forestplot} is based on the \pkg{rmeta}-package`s
