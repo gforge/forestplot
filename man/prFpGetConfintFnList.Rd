@@ -4,7 +4,7 @@
 \alias{prFpGetConfintFnList}
 \title{Get a function list}
 \usage{
-prFpGetConfintFnList(fn, no_rows, no_cols)
+prFpGetConfintFnList(fn, no_rows, no_cols, missing_rows, is.summary, summary)
 }
 \arguments{
 \item{fn}{The function list/matrix. If a list it
@@ -16,6 +16,12 @@ and what is a row.}
 \item{no_rows}{Number of rows}
 
 \item{no_cols}{Number of columns}
+
+\item{missing_rows}{The rows that don't have a CI}
+
+\item{is.summary}{A vector indicating by \code{TRUE}/\code{FALSE} if
+the value is a summary value which means that it will have a different
+font-style}
 }
 \value{
 \code{list} The function returns a list that has

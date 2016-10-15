@@ -174,6 +174,7 @@ forestplot <- function(...)
 #' @rdname forestplot
 #' @method forestplot default
 #' @export
+#' @importFrom checkmate assert_class assert_vector
 forestplot.default <- function (labeltext,
                                 mean, lower, upper,
                                 align,
@@ -223,11 +224,8 @@ forestplot.default <- function (labeltext,
   }
   colgap <- convertUnit(colgap, "mm")
 
-  if (!inherits(txt_gp, "fpTxtGp"))
-    stop("The txt_gp argument must come from a call to the fpTxtGp() function")
-
-  if (!inherits(col, "fpColors"))
-    stop("The col argument must come from a call to the fpColors() function")
+  assert_class(txt_gp, "fpTxtGp")
+  assert_class(col, "fpColors")
 
   if (missing(lower) &&
       missing(upper) &&
@@ -236,18 +234,13 @@ forestplot.default <- function (labeltext,
       stop("You need to provide the labeltext or",
            " the mean/lower/upper arguments")
 
-    if (NCOL(labeltext) != 3)
-      stop("If you only provide the function the labeltext and",
-           " not the mean/lower/upper then you need to have",
-           " a 3-column labeltext where the columns correspond to",
-           " the mean, lower, and upper columns")
+    assert_matrix(labeltext, ncols=3)
 
     mean <- labeltext
     labeltext <- rownames(mean)
   }
 
-  if (length(zero) > 2)
-    stop("The zero marker can only be 1 or 2 values, you have provided: '", length(zero), "' values")
+  assert_vector(zero, max.len = 2)
 
   if (missing(labeltext))
     labeltext <- rownames(mean)
@@ -291,19 +284,6 @@ forestplot.default <- function (labeltext,
                                          col_no = NCOL(mean),
                                          fn.ci_norm = fn.ci_norm)
   }
-
-  fn.ci_norm <-
-    prFpGetConfintFnList(fn = fn.ci_norm,
-                         no_rows = NROW(mean),
-                         no_cols = NCOL(mean))
-  fn.ci_sum <-
-    prFpGetConfintFnList(fn = fn.ci_sum,
-                         no_rows = NROW(mean),
-                         no_cols = NCOL(mean))
-
-  lty.ci <- prPopulateList(lty.ci,
-                           no_rows = NROW(mean),
-                           no_cols = NCOL(mean))
 
   if (!is.unit(lineheight) && !lineheight %in% c("auto", "lines"))
     stop("The argument lineheight must either be of type unit or set to 'auto',",
@@ -471,6 +451,32 @@ forestplot.default <- function (labeltext,
   }
 
   is.summary <- rep(is.summary, length = nr)
+
+  if (is.matrix(mean)) {
+    missing_rows <- apply(mean, 2, function(row) all(is.na(row)))
+  }else{
+    missing_rows <- sapply(mean, is.na)
+  }
+
+  fn.ci_norm <-
+    prFpGetConfintFnList(fn = fn.ci_norm,
+                         no_rows = NROW(mean),
+                         no_cols = NCOL(mean),
+                         missing_rows = missing_rows,
+                         is.summary = is.summary,
+                         summary = FALSE)
+  fn.ci_sum <-
+    prFpGetConfintFnList(fn = fn.ci_sum,
+                         no_rows = NROW(mean),
+                         no_cols = NCOL(mean),
+                         missing_rows = missing_rows,
+                         is.summary = is.summary,
+                         summary = TRUE)
+
+  lty.ci <- prPopulateList(lty.ci,
+                           no_rows = NROW(mean),
+                           no_cols = NCOL(mean))
+
 
   hrzl_lines <- prFpGetLines(hrzl_lines = hrzl_lines,
                              is.summary = is.summary,

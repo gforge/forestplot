@@ -23,7 +23,8 @@ BugReports: https://github.com/gforge/forestplot/issues
 Biarch: yes
 Depends:
     grid,
-    magrittr
+    magrittr,
+    checkmate
 Suggests:
     testthat,
     knitr,
