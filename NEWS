@@ -4,6 +4,7 @@ Changes for 1.5.2
 -----------------
 * Changed forestplot function to S3 style (thanks Christian Röver)
 * Fixed bug with alignment for summary elements
+* When any of the inputs is missing for a line the line is skipped (issue #5)
 
 Changes for 1.5.1
 ------------------

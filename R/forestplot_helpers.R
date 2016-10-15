@@ -58,6 +58,11 @@ fpDrawNormalCI <- function(lower_limit,
                            vertices.height = .1,
                            ...) {
 
+  if (is.na(lower_limit) ||
+      is.na(estimate) ||
+      is.na(upper_limit))
+    return();
+
   # Funciton for drawing the confidence line
   prFpDrawLine(lower_limit = lower_limit,
                upper_limit = upper_limit,
@@ -253,6 +258,11 @@ fpDrawDiamondCI <- function(lower_limit,
                             vertices,
                             vertices.height = .1,
                             ...) {
+  if (is.na(lower_limit) ||
+      is.na(estimate) ||
+      is.na(upper_limit))
+    return();
+
   # Funciton for drawing the confidence line
   prFpDrawLine(lower_limit = lower_limit,
                upper_limit = upper_limit,
@@ -298,6 +308,11 @@ fpDrawCircleCI <- function(lower_limit,
                            vertices,
                            vertices.height = .1,
                            ...) {
+  if (is.na(lower_limit) ||
+      is.na(estimate) ||
+      is.na(upper_limit))
+    return();
+
   # Funciton for drawing the confidence line
   prFpDrawLine(lower_limit = lower_limit,
                upper_limit = upper_limit,
@@ -344,6 +359,11 @@ fpDrawPointCI <- function(lower_limit,
                           vertices.height = .1,
                           pch = 1,
                           ...) {
+  if (is.na(lower_limit) ||
+      is.na(estimate) ||
+      is.na(upper_limit))
+    return();
+
   # Funciton for drawing the confidence line
   prFpDrawLine(lower_limit = lower_limit,
                upper_limit = upper_limit,
@@ -380,6 +400,11 @@ fpDrawPointCI <- function(lower_limit,
 fpDrawSummaryCI <- function(lower_limit, estimate, upper_limit,
                             size, col, y.offset = 0.5,
                             ...) {
+  if (is.na(lower_limit) ||
+      is.na(estimate) ||
+      is.na(upper_limit))
+    return();
+
   # Convert size into 'npc' value only if
   # it is provided as a unit() object
   size <- ifelse(is.unit(size),
