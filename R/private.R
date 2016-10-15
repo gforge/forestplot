@@ -905,11 +905,7 @@ prFpGetLabels <- function(label_type, labeltext, align,
 
         # Bold the text if this is a summary
         if (is.summary[i]){
-          if (is.expression(txt_out)){
-            x <- 0.5
-          }else{
-            x <- switch(align[j], l = 0, r = 1, c = 0.5)
-          }
+          x <- switch(align[j], l = 0, r = 1, c = 0.5)
 
           gp_list <- txt_gp$summary[[sum(is.summary[1:i])]][[j]]
           gp_list[["col"]] <- rep(col$text, length = nr)[i]

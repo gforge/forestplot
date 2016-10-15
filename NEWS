@@ -3,6 +3,7 @@ NEWS for the forestplot package
 Changes for 1.5.2
 -----------------
 * Changed forestplot function to S3 style (thanks Christian Röver)
+* Fixed bug with alignment for summary elements
 
 Changes for 1.5.1
 ------------------
