@@ -460,22 +460,22 @@ forestplot.default <- function (labeltext,
 
   fn.ci_norm <-
     prFpGetConfintFnList(fn = fn.ci_norm,
-                         no_rows = NROW(mean),
-                         no_cols = NCOL(mean),
+                         no_rows = NROW(org_mean),
+                         no_cols = NCOL(org_mean),
                          missing_rows = missing_rows,
                          is.summary = is.summary,
                          summary = FALSE)
   fn.ci_sum <-
     prFpGetConfintFnList(fn = fn.ci_sum,
-                         no_rows = NROW(mean),
-                         no_cols = NCOL(mean),
+                         no_rows = NROW(org_mean),
+                         no_cols = NCOL(org_mean),
                          missing_rows = missing_rows,
                          is.summary = is.summary,
                          summary = TRUE)
 
   lty.ci <- prPopulateList(lty.ci,
-                           no_rows = NROW(mean),
-                           no_cols = NCOL(mean))
+                           no_rows = NROW(org_mean),
+                           no_cols = NCOL(org_mean))
 
 
   hrzl_lines <- prFpGetLines(hrzl_lines = hrzl_lines,
