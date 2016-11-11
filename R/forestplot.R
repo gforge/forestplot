@@ -175,7 +175,7 @@ forestplot <- function(...)
 #' @rdname forestplot
 #' @method forestplot default
 #' @export
-#' @importFrom checkmate assert_class assert_vector
+#' @importFrom checkmate assert_class assert_vector assert_matrix
 forestplot.default <- function (labeltext,
                                 mean, lower, upper,
                                 align,

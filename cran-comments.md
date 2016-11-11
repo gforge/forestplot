@@ -1,5 +1,5 @@
 ## Test environments
-* local Ubuntu, R 3.3.0
+* local Ubuntu, R 3.3.2
 * rocker/r-devel version (gforge/r-dev)
 
 ## R CMD check results
