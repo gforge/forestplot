@@ -1,7 +1,13 @@
 NEWS for the forestplot package
 
-Changes for 1.5.1
-------------------
+Changes for 1.6
+-----------------
+* Changed forestplot function to S3 style (thanks Christian Röver)
+* Fixed bug with alignment for summary elements
+* When any of the inputs is missing for a line the line is skipped (issue #5)
+* Added checkmate for argument validation
+* Added option of just specifying the rows that the CI should be applied to (issue #7)
+* Added fpDrawBarCI (thanks Christian Röver)
 * Fixed xlog bug
 * Added a colgap option
 * Bug fix for plots wider than the div (Thanks Michael Obeda for reporting)

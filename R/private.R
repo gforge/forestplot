@@ -11,15 +11,18 @@
 #'  and what is a row.
 #' @param no_rows Number of rows
 #' @param no_cols Number of columns
+#' @param missing_rows The rows that don't have a CI
 #' @return \code{list} The function returns a list that has
 #' the format [[row]][[col]] where each element contains the
 #' function that you need to call using the \code{\link[base]{as.call}}
 #' and \code{\link[base]{eval}} functions: \code{eval(as.call(list(fn[[row]][[col]], arg_1=1, arg_2=2)))}
 #'
-#'
+#' @inheritParams forestplot
 #' @keywords internal
-prFpGetConfintFnList <- function(fn, no_rows, no_cols){
-  ret <- prPopulateList(fn, no_rows = no_rows, no_cols = no_cols)
+prFpGetConfintFnList <- function(fn, no_rows, no_cols, missing_rows, is.summary, summary){
+  ret <- prPopulateList(fn, no_rows = no_rows, no_cols = no_cols,
+                        missing_rows = missing_rows,
+                        is.summary = is.summary, summary = summary)
 
   makeCalleable <- function(value){
     if (is.function(value)){
@@ -57,13 +60,14 @@ prFpGetConfintFnList <- function(fn, no_rows, no_cols){
 #'  and what is a row.
 #' @param no_rows Number of rows
 #' @param no_cols Number of columns
+#' @param missing_rows The rows that don't have data
 #' @return \code{list} The function returns a list that has
 #'  the format [[row]][[col]] where each element contains the
 #'  corresponding element
 #'
-#'
+#' @inheritParams forestplot
 #' @keywords internal
-prPopulateList <- function(elmnt, no_rows, no_cols){
+prPopulateList <- function(elmnt, no_rows, no_cols, missing_rows, is.summary, summary){
   # Return a list that has
   # a two dim structure of [[row]][[col]]
   # if you have a matrix provided but if you
@@ -123,12 +127,42 @@ prPopulateList <- function(elmnt, no_rows, no_cols){
   }else if (is.list(elmnt)){
     if (no_cols == 1){
       # Actually correct if the lengths add up
-      if (length(elmnt) != no_rows)
-        stop("You do not have the same number of ",
-             "confidence interval functions as you have ",
-             "number of rows: ", length(elmnt), "!=", no_rows,
-             " You should provide the same number.")
-      ret <- elmnt
+      if (length(elmnt) != no_rows) {
+        if (length(elmnt) == sum(is.summary == summary)){
+            ret <- list()
+            i <- 1
+            for (is_row_summary in is.summary){
+              if (is_row_summary ==  summary) {
+                ret <- append(ret, elmnt[[i]])
+                i <- i + 1
+              }else{
+                # For simplicity all non-same elements have the last summary element
+                # As this element isn't outputted it doesn't matter
+                ret <- append(ret, elmnt[[i]])
+              }
+            }
+        }else if(length(elmnt) == sum(is.summary == summary & !missing_rows)){
+          ret <- list()
+          i <- 1
+          for (row_no in 1:length(is.summary)){
+            if (is.summary[row_no] ==  summary & !missing_rows[row_no]) {
+              ret <- append(ret, elmnt[[i]])
+              i <- i + 1
+            }else{
+              # For simplicity all non-same elements have the last summary element
+              # As this element isn't outputted it doesn't matter
+              ret <- append(ret, elmnt[[i]])
+            }
+          }
+        }else{
+          stop("You do not have the same number of ",
+               "confidence interval functions as you have ",
+               "number of rows: ", length(elmnt), "!=", no_rows,
+               " You should provide the same number.")
+        }
+      }else{
+        ret <- elmnt
+      }
     }else{
       # Populate a new elmnt list
       if (length(elmnt) == no_rows){
@@ -905,11 +939,7 @@ prFpGetLabels <- function(label_type, labeltext, align,
 
         # Bold the text if this is a summary
         if (is.summary[i]){
-          if (is.expression(txt_out)){
-            x <- 0.5
-          }else{
-            x <- switch(align[j], l = 0, r = 1, c = 0.5)
-          }
+          x <- switch(align[j], l = 0, r = 1, c = 0.5)
 
           gp_list <- txt_gp$summary[[sum(is.summary[1:i])]][[j]]
           gp_list[["col"]] <- rep(col$text, length = nr)[i]

@@ -162,42 +162,55 @@
 #'
 #' @example inst/examples/forestplot_example.R
 #' @family forestplot functions
+#' @rdname forestplot
+#' @export forestplot
+#' @aliases forestplot forestplot.default
+forestplot <- function(...)
+{
+  UseMethod("forestplot")
+}
+
+#' @return \code{NULL}
+#'
+#' @rdname forestplot
+#' @method forestplot default
 #' @export
-forestplot <- function (labeltext,
-                        mean, lower, upper,
-                        align,
-                        is.summary           = FALSE,
-                        graph.pos            = "right",
-                        hrzl_lines,
-                        clip                 = c(-Inf, Inf),
-                        xlab                 = "",
-                        zero                 = ifelse(xlog, 1, 0),
-                        graphwidth           = "auto",
-                        colgap,
-                        lineheight           = "auto",
-                        line.margin,
-                        col                  = fpColors(),
-                        txt_gp               = fpTxtGp(),
-                        xlog                 = FALSE,
-                        xticks,
-                        xticks.digits        = 2,
-                        grid                 = FALSE,
-                        lwd.xaxis,
-                        lwd.zero,
-                        lwd.ci,
-                        lty.ci = 1,
-                        ci.vertices,
-                        ci.vertices.height = .1,
-                        boxsize,
-                        mar                  = unit(rep(5, times=4), "mm"),
-                        title,
-                        legend,
-                        legend_args          = fpLegend(),
-                        new_page             = getOption("forestplot_new_page", TRUE),
-                        fn.ci_norm           = fpDrawNormalCI,
-                        fn.ci_sum            = fpDrawSummaryCI,
-                        fn.legend,
-                        ...)
+#' @importFrom checkmate assert_class assert_vector
+forestplot.default <- function (labeltext,
+                                mean, lower, upper,
+                                align,
+                                is.summary         = FALSE,
+                                graph.pos          = "right",
+                                hrzl_lines,
+                                clip               = c(-Inf, Inf),
+                                xlab               = "",
+                                zero               = ifelse(xlog, 1, 0),
+                                graphwidth         = "auto",
+                                colgap,
+                                lineheight         = "auto",
+                                line.margin,
+                                col                = fpColors(),
+                                txt_gp             = fpTxtGp(),
+                                xlog               = FALSE,
+                                xticks,
+                                xticks.digits      = 2,
+                                grid               = FALSE,
+                                lwd.xaxis,
+                                lwd.zero,
+                                lwd.ci,
+                                lty.ci = 1,
+                                ci.vertices,
+                                ci.vertices.height = .1,
+                                boxsize,
+                                mar                = unit(rep(5, times=4), "mm"),
+                                title,
+                                legend,
+                                legend_args        = fpLegend(),
+                                new_page           = getOption("forestplot_new_page", TRUE),
+                                fn.ci_norm         = fpDrawNormalCI,
+                                fn.ci_sum          = fpDrawSummaryCI,
+                                fn.legend,
+                                ...)
 {
   if (missing(colgap)){
     colgap <- convertUnit(unit(6, "mm"), "npc", valueOnly=TRUE)
@@ -212,31 +225,23 @@ forestplot <- function (labeltext,
   }
   colgap <- convertUnit(colgap, "mm")
 
-  if (!inherits(txt_gp, "fpTxtGp"))
-    stop("The txt_gp argument must come from a call to the fpTxtGp() function")
-
-  if (!inherits(col, "fpColors"))
-    stop("The col argument must come from a call to the fpColors() function")
+  assert_class(txt_gp, "fpTxtGp")
+  assert_class(col, "fpColors")
 
   if (missing(lower) &&
-        missing(upper) &&
-        missing(mean)){
+      missing(upper) &&
+      missing(mean)){
     if(missing(labeltext))
       stop("You need to provide the labeltext or",
            " the mean/lower/upper arguments")
 
-    if (NCOL(labeltext) != 3)
-      stop("If you only provide the function the labeltext and",
-           " not the mean/lower/upper then you need to have",
-           " a 3-column labeltext where the columns correspond to",
-           " the mean, lower, and upper columns")
+    assert_matrix(labeltext, ncols=3)
 
     mean <- labeltext
     labeltext <- rownames(mean)
   }
 
-  if (length(zero) > 2)
-    stop("The zero marker can only be 1 or 2 values, you have provided: '", length(zero), "' values")
+  assert_vector(zero, max.len = 2)
 
   if (missing(labeltext))
     labeltext <- rownames(mean)
@@ -247,7 +252,7 @@ forestplot <- function (labeltext,
   # Assume that lower and upper are contained within
   # the mean variable
   if (missing(lower) &&
-        missing(upper)){
+      missing(upper)){
     if (NCOL(mean) != 3)
       stop("If you do not provide lower/upper arguments your mean needs to have 3 columns")
 
@@ -262,8 +267,8 @@ forestplot <- function (labeltext,
   }
 
   if (NCOL(mean) != NCOL(lower) ||
-        NCOL(lower) != NCOL(upper) ||
-        NCOL(mean) == 0)
+      NCOL(lower) != NCOL(upper) ||
+      NCOL(mean) == 0)
     stop('Mean, lower and upper contain invalid number of columns',
          " Mean columns:", ncol(mean),
          " Lower bound columns:", ncol(lower),
@@ -277,26 +282,13 @@ forestplot <- function (labeltext,
   # Prepare the legend marker
   if (!missing(legend)){
     fn.legend <- prFpPrepareLegendMarker(fn.legend = fn.legend,
-                                              col_no = NCOL(mean),
-                                              fn.ci_norm = fn.ci_norm)
+                                         col_no = NCOL(mean),
+                                         fn.ci_norm = fn.ci_norm)
   }
-
-  fn.ci_norm <-
-    prFpGetConfintFnList(fn = fn.ci_norm,
-                         no_rows = NROW(mean),
-                         no_cols = NCOL(mean))
-  fn.ci_sum <-
-    prFpGetConfintFnList(fn = fn.ci_sum,
-                         no_rows = NROW(mean),
-                         no_cols = NCOL(mean))
-
-  lty.ci <- prPopulateList(lty.ci,
-                           no_rows = NROW(mean),
-                           no_cols = NCOL(mean))
 
   if (!is.unit(lineheight) && !lineheight %in% c("auto", "lines"))
     stop("The argument lineheight must either be of type unit or set to 'auto',",
-      " you have provided a '", class(lineheight), "' class")
+         " you have provided a '", class(lineheight), "' class")
 
   if (!missing(legend)){
     if (length(legend) != ncol(mean))
@@ -308,7 +300,7 @@ forestplot <- function (labeltext,
       legend_args$pos <- prFpGetLegendBoxPosition(legend_args$pos)
     }else if (!legend_args$pos %in% c("top", "right")){
       stop("The legend is either a list positioning it inside the main plot or at the 'top' or 'right' side,",
-        " the position '", legend_args$pos, "' is not valid.")
+           " the position '", legend_args$pos, "' is not valid.")
     }
 
     if (inherits(legend_args$gp, "gpar")){
@@ -400,7 +392,7 @@ forestplot <- function (labeltext,
       empty_row <- TRUE
       for (row.no in seq(along=labeltext[[col.no]])){
         if (is.expression(labeltext[[col.no]][[row.no]]) ||
-              !is.na(labeltext[[col.no]][[row.no]])){
+            !is.na(labeltext[[col.no]][[row.no]])){
           empty_row <- FALSE
           break
         }
@@ -464,6 +456,32 @@ forestplot <- function (labeltext,
 
   is.summary <- rep(is.summary, length = nr)
 
+  if (is.matrix(mean)) {
+    missing_rows <- apply(mean, 2, function(row) all(is.na(row)))
+  }else{
+    missing_rows <- sapply(mean, is.na)
+  }
+
+  fn.ci_norm <-
+    prFpGetConfintFnList(fn = fn.ci_norm,
+                         no_rows = NROW(org_mean),
+                         no_cols = NCOL(org_mean),
+                         missing_rows = missing_rows,
+                         is.summary = is.summary,
+                         summary = FALSE)
+  fn.ci_sum <-
+    prFpGetConfintFnList(fn = fn.ci_sum,
+                         no_rows = NROW(org_mean),
+                         no_cols = NCOL(org_mean),
+                         missing_rows = missing_rows,
+                         is.summary = is.summary,
+                         summary = TRUE)
+
+  lty.ci <- prPopulateList(lty.ci,
+                           no_rows = NROW(org_mean),
+                           no_cols = NCOL(org_mean))
+
+
   hrzl_lines <- prFpGetLines(hrzl_lines = hrzl_lines,
                              is.summary = is.summary,
                              total_columns = nc + 1,
@@ -524,10 +542,10 @@ forestplot <- function (labeltext,
   marList$right <- convertX(mar[4], "npc")
 
   prPushMarginViewport(bottom = marList$bottom,
-    left = marList$left,
-    top = marList$top,
-    right = marList$right,
-    name="forestplot_margins")
+                       left = marList$left,
+                       top = marList$top,
+                       right = marList$right,
+                       name="forestplot_margins")
 
   if (!missing(title)){
     prGridPlotTitle(title=title, gp = txt_gp$title)
@@ -540,7 +558,7 @@ forestplot <- function (labeltext,
                                  title = legend_args$title)
     legend_colgap <- colgap
     if (convertUnit(legend_colgap, unitTo = "mm", valueOnly = TRUE) >
-          convertUnit(attr(lGrobs, "max_height"), unitTo = "mm", valueOnly = TRUE)){
+        convertUnit(attr(lGrobs, "max_height"), unitTo = "mm", valueOnly = TRUE)){
       legend_colgap <- attr(lGrobs, "max_height")
     }
 
@@ -566,13 +584,13 @@ forestplot <- function (labeltext,
     # Prepare the viewports if the legend is not
     # positioned inside the forestplot, i.e. on the top or right side
     if ((!is.list(legend_args$pos) && legend_args$pos == "top") ||
-      ("align" %in% names(legend_args$pos) && legend_args$pos[["align"]] == "horizontal")){
+        ("align" %in% names(legend_args$pos) && legend_args$pos[["align"]] == "horizontal")){
       legend_layout <- grid.layout(nrow=3, ncol=1,
                                    heights=unit.c(legend_horizontal_height,
-                                                 legend_colgap+legend_colgap,
-                                                 unit(1, "npc")-
-                                                   legend_horizontal_height-
-                                                   legend_colgap-legend_colgap))
+                                                  legend_colgap+legend_colgap,
+                                                  unit(1, "npc")-
+                                                    legend_horizontal_height-
+                                                    legend_colgap-legend_colgap))
 
       legend_pos <- list(row = 1,
                          col = 1)
@@ -595,11 +613,11 @@ forestplot <- function (labeltext,
   # If the legend should be positioned within the plot then wait
   # until after the plot has been drawn
   if (!missing(legend) > 0 &&
-        !is.list(legend_args$pos)){
+      !is.list(legend_args$pos)){
     pushViewport(prFpGetLayoutVP(lineheight=lineheight,
-        labels = labels,
-        nr=nr,
-        legend_layout=legend_layout))
+                                 labels = labels,
+                                 nr=nr,
+                                 legend_layout=legend_layout))
     vp <- viewport(layout.pos.row = legend_pos$row,
                    layout.pos.col = legend_pos$col,
                    name = "legend")
@@ -624,7 +642,7 @@ forestplot <- function (labeltext,
     pushViewport(vp)
   }else{
     pushViewport(prFpGetLayoutVP(lineheight=lineheight,
-        labels = labels, nr=nr))
+                                 labels = labels, nr=nr))
   }
 
   ###########################################
@@ -639,8 +657,8 @@ forestplot <- function (labeltext,
     graphwidth <- unit(max(.05, 1 - sum(npc_colwidths)), "npc")
   }else if(!is.unit(graphwidth)){
     stop("You have to provide graph width either as a unit() object or as 'auto'.",
-      " Auto sizes the graph to maximally use the available space.",
-      " If you want to have exact mm width then use graphwidth = unit(34, 'mm').")
+         " Auto sizes the graph to maximally use the available space.",
+         " If you want to have exact mm width then use graphwidth = unit(34, 'mm').")
   }
 
   # Add the base grapwh width to the total column width
@@ -859,10 +877,10 @@ forestplot <- function (labeltext,
 
   # Output the legend if it is inside the main plot
   if (!missing(legend) &&
-        is.list(legend_args$pos)){
+      is.list(legend_args$pos)){
     plot_vp <- viewport(layout.pos.row = 1:nr,
-      layout.pos.col = 2 * graph.pos - 1,
-      name = "main_plot_area")
+                        layout.pos.col = 2 * graph.pos - 1,
+                        name = "main_plot_area")
     pushViewport(plot_vp)
 
     if ("align" %in% names(legend_args$pos) && legend_args$pos[["align"]] == "horizontal"){
@@ -883,7 +901,7 @@ forestplot <- function (labeltext,
       legend_height <- attr(lGrobs, "line_height_and_spacing")[rep(1:2, length.out=length(legend)*2-1)]
       if (!is.null(attr(lGrobs, "title"))){
         legend_height <- unit.c(attr(lGrobs, "titleHeight"),
-          attr(lGrobs, "line_height_and_spacing")[2], legend_height)
+                                attr(lGrobs, "line_height_and_spacing")[2], legend_height)
       }
 
       height <- sum(legend_args$padding, legend_height, legend_args$padding)
