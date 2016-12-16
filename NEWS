@@ -1,5 +1,10 @@
 NEWS for the forestplot package
 
+Changes for 1.6.1
+-----------------
+* Fixed input bug with 3-dim array
+* Improved autodetection of upper and lower intervals
+
 Changes for 1.6
 -----------------
 * Changed forestplot function to S3 style (thanks Christian Röver)

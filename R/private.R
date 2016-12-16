@@ -1280,7 +1280,9 @@ prFpConvertMultidimArray <- function(x){
 
            lower <- x[,lower_cnr,drop=TRUE]
            upper <- x[,upper_cnr,drop=TRUE]
-           mean <- x[,-c(upper_cnr, lower_cnr),drop=TRUE]},
+           mean <- x[,-c(upper_cnr, lower_cnr),drop=TRUE]
+
+           },
          "3" = {
            # Loop through the different rows as a row with only a label may have NA in it
            # this is a little complicated as we're doing a 3D loop and exiting
@@ -1314,6 +1316,13 @@ prFpConvertMultidimArray <- function(x){
              stop("Invalid number of dimensions of the mean argument,",
                   " should be either 2 or 3 - you have '", length(dim(mean)),"'")
            })
+
+  if (!all(lower <= upper) ||
+      !all(lower <= mean) ||
+      !all(mean <= upper))
+    stop("Sorry did not manage to correctly identify",
+         " the upper/lower boundaries from the input matrix.")
+
   return(list(mean = mean, lower = lower, upper = upper))
 }
 

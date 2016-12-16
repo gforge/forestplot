@@ -175,7 +175,7 @@ forestplot <- function(...)
 #' @rdname forestplot
 #' @method forestplot default
 #' @export
-#' @importFrom checkmate assert_class assert_vector assert_matrix
+#' @importFrom checkmate assert_class assert_vector assert_matrix, check_matrix, check_array, assert, check_integer
 forestplot.default <- function (labeltext,
                                 mean, lower, upper,
                                 align,
@@ -235,10 +235,15 @@ forestplot.default <- function (labeltext,
       stop("You need to provide the labeltext or",
            " the mean/lower/upper arguments")
 
-    assert_matrix(labeltext, ncols=3)
-
     mean <- labeltext
     labeltext <- rownames(mean)
+  }
+
+  if (missing(lower) &&
+      missing(upper)) {
+    assert(check_matrix(mean, ncols=3),
+           check_array(mean, d=3),
+           check_integer(dim(mean)[2], lower=3, upper=3))
   }
 
   assert_vector(zero, max.len = 2)
