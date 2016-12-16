@@ -25,6 +25,14 @@ test_that("Check different input formats",{
     ),
     labeltext = 1:3))
 
+  expect_silent(forestplot(
+    cbind(
+      c(NA, 1:2),
+      c(NA, 2:3),
+      c(NA, 3:4)
+    ),
+    labeltext = 1:3))
+
   expect_error(forestplot(
       cbind(
         0:2,

@@ -1317,9 +1317,9 @@ prFpConvertMultidimArray <- function(x){
                   " should be either 2 or 3 - you have '", length(dim(mean)),"'")
            })
 
-  if (!all(lower <= upper) ||
-      !all(lower <= mean) ||
-      !all(mean <= upper))
+  if (!all(lower <= upper, na.rm = TRUE) ||
+      !all(lower <= mean, na.rm = TRUE) ||
+      !all(mean <= upper, na.rm = TRUE))
     stop("Sorry did not manage to correctly identify",
          " the upper/lower boundaries from the input matrix.")
 
