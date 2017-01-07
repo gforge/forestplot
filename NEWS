@@ -1,7 +1,8 @@
 NEWS for the forestplot package
 
-Changes for 1.6.1
+Changes for 1.7
 -----------------
+* Fixed bug when mergin gpar() with font & fontface options (thanks Katherine T. Mills)
 * Fixed input bug with 3-dim array
 * Improved autodetection of upper and lower intervals
 
