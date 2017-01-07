@@ -1605,6 +1605,19 @@ prFpDrawLines <- function(hrzl_lines, nr, colwidths,
 #' @return Returns a \code{\link[grid]{gpar}} element
 #' @keywords internal
 prGparMerge <- function(l1, l2){
+  cleanFont4Fontface <- function(element) {
+    if (is.null(element$font)) return (element)
+
+    if (is.null(element$fontface)) {
+      element$fontface <- names(element$font)
+    }
+    #  Delete font in favor of fontface
+    element$font <- NULL
+
+    return(element)
+  }
+  l1 <- cleanFont4Fontface(l1)
+  l2 <- cleanFont4Fontface(l2)
   out <- c(l1, l2)
   if (!any(duplicated(names(out))))
     return(out)
