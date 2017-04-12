@@ -1,6 +1,6 @@
 Package: forestplot
-Version: 1.6
-Date: 2016-11-11
+Version: 1.7
+Date: 2017-01-07
 Title: Advanced Forest Plot Using 'grid' Graphics
 Authors@R: c(person(given = "Max",
                     family = "Gordon",
@@ -15,7 +15,7 @@ Description: A forest plot that allows for
     custom confidence intervals,
     text mixed with expressions, and more.
     The aim is to extend the use of forest plots beyond meta-analyses.
-    This is a more general version of the original 'rmeta' package's forestplot
+    This is a more general version of the original 'rmeta' package's forestplot()
     function and relies heavily on the 'grid' package.
 License: GPL-2
 URL: http://gforge.se/packages/
@@ -27,6 +27,7 @@ Depends:
     checkmate
 Suggests:
     testthat,
+    abind,
     knitr,
     rmarkdown
 Roxygen: list(wrap = FALSE)
