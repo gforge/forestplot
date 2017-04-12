@@ -35,4 +35,3 @@ to deal with multiple drawing functions for the
 confidence intervals.
 }
 \keyword{internal}
-

@@ -26,4 +26,3 @@ generate the margins. A second viewport selecting the
 mid-row/col is used to create the effect of margins
 }
 \keyword{internal}
-

@@ -45,4 +45,3 @@ details}
 A function that gets all the labels
 }
 \keyword{internal}
-

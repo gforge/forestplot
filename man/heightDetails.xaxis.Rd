@@ -23,4 +23,3 @@ xg <- xaxisGrob(c(1:3))
 convertY(grobHeight(xg), "lines")
 }
 \keyword{internal}
-

@@ -44,7 +44,7 @@ should correspond to the number of labels for the \code{label} argument, i.e.
 without the rows marked as summary elements. The same goes for \code{summary}
 arguments.
 }
+
 \examples{
 fpTxtGp(label=gpar(fontfamily="HersheySerif"))
 }
-

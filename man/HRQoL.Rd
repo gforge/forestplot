@@ -13,4 +13,3 @@ The age is modelled as a spline and is therefore presented as a contrast.
 Max Gordon \email{max@gforge.se}
 }
 \keyword{data}
-

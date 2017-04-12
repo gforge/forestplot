@@ -23,4 +23,3 @@ details}
 Prepares the hrzl_lines for the plot
 }
 \keyword{internal}
-

@@ -32,4 +32,3 @@ A function used for fetching the text or
 expression from the supplied labeltext.
 }
 \keyword{internal}
-

@@ -22,4 +22,3 @@ to \code{"left"} or \code{"right"}.}
 Draws the horizontal lines
 }
 \keyword{internal}
-

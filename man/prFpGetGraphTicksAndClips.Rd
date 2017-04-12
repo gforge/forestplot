@@ -63,4 +63,3 @@ to \code{"left"} or \code{"right"}.}
 Gets the x-label and zero-bar details
 }
 \keyword{internal}
-

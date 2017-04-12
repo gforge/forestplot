@@ -30,4 +30,3 @@ text height is as your line height}
 The layout makes space for a legend if needed
 }
 \keyword{internal}
-

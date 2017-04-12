@@ -25,4 +25,3 @@ This is a helper function to the \code{\link{forestplot}}
 function.
 }
 \keyword{internal}
-

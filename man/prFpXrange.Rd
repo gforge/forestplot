@@ -42,4 +42,3 @@ that it continues beyond the graph The zero bar has to
 be on the chart though!
 }
 \keyword{internal}
-

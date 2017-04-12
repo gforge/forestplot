@@ -58,4 +58,3 @@ getTicks(1:10*.33,
   digits=2,
   exp=TRUE)
 }
-

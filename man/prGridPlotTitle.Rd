@@ -19,4 +19,3 @@ Adds the title and generates a new
 main viewport below the title
 }
 \keyword{internal}
-

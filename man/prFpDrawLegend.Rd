@@ -49,4 +49,3 @@ Takes the grobs and outputs the legend
 inside the current viewport.
 }
 \keyword{internal}
-

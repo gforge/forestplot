@@ -3,6 +3,7 @@
 \name{forestplot}
 \alias{forestplot}
 \alias{forestplot.default}
+\alias{forestplot.default}
 \title{Draws a forest plot}
 \usage{
 forestplot(...)
@@ -222,6 +223,7 @@ always the best option, try to set these manually as much as possible.
   \item{col: }{The corresponding function is \code{\link{fpColors}} for this package}
 }
 }
+
 \examples{
 #############################################
 # Simple examples of how to do a forestplot #
@@ -332,11 +334,10 @@ par(ask=ask)
 # See vignette for a more detailed description
 # vignette("forestplot",  package="forestplot")
 }
+\seealso{
+Other forestplot functions: \code{\link{fpColors}},
+  \code{\link{fpDrawNormalCI}}, \code{\link{fpLegend}}
+}
 \author{
 Max Gordon, Thomas Lumley
 }
-\seealso{
-Other forestplot.functions: \code{\link{fpColors}},
-  \code{\link{fpDrawNormalCI}}, \code{\link{fpLegend}}
-}
-
