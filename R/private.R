@@ -1196,11 +1196,12 @@ prFpGetLegendBoxPosition <- function (pos) {
 #'
 #' @param fn.legend The unknown parameter
 #' @param col_no The number of columns
+#' @param row_no The number of rows
 #' @param fn.ci_norm The original fn.ci_norm input
 #' @return \code{list}
 #'
 #' @keywords internal
-prFpPrepareLegendMarker <- function (fn.legend, col_no, fn.ci_norm) {
+prFpPrepareLegendMarker <- function (fn.legend, col_no, row_no, fn.ci_norm) {
   if (!missing(fn.legend)){
     if (is.function(fn.legend)){
       return(lapply(1:col_no, function(x) fn.legend))
@@ -1238,7 +1239,7 @@ prFpPrepareLegendMarker <- function (fn.legend, col_no, fn.ci_norm) {
 
   if (length(fn.ci_norm) == col_no){
     return(prFpGetConfintFnList(fn = fn.ci_norm,
-                                no_rows = NROW(mean),
+                                no_rows = row_no,
                                 no_cols = col_no)[[1]])
   }
 

@@ -1,6 +1,6 @@
 Package: forestplot
-Version: 1.7
-Date: 2017-01-07
+Version: 1.7.1
+Date: 2017-04-12
 Title: Advanced Forest Plot Using 'grid' Graphics
 Authors@R: c(person(given = "Max",
                     family = "Gordon",

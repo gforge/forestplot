@@ -1,5 +1,9 @@
 NEWS for the forestplot package
 
+Changes for 1.7.1
+-----------------
+* Fixed bug reported related to legends on SO: http://stackoverflow.com/questions/43217570/forestplot-want-to-give-legend-for-each-4-colums
+
 Changes for 1.7
 -----------------
 * Fixed bug when mergin gpar() with font & fontface options (thanks Katherine T. Mills)
