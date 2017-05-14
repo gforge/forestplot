@@ -438,7 +438,7 @@ prFpGetGraphTicksAndClips <- function(xticks,
       if (inherits(xpos, "unit")){
         xpos <- convertX(xpos, unitTo = "native", valueOnly = TRUE)
       }
-      if (!xpos %in% zero){
+      if (is.na(zero) || !xpos %in% zero){
         lg <- linesGrob(x = unit(rep(ifelse(xlog, log(xpos), xpos), 2), units = "native"),
                         y = unit(c(0,1), units = "npc"),
                         gp = grid_gp,
@@ -490,17 +490,19 @@ prFpPrintXaxis <- function(axisList,
   if (!missing(lwd.zero))
     gp_list$lwd <- lwd.zero
 
-  if (length(axisList$zero) == 1){
-    grid.lines(x  = unit(axisList$zero, "native"),
-               y  = 0:1,
-               gp = do.call(gpar, gp_list))
-  }else if (length(axisList$zero) == 2){
-    gp_list$fill <- gp_list$col
-    grid.polygon(x  = unit(c(axisList$zero,
-                             rev(axisList$zero)),
-                           "native"),
-                 y  = c(0, 0, 1, 1),
+  if (!is.na(axisList$zero)) {
+    if (length(axisList$zero) == 1){
+      grid.lines(x  = unit(axisList$zero, "native"),
+                 y  = 0:1,
                  gp = do.call(gpar, gp_list))
+    }else if (length(axisList$zero) == 2){
+      gp_list$fill <- gp_list$col
+      grid.polygon(x  = unit(c(axisList$zero,
+                               rev(axisList$zero)),
+                             "native"),
+                   y  = c(0, 0, 1, 1),
+                   gp = do.call(gpar, gp_list))
+    }
   }
 
   if (is.grob(axisList$gridList)){
@@ -832,21 +834,25 @@ prFpXrange <- function(upper, lower, clip, zero, xticks, xlog){
     ret <- c(
       min(
         zero,
-        bottom
+        bottom,
+        na.rm = TRUE
       ),
       max(
         zero,
-        top
+        top,
+        na.rm = TRUE
       )
     )
 
   }else{
     ret <- c(
       min(
-        c(zero, bottom, xticks)
+        c(zero, bottom, xticks),
+        na.rm = TRUE
       ),
       max(
-        c(zero, top, xticks)
+        c(zero, top, xticks),
+        na.rm = TRUE
       )
     )
   }

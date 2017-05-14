@@ -80,7 +80,7 @@
 #' @param clip Lower and upper limits for clipping confidence intervals to arrows
 #' @param xlab x-axis label
 #' @param zero x-axis coordinate for zero line. If you provide a vector of length 2 it
-#'   will print a rectangle instead of just a line.
+#'   will print a rectangle instead of just a line. If you provide NA the line is supressed.
 #' @param graphwidth Width of confidence interval graph, see \code{\link[grid]{unit}} for
 #'   details on how to utilize mm etc. The default is \code{auto}, that is it uses up whatever
 #'   space that is left after adjusting for text size and legend
@@ -338,7 +338,7 @@ forestplot.default <- function (labeltext,
     if (any(mean < 0, na.rm = TRUE) ||
         any(lower < 0, na.rm = TRUE) ||
         any(upper < 0, na.rm = TRUE) ||
-        zero <= 0 ||
+        (!is.na(zero) && zero <= 0) ||
         (!missing(clip) && any(clip <= 0, na.rm = TRUE)) ||
         (!missing(grid) && any(grid <= 0, na.rm = TRUE))){
       stop("All argument values (mean, lower, upper, zero, grid and clip)",
