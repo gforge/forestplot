@@ -1,5 +1,9 @@
 NEWS for the forestplot package
 
+Changes for 1.7.1
+-----------------
+* Fixed issue #10 with non-log grid lines
+
 Changes for 1.7
 -----------------
 * Fixed bug when mergin gpar() with font & fontface options (thanks Katherine T. Mills)

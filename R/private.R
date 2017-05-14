@@ -439,7 +439,7 @@ prFpGetGraphTicksAndClips <- function(xticks,
         xpos <- convertX(xpos, unitTo = "native", valueOnly = TRUE)
       }
       if (!xpos %in% zero){
-        lg <- linesGrob(x = unit(rep(xpos, 2), units = "native"),
+        lg <- linesGrob(x = unit(rep(ifelse(xlog, log(xpos), xpos), 2), units = "native"),
                         y = unit(c(0,1), units = "npc"),
                         gp = grid_gp,
                         vp = grid_vp)
