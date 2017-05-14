@@ -19,4 +19,3 @@ prFpFindWidestGrob(grob.list, return_unit = "mm")
 Finds the widest grob in the current list of grobs
 }
 \keyword{internal}
-

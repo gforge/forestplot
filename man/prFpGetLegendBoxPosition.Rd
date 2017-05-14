@@ -26,4 +26,3 @@ you want them to be in a line then you can specify the "align" option, e.g.
 Used for the forestplot legend box.
 }
 \keyword{internal}
-

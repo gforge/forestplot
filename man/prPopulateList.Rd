@@ -34,4 +34,3 @@ to deal with different arguments for the
 confidence intervals.
 }
 \keyword{internal}
-

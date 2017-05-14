@@ -16,7 +16,7 @@ to be the same format as the mean, i.e. matrix/vector of equal columns & length}
 \item{clip}{Lower and upper limits for clipping confidence intervals to arrows}
 
 \item{zero}{x-axis coordinate for zero line. If you provide a vector of length 2 it
-will print a rectangle instead of just a line.}
+will print a rectangle instead of just a line. If you provide NA the line is supressed.}
 
 \item{xticks}{Optional user-specified x-axis tick marks. Specify NULL to use
 the defaults, numeric(0) to omit the x-axis. By adding a labels-attribute,
@@ -42,4 +42,3 @@ that it continues beyond the graph The zero bar has to
 be on the chart though!
 }
 \keyword{internal}
-

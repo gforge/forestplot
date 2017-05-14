@@ -20,4 +20,3 @@ when lists are supposed to be their own
 elements
 }
 \keyword{internal}
-

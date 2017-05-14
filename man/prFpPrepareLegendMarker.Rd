@@ -20,4 +20,3 @@ prFpPrepareLegendMarker(fn.legend, col_no, fn.ci_norm)
 Prepares the legend marker function
 }
 \keyword{internal}
-

@@ -45,7 +45,7 @@ for details}
 \item{clip}{Lower and upper limits for clipping confidence intervals to arrows}
 
 \item{zero}{x-axis coordinate for zero line. If you provide a vector of length 2 it
-will print a rectangle instead of just a line.}
+will print a rectangle instead of just a line. If you provide NA the line is supressed.}
 
 \item{x_range}{The range that the values from the different confidence
 interval span}
@@ -63,4 +63,3 @@ to \code{"left"} or \code{"right"}.}
 Gets the x-label and zero-bar details
 }
 \keyword{internal}
-

@@ -22,4 +22,3 @@ A helper function to the \code{\link{forestplot}}
 function.
 }
 \keyword{internal}
-

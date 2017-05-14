@@ -25,4 +25,3 @@ for details}
 Gets the forestplot legend grobs
 }
 \keyword{internal}
-

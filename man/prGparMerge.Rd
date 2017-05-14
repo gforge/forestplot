@@ -18,4 +18,3 @@ Returns a \code{\link[grid]{gpar}} element
 The second elements overrides any conflicting elements within the first
 }
 \keyword{internal}
-

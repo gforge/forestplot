@@ -16,4 +16,3 @@ prFpConvertMultidimArray(x)
 Converts a 2D or 3D array to mean, lower, upper
 }
 \keyword{internal}
-

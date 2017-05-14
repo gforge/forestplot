@@ -43,7 +43,6 @@ This function encapsulates all the legend options that are used in the
 among the arguments for the \code{\link{forestplot}} call.
 }
 \seealso{
-Other forestplot.functions: \code{\link{forestplot}},
+Other forestplot functions: \code{\link{forestplot}},
   \code{\link{fpColors}}, \code{\link{fpDrawNormalCI}}
 }
-

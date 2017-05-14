@@ -72,11 +72,10 @@ forestplot(labeltext = row_names,
 
 par(ask=ask)
 }
+\seealso{
+Other forestplot functions: \code{\link{forestplot}},
+  \code{\link{fpDrawNormalCI}}, \code{\link{fpLegend}}
+}
 \author{
 Max Gordon, Thomas Lumley
 }
-\seealso{
-Other forestplot.functions: \code{\link{forestplot}},
-  \code{\link{fpDrawNormalCI}}, \code{\link{fpLegend}}
-}
-

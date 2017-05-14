@@ -3,6 +3,7 @@
 \name{forestplot}
 \alias{forestplot}
 \alias{forestplot.default}
+\alias{forestplot.default}
 \title{Draws a forest plot}
 \usage{
 forestplot(...)
@@ -62,7 +63,7 @@ of \code{\link[grid]{gpar}}. See line section below for details.}
 \item{xlab}{x-axis label}
 
 \item{zero}{x-axis coordinate for zero line. If you provide a vector of length 2 it
-will print a rectangle instead of just a line.}
+will print a rectangle instead of just a line. If you provide NA the line is supressed.}
 
 \item{graphwidth}{Width of confidence interval graph, see \code{\link[grid]{unit}} for
 details on how to utilize mm etc. The default is \code{auto}, that is it uses up whatever
@@ -222,6 +223,7 @@ always the best option, try to set these manually as much as possible.
   \item{col: }{The corresponding function is \code{\link{fpColors}} for this package}
 }
 }
+
 \examples{
 #############################################
 # Simple examples of how to do a forestplot #
@@ -332,11 +334,10 @@ par(ask=ask)
 # See vignette for a more detailed description
 # vignette("forestplot",  package="forestplot")
 }
+\seealso{
+Other forestplot functions: \code{\link{fpColors}},
+  \code{\link{fpDrawNormalCI}}, \code{\link{fpLegend}}
+}
 \author{
 Max Gordon, Thomas Lumley
 }
-\seealso{
-Other forestplot.functions: \code{\link{fpColors}},
-  \code{\link{fpDrawNormalCI}}, \code{\link{fpLegend}}
-}
-
