@@ -1,5 +1,9 @@
 NEWS for the forestplot package
 
+Changes for 1.7.2
+-----------------
+* Fixed bug when automatic lower/upper are to be identified and the data contains NA
+
 Changes for 1.7.1
 -----------------
 * Fixed bug reported related to legends on SO: http://stackoverflow.com/questions/43217570/forestplot-want-to-give-legend-for-each-4-colums

@@ -1256,19 +1256,21 @@ prFpPrepareLegendMarker <- function (fn.legend, col_no, row_no, fn.ci_norm) {
 #'
 #' @param x The array to convert
 #' @return \code{list(mean = mean, lower = lower, upper = upper)}
+#' @importFrom stats na.omit
 #' @keywords internal
 prFpConvertMultidimArray <- function(x){
-  switch(as.character(length(dim(x))),
+  cleanX <- na.omit(x)
+  switch(as.character(length(dim(cleanX))),
          "2" = {
            # Loop through the different rows as a row with only a label may have NA in it
            lower_cnr <- NULL
            upper_cnr <- NULL
-           for (d1 in dim(x)[1]){
-             if (length(unique(x[d1,])) < 3)
+           for (d1 in dim(cleanX)[1]){
+             if (length(unique(cleanX[d1,])) < 3)
                next;
 
-             lower_cnr <- which.min(x[d1,])
-             upper_cnr <- which.max(x[d1,])
+             lower_cnr <- which.min(cleanX[d1,])
+             upper_cnr <- which.max(cleanX[d1,])
              if (length(lower_cnr) == 1 &&
                    length(upper_cnr) == 1){
                break;
@@ -1290,13 +1292,13 @@ prFpConvertMultidimArray <- function(x){
            # as soon as the vars have been identified
            lower_cnr <- NULL
            upper_cnr <- NULL
-           for (d3 in 1:dim(x)[3]){
-             for (d1 in 1:dim(x)[1]){
-               if (length(unique(x[d1,,d3])) < 3)
+           for (d3 in 1:dim(cleanX)[3]){
+             for (d1 in 1:dim(cleanX)[1]){
+               if (length(unique(cleanX[d1,,d3])) < 3)
                  next;
 
-               lower_cnr <- which.min(x[d1,,d3])
-               upper_cnr <- which.max(x[d1,,d3])
+               lower_cnr <- which.min(cleanX[d1,,d3])
+               upper_cnr <- which.max(cleanX[d1,,d3])
 
                if (length(lower_cnr) == 1 &&
                      length(upper_cnr) == 1)
