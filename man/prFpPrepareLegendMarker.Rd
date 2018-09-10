@@ -4,12 +4,14 @@
 \alias{prFpPrepareLegendMarker}
 \title{Prepares the legend marker function}
 \usage{
-prFpPrepareLegendMarker(fn.legend, col_no, fn.ci_norm)
+prFpPrepareLegendMarker(fn.legend, col_no, row_no, fn.ci_norm)
 }
 \arguments{
 \item{fn.legend}{The unknown parameter}
 
 \item{col_no}{The number of columns}
+
+\item{row_no}{The number of rows}
 
 \item{fn.ci_norm}{The original fn.ci_norm input}
 }

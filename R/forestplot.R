@@ -288,6 +288,7 @@ forestplot.default <- function (labeltext,
   if (!missing(legend)){
     fn.legend <- prFpPrepareLegendMarker(fn.legend = fn.legend,
                                          col_no = NCOL(mean),
+                                         row_no = NROW(mean),
                                          fn.ci_norm = fn.ci_norm)
   }
 
