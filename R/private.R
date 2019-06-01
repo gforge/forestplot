@@ -438,7 +438,7 @@ prFpGetGraphTicksAndClips <- function(xticks,
       if (inherits(xpos, "unit")){
         xpos <- convertX(xpos, unitTo = "native", valueOnly = TRUE)
       }
-      if (is.na(zero) || !xpos %in% zero){
+      if ((length(zero) == 1 && is.na(zero)) || !xpos %in% zero){
         lg <- linesGrob(x = unit(rep(ifelse(xlog, log(xpos), xpos), 2), units = "native"),
                         y = unit(c(0,1), units = "npc"),
                         gp = grid_gp,
@@ -490,7 +490,7 @@ prFpPrintXaxis <- function(axisList,
   if (!missing(lwd.zero))
     gp_list$lwd <- lwd.zero
 
-  if (!is.na(axisList$zero)) {
+  if (length(axisList$zero) > 1 || !is.na(axisList$zero)) {
     if (length(axisList$zero) == 1){
       grid.lines(x  = unit(axisList$zero, "native"),
                  y  = 0:1,

@@ -10,23 +10,26 @@
 \title{Draw standard confidence intervals}
 \usage{
 fpDrawNormalCI(lower_limit, estimate, upper_limit, size, y.offset = 0.5,
-  clr.line, clr.marker, lwd, lty = 1, vertices, vertices.height = 0.1, ...)
+  clr.line, clr.marker, lwd, lty = 1, vertices, vertices.height = 0.1,
+  ...)
 
 fpDrawDiamondCI(lower_limit, estimate, upper_limit, size, y.offset = 0.5,
-  clr.line, clr.marker, lwd, lty = 1, vertices, vertices.height = 0.1, ...)
+  clr.line, clr.marker, lwd, lty = 1, vertices, vertices.height = 0.1,
+  ...)
 
 fpDrawCircleCI(lower_limit, estimate, upper_limit, size, y.offset = 0.5,
-  clr.line, clr.marker, lwd, lty = 1, vertices, vertices.height = 0.1, ...)
+  clr.line, clr.marker, lwd, lty = 1, vertices, vertices.height = 0.1,
+  ...)
 
 fpDrawPointCI(lower_limit, estimate, upper_limit, size, y.offset = 0.5,
   clr.line, clr.marker, lwd, lty = 1, vertices, vertices.height = 0.1,
   pch = 1, ...)
 
-fpDrawSummaryCI(lower_limit, estimate, upper_limit, size, col, y.offset = 0.5,
-  ...)
+fpDrawSummaryCI(lower_limit, estimate, upper_limit, size, col,
+  y.offset = 0.5, ...)
 
-fpDrawBarCI(lower_limit, estimate, upper_limit, size, col, y.offset = 0.5,
-  ...)
+fpDrawBarCI(lower_limit, estimate, upper_limit, size, col,
+  y.offset = 0.5, ...)
 }
 \arguments{
 \item{lower_limit}{The lower limit of the confidence line.
@@ -182,3 +185,4 @@ Other forestplot functions: \code{\link{forestplot}},
 \author{
 Max Gordon, Thomas Lumley
 }
+\concept{forestplot functions}

@@ -4,7 +4,8 @@
 \alias{getTicks}
 \title{Ticks for plot axis}
 \usage{
-getTicks(low, high = low, clip = c(-Inf, Inf), exp = FALSE, digits = 0)
+getTicks(low, high = low, clip = c(-Inf, Inf), exp = FALSE,
+  digits = 0)
 }
 \arguments{
 \item{low}{lower bound, can be a single number or a vector}

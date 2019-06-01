@@ -4,9 +4,9 @@
 \alias{fpColors}
 \title{A function for the color elements used in forestplot()}
 \usage{
-fpColors(all.elements, box = "black", lines = "gray", summary = "black",
-  zero = "lightgray", text = "black", axes = "black",
-  hrz_lines = "black")
+fpColors(all.elements, box = "black", lines = "gray",
+  summary = "black", zero = "lightgray", text = "black",
+  axes = "black", hrz_lines = "black")
 }
 \arguments{
 \item{all.elements}{A color for all the elements. If set to NULL then
@@ -79,3 +79,4 @@ Other forestplot functions: \code{\link{forestplot}},
 \author{
 Max Gordon, Thomas Lumley
 }
+\concept{forestplot functions}
