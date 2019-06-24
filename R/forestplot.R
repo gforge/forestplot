@@ -494,8 +494,10 @@ forestplot.default <- function (labeltext,
                              col = col)
 
   labels <- prFpGetLabels(label_type = label_type,
-                          labeltext = labeltext, align = align,
-                          nc = nc, nr = nr,
+                          labeltext = labeltext,
+                          align = align,
+                          nc = nc,
+                          nr = nr,
                           is.summary = is.summary,
                           txt_gp = txt_gp,
                           col = col)

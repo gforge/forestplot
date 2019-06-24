@@ -935,7 +935,7 @@ prFpGetLabels <- function(label_type, labeltext, align,
       if (is.call(txt_out))
         txt_out <- eval(txt_out)
 
-      if (is.expression(txt_out) || is.character(txt_out) || is.numeric(txt_out)){
+      if (is.expression(txt_out) || is.character(txt_out) || is.numeric(txt_out) || is.factor(txt_out)){
         x <- switch(align[j], l = 0, r = 1, c = 0.5)
 
         just <- switch(align[j],
