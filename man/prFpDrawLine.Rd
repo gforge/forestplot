@@ -4,8 +4,16 @@
 \alias{prFpDrawLine}
 \title{Draws a straight line}
 \usage{
-prFpDrawLine(lower_limit, upper_limit, clr.line, lwd, lty, y.offset,
-  vertices, vertices.height = 0.1)
+prFpDrawLine(
+  lower_limit,
+  upper_limit,
+  clr.line,
+  lwd,
+  lty,
+  y.offset,
+  vertices,
+  vertices.height = 0.1
+)
 }
 \arguments{
 \item{lower_limit}{The lower limit of the confidence line.

@@ -4,8 +4,7 @@
 \alias{fpTxtGp}
 \title{Get font settings for forestplot}
 \usage{
-fpTxtGp(label, summary, xlab, title, ticks, legend, legend.title,
-  cex = 1)
+fpTxtGp(label, summary, xlab, title, ticks, legend, legend.title, cex = 1)
 }
 \arguments{
 \item{label}{The text labels (see details below)}

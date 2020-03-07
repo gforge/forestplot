@@ -4,8 +4,7 @@
 \alias{prFpGetConfintFnList}
 \title{Get a function list}
 \usage{
-prFpGetConfintFnList(fn, no_rows, no_cols, missing_rows, is.summary,
-  summary)
+prFpGetConfintFnList(fn, no_rows, no_cols, missing_rows, is.summary, summary)
 }
 \arguments{
 \item{fn}{The function list/matrix. If a list it

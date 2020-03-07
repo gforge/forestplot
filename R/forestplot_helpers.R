@@ -75,6 +75,9 @@ fpDrawNormalCI <- function(lower_limit,
 
   # If the box is outside the plot the it shouldn't be plotted
   box <- convertX(unit(estimate, "native"), "npc", valueOnly = TRUE)
+  if (is.na(box)) {
+    stop("The estimate '", estimate, "' does not convert into a valid numeric value using grid::convertX")
+  }
   skipbox <- box < 0 || box > 1
 
   # Lastly draw the box if it is still there

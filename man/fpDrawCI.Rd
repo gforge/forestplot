@@ -9,27 +9,78 @@
 \alias{fpDrawBarCI}
 \title{Draw standard confidence intervals}
 \usage{
-fpDrawNormalCI(lower_limit, estimate, upper_limit, size, y.offset = 0.5,
-  clr.line, clr.marker, lwd, lty = 1, vertices, vertices.height = 0.1,
-  ...)
+fpDrawNormalCI(
+  lower_limit,
+  estimate,
+  upper_limit,
+  size,
+  y.offset = 0.5,
+  clr.line,
+  clr.marker,
+  lwd,
+  lty = 1,
+  vertices,
+  vertices.height = 0.1,
+  ...
+)
 
-fpDrawDiamondCI(lower_limit, estimate, upper_limit, size, y.offset = 0.5,
-  clr.line, clr.marker, lwd, lty = 1, vertices, vertices.height = 0.1,
-  ...)
+fpDrawDiamondCI(
+  lower_limit,
+  estimate,
+  upper_limit,
+  size,
+  y.offset = 0.5,
+  clr.line,
+  clr.marker,
+  lwd,
+  lty = 1,
+  vertices,
+  vertices.height = 0.1,
+  ...
+)
 
-fpDrawCircleCI(lower_limit, estimate, upper_limit, size, y.offset = 0.5,
-  clr.line, clr.marker, lwd, lty = 1, vertices, vertices.height = 0.1,
-  ...)
+fpDrawCircleCI(
+  lower_limit,
+  estimate,
+  upper_limit,
+  size,
+  y.offset = 0.5,
+  clr.line,
+  clr.marker,
+  lwd,
+  lty = 1,
+  vertices,
+  vertices.height = 0.1,
+  ...
+)
 
-fpDrawPointCI(lower_limit, estimate, upper_limit, size, y.offset = 0.5,
-  clr.line, clr.marker, lwd, lty = 1, vertices, vertices.height = 0.1,
-  pch = 1, ...)
+fpDrawPointCI(
+  lower_limit,
+  estimate,
+  upper_limit,
+  size,
+  y.offset = 0.5,
+  clr.line,
+  clr.marker,
+  lwd,
+  lty = 1,
+  vertices,
+  vertices.height = 0.1,
+  pch = 1,
+  ...
+)
 
-fpDrawSummaryCI(lower_limit, estimate, upper_limit, size, col,
-  y.offset = 0.5, ...)
+fpDrawSummaryCI(
+  lower_limit,
+  estimate,
+  upper_limit,
+  size,
+  col,
+  y.offset = 0.5,
+  ...
+)
 
-fpDrawBarCI(lower_limit, estimate, upper_limit, size, col,
-  y.offset = 0.5, ...)
+fpDrawBarCI(lower_limit, estimate, upper_limit, size, col, y.offset = 0.5, ...)
 }
 \arguments{
 \item{lower_limit}{The lower limit of the confidence line.
@@ -179,8 +230,10 @@ forestplot(row_names, coef, low, high,
 par(ask=ask)
 }
 \seealso{
-Other forestplot functions: \code{\link{forestplot}},
-  \code{\link{fpColors}}, \code{\link{fpLegend}}
+Other forestplot functions: 
+\code{\link{forestplot}()},
+\code{\link{fpColors}()},
+\code{\link{fpLegend}()}
 }
 \author{
 Max Gordon, Thomas Lumley

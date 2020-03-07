@@ -4,8 +4,7 @@
 \alias{prFpGetLabels}
 \title{Gets the forestplot labels}
 \usage{
-prFpGetLabels(label_type, labeltext, align, nc, nr, is.summary, txt_gp,
-  col)
+prFpGetLabels(label_type, labeltext, align, nc, nr, is.summary, txt_gp, col)
 }
 \arguments{
 \item{label_type}{The type of text labels}

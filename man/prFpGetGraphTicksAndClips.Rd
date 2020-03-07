@@ -4,8 +4,21 @@
 \alias{prFpGetGraphTicksAndClips}
 \title{A helper function to forestplot}
 \usage{
-prFpGetGraphTicksAndClips(xticks, xticks.digits, grid, xlog, xlab,
-  lwd.xaxis, col, txt_gp, clip, zero, x_range, mean, graph.pos)
+prFpGetGraphTicksAndClips(
+  xticks,
+  xticks.digits,
+  grid,
+  xlog,
+  xlab,
+  lwd.xaxis,
+  col,
+  txt_gp,
+  clip,
+  zero,
+  x_range,
+  mean,
+  graph.pos
+)
 }
 \arguments{
 \item{xticks}{Optional user-specified x-axis tick marks. Specify NULL to use
