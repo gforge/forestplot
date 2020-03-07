@@ -1,3 +1,4 @@
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/forestplot)](https://cran.r-project.org/package=forestplot)
 [![](https://cranlogs.r-pkg.org/badges/forestplot)](https://cran.r-project.org/package=forestplot)
 
 # The Forestplot package
