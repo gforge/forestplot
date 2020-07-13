@@ -439,12 +439,12 @@ forestplot.default <- function (labeltext,
                   " The only values accepted are 'left'/'right' or 'first'/'last'.",
                   " You have provided the value '", graph.pos, "'"))
   }else if(is.numeric(graph.pos)){
-    if (!graph.pos %in% 1:(NCOL(labeltext) + 1))
-      stop("The graph position must be between 1 and ", (NCOL(labeltext) + 1), ".",
+    if (!graph.pos %in% 1:(nc + 1))
+      stop("The graph position must be between 1 and ", (nc + 1), ".",
            " You have provided the value '", graph.pos, "'.")
   }else{
     stop("The graph pos must either be a string consisting of 'left'/'right' (alt. 'first'/'last')",
-         ", or an integer value between 1 and ", (NCOL(labeltext) + 1))
+         ", or an integer value between 1 and ", (nc + 1))
   }
 
   # Prepare the summary and align variables
