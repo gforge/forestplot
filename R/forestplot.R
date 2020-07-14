@@ -152,6 +152,9 @@
 #'  legends, this can be a list if you want different functions. It defaults to
 #'  a box if you have anything else than a single function or the number of columns
 #'  in the \code{mean} argument
+#' @param shapes_gp Sets graphical parameters (squares and lines widths, styles, etc.)
+#'  of all shapes drawn (squares, lines, diamonds, etc.). This overrides \code{col},
+#'  \code{lwd.xaxis}, \code{lwd.zero}, \code{lwd.ci} and \code{lty.ci}.
 #' @param ... Passed on to the \code{fn.ci_norm} and
 #'  \code{fn.ci_sum} arguments
 #'
@@ -210,6 +213,7 @@ forestplot.default <- function (labeltext,
                                 fn.ci_norm         = fpDrawNormalCI,
                                 fn.ci_sum          = fpDrawSummaryCI,
                                 fn.legend,
+                                shapes_gp		   = fpShapesGp(),
                                 ...)
 {
   if (missing(colgap)){
@@ -491,7 +495,8 @@ forestplot.default <- function (labeltext,
   hrzl_lines <- prFpGetLines(hrzl_lines = hrzl_lines,
                              is.summary = is.summary,
                              total_columns = nc + 1,
-                             col = col)
+                             col = col,
+                             shapes_gp = shapes_gp)
 
   labels <- prFpGetLabels(label_type = label_type,
                           labeltext = labeltext,
@@ -533,7 +538,8 @@ forestplot.default <- function (labeltext,
                                                            xticks = xticks,
                                                            xlog = xlog),
                                         mean = org_mean,
-                                        graph.pos = graph.pos)
+                                        graph.pos = graph.pos,
+                                        shapes_gp = shapes_gp)
   clip <- axisList$clip
 
   ##################
@@ -747,7 +753,9 @@ forestplot.default <- function (labeltext,
 
 
   prFpPrintXaxis(axisList=axisList,
-                 col=col, lwd.zero=lwd.zero)
+                 col=col,
+                 lwd.zero=lwd.zero,
+                 shapes_gp = shapes_gp)
 
   # Output the different confidence intervals
   for (i in 1:nr) {
@@ -796,6 +804,9 @@ forestplot.default <- function (labeltext,
         if (is.na(mean_values[j]))
           next;
 
+        shape_coordinates <- c(i,j)
+        attr(shape_coordinates, "max.coords") <- c(nr, length(low_values))
+        
         if (is.summary[i]){
           call_list <-
             list(fn.ci_sum[[i]][[j]],
@@ -804,7 +815,10 @@ forestplot.default <- function (labeltext,
                  upper_limit=up_values[j],
                  size=info_values[j],
                  y.offset = current_y.offset,
-                 col = clr.summary[j])
+                 col = clr.summary[j],
+                 shapes_gp=shapes_gp,
+                 shape_coordinates=shape_coordinates
+                 )
         }else{
           call_list <-
             list(fn.ci_norm[[i]][[j]],
@@ -816,7 +830,10 @@ forestplot.default <- function (labeltext,
                  clr.line = clr.line[j],
                  clr.marker = clr.marker[j],
                  lty = lty.ci[[i]][[j]],
-                 vertices.height = ci.vertices.height)
+                 vertices.height = ci.vertices.height,
+                 shapes_gp=shapes_gp,
+                 shape_coordinates=shape_coordinates
+                 )
 
           if (!missing(ci.vertices))
             call_list$vertices = ci.vertices;
@@ -839,14 +856,21 @@ forestplot.default <- function (labeltext,
         eval(as.call(call_list))
       }
     }else{
+      shape_coordinates <- c(i,1)
+      attr(shape_coordinates, "max.coords") <- c(nr, 1)
+      
       if (is.summary[i]){
+        
         call_list <-
           list(fn.ci_sum[[i]],
                lower_limit=low_values,
                estimate=mean_values,
                upper_limit=up_values,
                size=info_values,
-               col=clr.summary)
+               col=clr.summary,
+               shapes_gp=shapes_gp,
+               shape_coordinates=shape_coordinates
+               )
       }else{
         call_list <-
           list(fn.ci_norm[[i]],
@@ -857,7 +881,10 @@ forestplot.default <- function (labeltext,
                clr.line = clr.line,
                clr.marker = clr.marker,
                lty = lty.ci[[i]],
-               vertices.height = ci.vertices.height)
+               vertices.height = ci.vertices.height,
+               shapes_gp=shapes_gp,
+               shape_coordinates=shape_coordinates
+               )
 
         if (!missing(ci.vertices))
           call_list$vertices = ci.vertices;

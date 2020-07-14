@@ -102,6 +102,27 @@ forestplot(labeltext = row_names,
            xlog      = TRUE,
            col = fpColors(lines="red", box="darkred"))
 
+# An example using shapes_gp
+forestplot(
+	labeltext = cbind(Author=c("Smith et al","Smooth et al", "al et al")),
+	mean=cbind(1:3, 1.5:3.5),
+	lower=cbind(0:2, 0.5:2.5),
+	upper=cbind(4:6,5.5:7.5),
+	is.summary=c(FALSE,FALSE,TRUE),
+	shapes_gp=fpShapesGp(
+		default=gpar(lineend="square", linejoin="mitre", lwd=3, col="pink"),
+		box=gpar(fill="black", col="red"), # only one parameter
+		lines=list( # as many parameters as CI
+			gpar(lwd=10),gpar(lwd=5),
+			gpar(),gpar(),
+			gpar(lwd=2),gpar(lwd=1)
+		),
+		summary=list( # as many parameters as band per label
+			gpar(fill="violet", col="gray", lwd=10),
+			gpar(fill="orange", col="gray", lwd=10))
+	),
+	vertices=TRUE
+	)
 
 par(ask=ask)
 # See vignette for a more detailed description
