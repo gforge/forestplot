@@ -3,6 +3,7 @@ NEWS for the forestplot package
 Changes for 1.9.1
 -----------------
 * Minor improvement for error message when plotting lines
+* Bugfix for multicolumn expressions (issue #30, thanks André Gillibert)
 
 Changes for 1.9
 -----------------
