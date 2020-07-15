@@ -17,7 +17,8 @@ prFpGetGraphTicksAndClips(
   zero,
   x_range,
   mean,
-  graph.pos
+  graph.pos,
+  shapes_gp = fpShapesGp()
 )
 }
 \arguments{
@@ -68,6 +69,10 @@ interval span}
 \item{graph.pos}{The position of the graph element within the table of text. The
 position can be \code{1-(ncol(labeltext) + 1)}. You can also choose set the positin
 to \code{"left"} or \code{"right"}.}
+
+\item{shapes_gp}{Sets graphical parameters (squares and lines widths, styles, etc.)
+of all shapes drawn (squares, lines, diamonds, etc.). This overrides \code{col},
+\code{lwd.xaxis}, \code{lwd.zero}, \code{lwd.ci} and \code{lty.ci}.}
 }
 \value{
 \code{list} Returns a list with axis_vp, axisGrob, labGrob, zero and clip

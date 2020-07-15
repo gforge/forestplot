@@ -12,7 +12,9 @@ prFpDrawLine(
   lty,
   y.offset,
   vertices,
-  vertices.height = 0.1
+  vertices.height = 0.1,
+  line_gp,
+  vertices_gp
 )
 }
 \arguments{
@@ -30,11 +32,11 @@ as you cannot compare a unit object.}
 \item{upper_limit}{The upper limit of the confidence line. See
 lower_limit for details.}
 
-\item{clr.line}{The color of the line.}
+\item{clr.line}{Legacy color of line (please, use line_gp)}
 
-\item{lwd}{Line width, see \code{\link[grid]{gpar}}}
+\item{lwd}{Legacy width of line (please, use line_gp)}
 
-\item{lty}{Line type, see \code{\link[grid]{gpar}}}
+\item{lty}{Legacy type of line (please, use line_gp)}
 
 \item{y.offset}{If you have multiple lines they need an offset in
 the y-direction.}
@@ -46,6 +48,11 @@ at the very end, i.e. showing incorrectly narrow confidence interval.}
 
 \item{vertices.height}{The height hoft the vertices. Defaults to npc units
 corresponding to 10\% of the row height.}
+
+\item{line_gp}{A \code{\link[grid]{gpar}} for drawing the horizontal line}
+
+\item{vertices_gp}{A \code{\link[grid]{gpar}} for drawing the vertices.
+unspecified attributes in vertices_gp default to line_gp.}
 }
 \value{
 \code{void}

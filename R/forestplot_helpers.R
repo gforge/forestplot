@@ -40,6 +40,10 @@
 #' @param ... Allows additional parameters for sibling functions
 #' @return \code{void} The function outputs the line using grid compatible
 #'  functions and does not return anything.
+#' @param shapes_gp A set of graphical parameters of class \code{\link{fpShapesGp}}
+#' @param shape_coordinates A vector of length 2 the label (first item of the vector)
+#' and the band (second item of the vector) of the confidence interval.
+#' This is used together with shapes_gp to retrieve graphical parameters for that item.
 #'
 #' @author Max Gordon, Thomas Lumley
 #' @example inst/examples/forestplot_alt_ci_example.R
@@ -56,6 +60,8 @@ fpDrawNormalCI <- function(lower_limit,
                            lty = 1,
                            vertices,
                            vertices.height = .1,
+                           shapes_gp=fpShapesGp(),
+                           shape_coordinates=structure(c(1,1),max.coords=c(1,1)),
                            ...) {
 
   if (is.na(lower_limit) ||
@@ -66,9 +72,8 @@ fpDrawNormalCI <- function(lower_limit,
   # Funciton for drawing the confidence line
   prFpDrawLine(lower_limit = lower_limit,
                upper_limit = upper_limit,
-               clr.line = clr.line,
-               lwd = lwd,
-               lty = lty,
+               line_gp = prGetShapeGp(shapes_gp, shape_coordinates, "lines", default=prDefaultGp(col=clr.line, lwd=lwd, lty=lty)),
+               vertices_gp = prGetShapeGp(shapes_gp, shape_coordinates, "vertices", nodefault=TRUE),
                y.offset = y.offset,
                vertices = vertices,
                vertices.height = vertices.height)
@@ -92,9 +97,25 @@ fpDrawNormalCI <- function(lower_limit,
               y = y.offset,
               width = size,
               height = size,
-              gp = gpar(fill = clr.marker,
-                        col = clr.marker))
+              gp = prGetShapeGp(shapes_gp, shape_coordinates, "box",
+                                default = gpar(fill = clr.marker, col = clr.marker)))
   }
+}
+
+#' Construct default parameters from arguments that may include missing arguments
+#'
+#' @param col Line color (or missing)
+#' @param lwd Line width (or missing)
+#' @param lty Line type (or missing)
+#'
+#' @return a \code{\link[grid]{gpar}} object
+#'  containing these three attributes
+prDefaultGp <- function(col, lwd, lty) {
+  ret = list()
+  if (!missing(col)) {ret$col = col}
+  if (!missing(lwd)) {ret$lwd = lwd}
+  if (!missing(lty)) {ret$lty = lty}
+  return(do.call(grid::gpar, ret))
 }
 
 #' Draws a straight line
@@ -105,11 +126,29 @@ fpDrawNormalCI <- function(lower_limit,
 #' the upper limit the line is not drawn.
 #'
 #' @inheritParams fpDrawNormalCI
+#' @param clr.line Legacy color of line (please, use line_gp)
+#' @param lwd Legacy width of line (please, use line_gp)
+#' @param lty Legacy type of line (please, use line_gp)
+#' @param line_gp A \code{\link[grid]{gpar}} for drawing the horizontal line
+#' @param vertices_gp A \code{\link[grid]{gpar}} for drawing the vertices.
+#'  unspecified attributes in vertices_gp default to line_gp.
 #' @keywords internal
 #' @import magrittr
+#' @importFrom grid gpar
 #' @return \code{void}
-prFpDrawLine <- function (lower_limit, upper_limit, clr.line, lwd, lty, y.offset,
-                          vertices, vertices.height = .1) {
+prFpDrawLine <- function(lower_limit, upper_limit, clr.line, lwd, lty, y.offset,
+                         vertices, vertices.height = .1, line_gp, vertices_gp) {
+
+  # clr.line, lwd and lty are obsolete but are maintained for backward compatibility
+  line_gp0 = prDefaultGp(col = clr.line, lwd = lwd, lty = lty)
+
+  if (missing(line_gp) & missing(vertices_gp)) {
+    line_gp = line_gp0
+    vertices_gp = line_gp0
+  } else {
+    line_gp = prMergeGp(line_gp0, line_gp)
+  }
+
   # Draw the lines if the lower limit is
   # actually below the upper limit
   if (lower_limit >= upper_limit)
@@ -118,13 +157,13 @@ prFpDrawLine <- function (lower_limit, upper_limit, clr.line, lwd, lty, y.offset
   if (any(vertices.height < 0))
     stop("The vertices height cannot be negative")
 
-  if (inherits(vertices.height, "unit")){
+  if (inherits(vertices.height, "unit")) {
     vertices.height <- convertY(vertices.height,
                                 unitTo = "npc",
                                 valueOnly = TRUE)
   }
 
-  if (!inherits(y.offset, "unit")){
+  if (!inherits(y.offset, "unit")) {
     y.offset <- unit(y.offset, "npc")
   }
 
@@ -141,11 +180,8 @@ prFpDrawLine <- function (lower_limit, upper_limit, clr.line, lwd, lty, y.offset
              "npc",
              valueOnly = TRUE) < 0
 
-  gp_list <- list(col = clr.line,
-                  fill = clr.line,
-                  lty = lty)
-  if (!missing(lwd))
-    gp_list$lwd <- lwd
+  gp_list <- line_gp
+  if (is.null(gp_list$lty)) {gp_list$lty = 1}
 
   grid_line_args <- list(y = y.offset,
                          gp = do.call(gpar, gp_list))
@@ -176,7 +212,7 @@ prFpDrawLine <- function (lower_limit, upper_limit, clr.line, lwd, lty, y.offset
   # The arrows should not have dashed line type
   # and it seems that the simples solution is just to do
   # an arrow of my own through the line-call
-  if (clipupper || cliplower){
+  if (clipupper || cliplower) {
     # Make arrow the same height the intended vertices
     # Old code: unit(0.05, "inches")
     radians = 30 * pi/180
@@ -217,7 +253,7 @@ prFpDrawLine <- function (lower_limit, upper_limit, clr.line, lwd, lty, y.offset
   }
 
   if (missing(vertices)){
-    if (lty != 1)
+    if (gp_list$lty != 1)
       vertices = TRUE
     else
       vertices = FALSE
@@ -233,15 +269,16 @@ prFpDrawLine <- function (lower_limit, upper_limit, clr.line, lwd, lty, y.offset
     y <- convertY(grid_line_args$y[1], "npc", valueOnly = TRUE)
     y_spread <- y + vertices.height
     gp_list$lty = 1
+    gp_vertices = prMergeGp(gp_list, vertices_gp)
     if (verticals != "right"){
       grid.lines(x = rep(grid_line_args$x[1], 2),
                  y = y_spread,
-                 gp = do.call(gpar, gp_list))
+                 gp = gp_vertices)
     }
     if (verticals != "left"){
       grid.lines(x = rep(grid_line_args$x[2], 2),
                  y = y_spread,
-                 gp = do.call(gpar, gp_list))
+                 gp = gp_vertices)
     }
 
   }
@@ -260,6 +297,8 @@ fpDrawDiamondCI <- function(lower_limit,
                             lty = 1,
                             vertices,
                             vertices.height = .1,
+                            shapes_gp=fpShapesGp(),
+                            shape_coordinates=structure(c(1,1),max.coords=c(1,1)),
                             ...) {
   if (is.na(lower_limit) ||
       is.na(estimate) ||
@@ -269,9 +308,8 @@ fpDrawDiamondCI <- function(lower_limit,
   # Funciton for drawing the confidence line
   prFpDrawLine(lower_limit = lower_limit,
                upper_limit = upper_limit,
-               clr.line = clr.line,
-               lwd = lwd,
-               lty = lty,
+               line_gp = prGetShapeGp(shapes_gp, shape_coordinates, "lines", default=prDefaultGp(col=clr.line, lwd=lwd, lty=lty)),
+               vertices_gp = prGetShapeGp(shapes_gp, shape_coordinates, "vertices", nodefault=TRUE),
                y.offset = y.offset,
                vertices = vertices,
                vertices.height = vertices.height)
@@ -292,8 +330,7 @@ fpDrawDiamondCI <- function(lower_limit,
                    unit(c(-size/2, 0, +size/2, 0), default.size.unit),
                  y = unit(y.offset, "npc") +
                    unit(c(0, size/2, 0, -size/2), default.size.unit),
-                 gp = gpar(fill = clr.marker,
-                           col = clr.marker))
+                 gp = prGetShapeGp(shapes_gp, shape_coordinates, "box", default=gpar(fill = clr.marker, col = clr.marker)))
 
   }
 }
@@ -310,6 +347,8 @@ fpDrawCircleCI <- function(lower_limit,
                            lty = 1,
                            vertices,
                            vertices.height = .1,
+                           shapes_gp=fpShapesGp(),
+                           shape_coordinates=structure(c(1,1),max.coords=c(1,1)),
                            ...) {
   if (is.na(lower_limit) ||
       is.na(estimate) ||
@@ -319,9 +358,8 @@ fpDrawCircleCI <- function(lower_limit,
   # Funciton for drawing the confidence line
   prFpDrawLine(lower_limit = lower_limit,
                upper_limit = upper_limit,
-               clr.line = clr.line,
-               lwd = lwd,
-               lty = lty,
+               line_gp = prGetShapeGp(shapes_gp, shape_coordinates, "lines", default=prDefaultGp(col=clr.line, lwd=lwd, lty=lty)),
+               vertices_gp = prGetShapeGp(shapes_gp, shape_coordinates, "vertices", nodefault=TRUE),
                y.offset = y.offset,
                vertices = vertices,
                vertices.height = vertices.height)
@@ -342,8 +380,7 @@ fpDrawCircleCI <- function(lower_limit,
     grid.circle(x = unit(estimate, "native"),
                 y = unit(y.offset, "npc"),
                 r = size,
-                gp = gpar(fill = clr.marker,
-                          col = clr.marker))
+                gp = prGetShapeGp(shapes_gp, shape_coordinates, "box", default=gpar(fill = clr.marker, col = clr.marker)))
   }
 }
 
@@ -361,6 +398,8 @@ fpDrawPointCI <- function(lower_limit,
                           vertices,
                           vertices.height = .1,
                           pch = 1,
+                          shapes_gp=fpShapesGp(),
+                          shape_coordinates=structure(c(1,1),max.coords=c(1,1)),
                           ...) {
   if (is.na(lower_limit) ||
       is.na(estimate) ||
@@ -370,9 +409,8 @@ fpDrawPointCI <- function(lower_limit,
   # Funciton for drawing the confidence line
   prFpDrawLine(lower_limit = lower_limit,
                upper_limit = upper_limit,
-               clr.line = clr.line,
-               lwd = lwd,
-               lty = lty,
+               line_gp = prGetShapeGp(shapes_gp, shape_coordinates, "lines", default=prDefaultGp(col=clr.line, lwd=lwd, lty=lty)),
+               vertices_gp = prGetShapeGp(shapes_gp, shape_coordinates, "vertices", nodefault=TRUE),
                y.offset = y.offset,
                vertices = vertices,
                vertices.height = vertices.height)
@@ -391,8 +429,7 @@ fpDrawPointCI <- function(lower_limit,
                 y = unit(y.offset, "npc"),
                 size = size,
                 pch = pch,
-                gp = gpar(fill = clr.marker,
-                          col = clr.marker))
+                gp = prGetShapeGp(shapes_gp, shape_coordinates, "box", default=gpar(fill = clr.marker, col = clr.marker)))
 
   }
 }
@@ -402,6 +439,8 @@ fpDrawPointCI <- function(lower_limit,
 #' @export
 fpDrawSummaryCI <- function(lower_limit, estimate, upper_limit,
                             size, col, y.offset = 0.5,
+                            shapes_gp=fpShapesGp(),
+                            shape_coordinates=structure(c(1,1),max.coords=c(1,1)),
                             ...) {
   if (is.na(lower_limit) ||
       is.na(estimate) ||
@@ -416,18 +455,21 @@ fpDrawSummaryCI <- function(lower_limit, estimate, upper_limit,
   grid.polygon(x = unit(c(lower_limit, estimate, upper_limit, estimate), "native"),
                y = unit(y.offset +
                           c(0, 0.5 * size, 0, -0.5 * size), "npc"),
-               gp = gpar(fill = col,
-                         col = col))
+               gp = prGetShapeGp(shapes_gp, shape_coordinates, "summary", default=gpar(fill = col,col = col))
+               )
 }
 
 #' @rdname fpDrawCI
 #' @export
-fpDrawBarCI <- function (lower_limit, estimate, upper_limit, size, col, y.offset = 0.5, ...)
+fpDrawBarCI <- function (lower_limit, estimate, upper_limit, size, col, y.offset = 0.5,
+                         shapes_gp=fpShapesGp(),
+                         shape_coordinates=structure(c(1,1),max.coords=c(1,1)),
+                         ...)
 {
   size <- ifelse(is.unit(size), convertUnit(size, unitTo = "npc", valueOnly = TRUE), size) * 0.9
   grid.polygon(x = unit(c(lower_limit, upper_limit, upper_limit, lower_limit), "native"),
                y = unit(y.offset + 0.5*c(1, 1, -1, -1)* size, "npc"),
-               gp = gpar(fill = col, col = col))
+               gp = prGetShapeGp(shapes_gp, shape_coordinates, "summary", default=gpar(fill = col,col = col)))
 }
 
 #' A function for the color elements used in forestplot()
@@ -435,6 +477,11 @@ fpDrawBarCI <- function (lower_limit, estimate, upper_limit, size, col, y.offset
 #' This function encapsulates all the colors that are used in the
 #' \code{\link{forestplot}} function. As there are plenty of color
 #' options this function gathers them all in one place.
+#'
+#' Further customization of non-text elements can be performed with
+#' \code{\link{fpShapesGp}} passed as \code{shapes_gp} parameter to
+#' \code{\link{forestplot}}. The \code{fpColors} function is kept for
+#' backwards compatibility.
 #'
 #' If you have several values per row in a forestplot you can set
 #' a color to a vector where the first value represents the first
@@ -519,6 +566,219 @@ fpColors <- function (all.elements,
   return(structure(ret,
                    class = c("fpColors", class(ret))))
 }
+
+#' A function for graphical parameters of the shapes used in forestplot()
+#'
+#' This function encapsulates all the non-text elements that are used in the
+#' \code{\link{forestplot}} function. As there are plenty of shapes
+#' options this function gathers them all in one place.
+#'
+#' This function obsoletes \code{\link{fpColors}}.
+#'
+#' If some, but not all parameters of a shape (e.g. box) are specified in gpar()
+#' such as setting lwd but not line color, the unspecified parameters default
+#' to the ones specified in \code{default}, then, default to legacy parameters
+#' of \code{forestplot} such as \code{col}.
+#'
+#' Parameters \code{box}, \code{lines}, \code{vertices}, \code{summary} may be set as list
+#' containing several gpars. The length of the list must either be equal to the number of bands
+#' per label or to the number of bands multiplied by the number of labels, allowing specification
+#' of different styles for different parts of the forest plot.
+#'
+#' The parameter \code{grid} can either be a single gpar or a list of gpars with as many
+#' elements as there are lines in the grid (as set by the \code{xticks} or \code{grid}
+#' arguments of forestplot)
+#'
+#' Parameters \code{zero}, \code{axes}, \code{hrz_lines} must either be NULL or gpar
+#' but cannot be lists of gpars.
+#'
+#' @param default A fallback \code{\link[grid]{gpar}} for all unspecified attributes.
+#'  If set to NULL then it defaults to legacy parameters, including
+#'  the \code{col}, \code{lwd.xaxis}, \code{lwd.ci} and \code{lty.ci}
+#'  parameter of \code{fpColors}.
+#' @param box The graphical parameters (\code{gpar}) of the box, circle
+#'  or point indicating the point estimate, i.e. the middle
+#'  of the confidence interval (may be a list of gpars)
+#' @param lines The graphical parameters (\code{gpar}) of the confidence lines
+#'  (may be a list of gpars)
+#' @param vertices The graphical parameters (\code{gpar}) of the vertices
+#'  (may be a list of gpars).
+#'  If \code{ci.vertices} is set to TRUE in \code{forestplot}
+#'  \code{vertices} inherits from \code{lines} all its parameters but lty that is set
+#'  to "solid" by default.
+#' @param summary The graphical parameters (\code{gpar}) of the summary
+#'  (may be a list of gpars)
+#' @param zero The graphical parameters (\code{gpar}) of the zero line
+#'  (may not be a list of gpars)
+#' @param axes The graphical parameters (\code{gpar}) of the x-axis at the bottom
+#'  (may not be a list of gpars)
+#' @param hrz_lines The graphical parameters (\code{gpar}) of the horizontal lines
+#'  (may not be a list of gpars)
+#' @param grid The graphical parameters (\code{gpar}) of the grid (vertical lines)
+#'  (may be a list of gpars)
+#'
+#' @return list A list with the elements:
+#' \item{default}{the gpar for default attributes}
+#' \item{box}{the gpar or list of gpars of the box/marker}
+#' \item{lines}{the gpar or list of gpars of the lines}
+#' \item{vertices}{the gpar or list of gpars of the vertices}
+#' \item{summary}{the gpar or list of gpars of the summary}
+#' \item{zero}{the gpar of the zero vertical line}
+#' \item{axes}{the gpar of the x-axis}
+#' \item{hrz_lines}{the gpar of the horizontal lines}
+#' \item{grid}{the gpar or list of gpars of the grid lines}
+#'
+#' @author Andre GILLIBERT
+#' @importFrom grid gpar
+#' @importFrom graphics par
+#'
+#' @example inst/examples/fpShapesGp_example.R
+#' @export
+#' @family forestplot functions
+fpShapesGp <- function (default=NULL,
+                      box        = NULL,
+                      lines      = NULL,
+                      vertices   = NULL,
+                      summary    = NULL,
+                      zero       = NULL,
+                      axes       = NULL,
+                      hrz_lines  = NULL,
+                      grid       = NULL)
+{
+ ret <- list(
+   default=default,
+   box=box,
+   lines=lines,
+   vertices=vertices,
+   summary=summary,
+   zero=zero,
+   axes=axes,
+   hrz_lines=hrz_lines,
+   grid=grid
+ )
+
+ # check that objects have the correct type
+ for(nm in names(ret)) {
+   obj = ret[[nm]]
+   if (!is.null(obj) & !inherits(obj, "gpar")) {
+     if (nm %in% c("default", "zero", "axes", "hrz_lines")) {
+       stop("`", nm, "` must either be NULL or a gpar")
+     }
+     if (!is.list(obj)) {
+       stop("`", nm, "` must either be NULL, a gpar or a list of gpars")
+     }
+     if (!all(sapply(obj, function (o) inherits(o, "gpar")))) {
+       stop("`", nm, "` is not a proper list of gpars")
+     }
+   }
+ }
+
+ return(structure(ret, class = c("fpShapesGp", class(ret))))
+}
+
+#' A function to extract graphical parameters from a fpShapesGp object
+#'
+#' @param shapes_gp An object of class \code{\link{fpShapesGp}} specifying all graphical parameters
+#' @param coords A numeric vector of length 2, specifying the label number (first item of the vector)
+#'  and the confidence band number within this label ; that can be >= 2 if there are multiple confidence
+#'  bands per label. Can be NULL for objects that are used only once (e.g. axes).
+#'  Vector \code{coords} must have an R attribute \code{max.coords} as numeric vector of length 2
+#'  specifying the total number of labels
+#'  and number of confidence bands by label for the forest plot.
+#'  The first coordinate specify the label number and the second coordinate (for multi-band forest plots)
+#'  specifies the band number within the label.
+#' @param object One of \code{"box"}, \code{"lines"}, \code{"vertices"}, \code{"summary"}, \code{"zero"},
+#'  \code{"axes"}, \code{"hrz_lines"} or \code{"grid"}, refering to the object for which the
+#'  graphical parameters are requested.
+#' @param default Default attributes to rely on when neither found in \code{shapes_gp$object}
+#'  nor in \code{shapes_gp$default}
+#' @param nodefault Logical. If TRUE, do not search attribute in shapes_gp$default
+#'
+#' @return An object of class \code{\link[grid]{gpar}}
+#'
+#' @author Andre GILLIBERT
+#' @export
+prGetShapeGp <- function(shapes_gp, coords, object, default=grid::gpar(), nodefault=FALSE) {
+  # validation of parameters
+  if (!inherits(shapes_gp, "fpShapesGp")) {
+    stop("`shapes_gp` must be of class fpShapesGp")
+  }
+  if (!is.character(object) || !is.vector(object) || length(object)!=1) {
+    stop("`object` must be a character vector of length")
+  }
+  if (!(object %in% c("box", "lines", "vertices", "summary", "zero", "axes", "hrz_lines", "grid"))) {
+    stop("`object` must be one of: \"box\", \"lines\", \"vertices\", \"summary\", \"zero\", \"axes\", \"hrz_lines\", \"grid\"")
+  }
+
+  undefined_coords <- is.null(coords)
+
+  if (!(is.null(coords) || is.numeric(coords) & length(coords) == 2)) {
+    stop(paste0("`coords` must be NULL or a numeric vector of length 2 rather than a ", class(coords)))
+  }
+  if (!is.null(coords)) {
+    if (is.null(attr(coords, "max.coords"))) {
+      stop("`coords` must have a `max.coords` attribute")
+    }
+    max.coords <- attr(coords, "max.coords")
+    if (!is.numeric(max.coords) | length(max.coords) != 2) {
+      stop("`max.coords` attribute must be a numeric vector of length 2")
+    }
+    if (!all(coords <= max.coords & coords >= 1)) {
+      stop(paste0("`coords` (",paste(coords, collapse=", "), ")  out of range of `max.coords` (",paste(max.coords, collapse=", "), ")"))
+    }
+  } else {
+    max.coords=c(1,1)
+    coords=c(1,1)
+  }
+
+  if (nodefault) {
+    gp <- default
+  } else {
+    gp <- prMergeGp(default, shapes_gp[["default"]])
+  }
+  if (!is.null(shapes_gp[[object]])) {
+  	# overriden.
+  	shps <- shapes_gp[[object]]
+  	if (inherits(shps, "gpar")) {
+  	  gp <- prMergeGp(gp, shps)
+  	} else if (!is.list(shps)) {
+  	  stop(paste0("`shapes_gp$", object, "` must be a gpar or a list of gpars"))
+  	} else if (length(shps) == max.coords[2]) { # list of gpars...
+  	  shp <- shps[[coords[2]]]
+  	  gp <- prMergeGp(gp, shp)
+  	} else if (length(shps) == max.coords[1]*max.coords[2]) {
+  	  shp <- shps[[(coords[1]-1)*max.coords[2] + coords[2] ]]
+  	  gp <- prMergeGp(gp, shp)
+  	} else {
+  	  if (undefined_coords) {
+  	    stop(paste0("shape_gp$", object, " should be a gpar"))
+  	  } else if (object == "grid") {
+  	    stop(paste0("length of shape_gp$grid (", length(shps), ") must either be equal to 1 or to the number of grid elements specified in `xticks` or `grid` parameter of forestplot"))
+  	  } else {
+  	    stop(paste0("length of shapes_gp$", object, " (", length(shps), ") should either be equal to number",
+  	       " of bands per label (", max.coords[2], "),\nor to the product of the number of labels and",
+  	       " number of bands per label (", max.coords[1], "*", max.coords[2], "=", max.coords[1]*max.coords[2], ")"))
+  	  }
+  	}
+  }
+  return (gp)
+}
+
+#' A function to merge two sets of graphical parameters
+#'
+#' @param weak A \code{\link[grid]{gpar}}
+#' @param strong Another \code{\link[grid]{gpar}}, with parameters taking precedence
+#' over \code{weak}
+#' @return A \code{\link[grid]{gpar}} merging attributes of both \code{weak} and \code{strong}
+#
+prMergeGp <- function(weak = gpar(), strong = gpar()) {
+  ret = weak
+  for(nm in names(strong)) {
+    ret[[nm]] <- strong[[nm]]
+  }
+  return(ret)
+}
+
 
 #' A function for the legend used in forestplot()
 #'

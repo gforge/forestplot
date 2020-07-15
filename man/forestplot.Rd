@@ -44,6 +44,7 @@ forestplot(...)
   fn.ci_norm = fpDrawNormalCI,
   fn.ci_sum = fpDrawSummaryCI,
   fn.legend,
+  shapes_gp = fpShapesGp(),
   ...
 )
 }
@@ -188,6 +189,10 @@ and it defaults to \code{\link{fpDrawSummaryCI}}.}
 legends, this can be a list if you want different functions. It defaults to
 a box if you have anything else than a single function or the number of columns
 in the \code{mean} argument}
+
+\item{shapes_gp}{Sets graphical parameters (squares and lines widths, styles, etc.)
+of all shapes drawn (squares, lines, diamonds, etc.). This overrides \code{col},
+\code{lwd.xaxis}, \code{lwd.zero}, \code{lwd.ci} and \code{lty.ci}.}
 }
 \value{
 \code{NULL}
@@ -357,6 +362,27 @@ forestplot(labeltext = row_names,
            xlog      = TRUE,
            col = fpColors(lines="red", box="darkred"))
 
+# An example using shapes_gp
+forestplot(
+	labeltext = cbind(Author=c("Smith et al","Smooth et al", "al et al")),
+	mean=cbind(1:3, 1.5:3.5),
+	lower=cbind(0:2, 0.5:2.5),
+	upper=cbind(4:6,5.5:7.5),
+	is.summary=c(FALSE,FALSE,TRUE),
+	shapes_gp=fpShapesGp(
+		default=gpar(lineend="square", linejoin="mitre", lwd=3, col="pink"),
+		box=gpar(fill="black", col="red"), # only one parameter
+		lines=list( # as many parameters as CI
+			gpar(lwd=10),gpar(lwd=5),
+			gpar(),gpar(),
+			gpar(lwd=2),gpar(lwd=1)
+		),
+		summary=list( # as many parameters as band per label
+			gpar(fill="violet", col="gray", lwd=10),
+			gpar(fill="orange", col="gray", lwd=10))
+	),
+	vertices=TRUE
+	)
 
 par(ask=ask)
 # See vignette for a more detailed description
@@ -366,7 +392,8 @@ par(ask=ask)
 Other forestplot functions: 
 \code{\link{fpColors}()},
 \code{\link{fpDrawNormalCI}()},
-\code{\link{fpLegend}()}
+\code{\link{fpLegend}()},
+\code{\link{fpShapesGp}()}
 }
 \author{
 Max Gordon, Thomas Lumley

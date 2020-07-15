@@ -21,6 +21,8 @@ fpDrawNormalCI(
   lty = 1,
   vertices,
   vertices.height = 0.1,
+  shapes_gp = fpShapesGp(),
+  shape_coordinates = structure(c(1, 1), max.coords = c(1, 1)),
   ...
 )
 
@@ -36,6 +38,8 @@ fpDrawDiamondCI(
   lty = 1,
   vertices,
   vertices.height = 0.1,
+  shapes_gp = fpShapesGp(),
+  shape_coordinates = structure(c(1, 1), max.coords = c(1, 1)),
   ...
 )
 
@@ -51,6 +55,8 @@ fpDrawCircleCI(
   lty = 1,
   vertices,
   vertices.height = 0.1,
+  shapes_gp = fpShapesGp(),
+  shape_coordinates = structure(c(1, 1), max.coords = c(1, 1)),
   ...
 )
 
@@ -67,6 +73,8 @@ fpDrawPointCI(
   vertices,
   vertices.height = 0.1,
   pch = 1,
+  shapes_gp = fpShapesGp(),
+  shape_coordinates = structure(c(1, 1), max.coords = c(1, 1)),
   ...
 )
 
@@ -77,10 +85,22 @@ fpDrawSummaryCI(
   size,
   col,
   y.offset = 0.5,
+  shapes_gp = fpShapesGp(),
+  shape_coordinates = structure(c(1, 1), max.coords = c(1, 1)),
   ...
 )
 
-fpDrawBarCI(lower_limit, estimate, upper_limit, size, col, y.offset = 0.5, ...)
+fpDrawBarCI(
+  lower_limit,
+  estimate,
+  upper_limit,
+  size,
+  col,
+  y.offset = 0.5,
+  shapes_gp = fpShapesGp(),
+  shape_coordinates = structure(c(1, 1), max.coords = c(1, 1)),
+  ...
+)
 }
 \arguments{
 \item{lower_limit}{The lower limit of the confidence line.
@@ -125,6 +145,12 @@ at the very end, i.e. showing incorrectly narrow confidence interval.}
 
 \item{vertices.height}{The height hoft the vertices. Defaults to npc units
 corresponding to 10\% of the row height.}
+
+\item{shapes_gp}{A set of graphical parameters of class \code{\link{fpShapesGp}}}
+
+\item{shape_coordinates}{A vector of length 2 the label (first item of the vector)
+and the band (second item of the vector) of the confidence interval.
+This is used together with shapes_gp to retrieve graphical parameters for that item.}
 
 \item{...}{Allows additional parameters for sibling functions}
 
@@ -233,7 +259,8 @@ par(ask=ask)
 Other forestplot functions: 
 \code{\link{forestplot}()},
 \code{\link{fpColors}()},
-\code{\link{fpLegend}()}
+\code{\link{fpLegend}()},
+\code{\link{fpShapesGp}()}
 }
 \author{
 Max Gordon, Thomas Lumley

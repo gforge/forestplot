@@ -48,6 +48,11 @@ This function encapsulates all the colors that are used in the
 options this function gathers them all in one place.
 }
 \details{
+Further customization of non-text elements can be performed with
+\code{\link{fpShapesGp}} passed as \code{shapes_gp} parameter to
+\code{\link{forestplot}}. The \code{fpColors} function is kept for
+backwards compatibility.
+
 If you have several values per row in a forestplot you can set
 a color to a vector where the first value represents the first
 line/box, second the second line/box etc. The vectors are only
@@ -83,7 +88,8 @@ par(ask=ask)
 Other forestplot functions: 
 \code{\link{forestplot}()},
 \code{\link{fpDrawNormalCI}()},
-\code{\link{fpLegend}()}
+\code{\link{fpLegend}()},
+\code{\link{fpShapesGp}()}
 }
 \author{
 Max Gordon, Thomas Lumley

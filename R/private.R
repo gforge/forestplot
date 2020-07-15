@@ -268,8 +268,8 @@ prFpGetGraphTicksAndClips <- function(xticks,
                                       zero,
                                       x_range,
                                       mean,
-                                      graph.pos){
-
+                                      graph.pos,
+                                      shapes_gp=fpShapesGp()){
   # Active rows are all excluding the top ones with NA in the mean value
   if (is.matrix(mean)){
     for (from in 1:nrow(mean))
@@ -392,9 +392,9 @@ prFpGetGraphTicksAndClips <- function(xticks,
   if (length(ticks) != 1 || ticks != 0){
     gp_list <- txt_gp$ticks
     gp_list$col <- col$axes
-
     if(!missing(lwd.xaxis))
       gp_list$lwd <- lwd.xaxis
+    gp_axis = prGetShapeGp(shapes_gp, NULL, "axes", default=do.call(grid::gpar, gp_list))
 
     if (!missing(xticks) &&
         !is.null(attr(xticks, "labels"))){
@@ -415,7 +415,7 @@ prFpGetGraphTicksAndClips <- function(xticks,
     }
     dg <- xaxisGrob(at    = ticks,
                     label = ticklabels,
-                    gp    = do.call(gpar, gp_list))
+                    gp    = gp_axis)
     if (length(grid) == 1){
       if (is.logical(grid) &&
           grid == TRUE){
@@ -434,14 +434,17 @@ prFpGetGraphTicksAndClips <- function(xticks,
                        xscale         = x_range,
                        name           = "grid_vp")
     gridList <- gTree()
-    for (xpos in grid){
+    for (ipos in 1:length(grid)){
+      xpos <- grid[ipos]
       if (inherits(xpos, "unit")){
         xpos <- convertX(xpos, unitTo = "native", valueOnly = TRUE)
       }
+      coords <- structure(c(ipos,1), max.coords=c(length(grid), 1))
+      grid_gpx <- prGetShapeGp(shapes_gp, coords, "grid", default=grid_gp)
       if ((length(zero) == 1 && is.na(zero)) || !xpos %in% zero){
         lg <- linesGrob(x = unit(rep(ifelse(xlog, log(xpos), xpos), 2), units = "native"),
                         y = unit(c(0,1), units = "npc"),
-                        gp = grid_gp,
+                        gp = grid_gpx,
                         vp = grid_vp)
         gridList <- addGrob(gridList, lg)
       }
@@ -481,7 +484,8 @@ prFpGetGraphTicksAndClips <- function(xticks,
 #' @keywords internal
 prFpPrintXaxis <- function(axisList,
                            col,
-                           lwd.zero){
+                           lwd.zero,
+                           shapes_gp=fpShapesGp()){
   # Now plot the axis inkluding the horizontal bar
   pushViewport(axisList$axis_vp)
 
@@ -489,19 +493,20 @@ prFpPrintXaxis <- function(axisList,
   gp_list <- list(col = col$zero)
   if (!missing(lwd.zero))
     gp_list$lwd <- lwd.zero
+  zero_gp = prGetShapeGp(shapes_gp, NULL, "zero", default=do.call(gpar, gp_list))
 
   if (length(axisList$zero) > 1 || !is.na(axisList$zero)) {
     if (length(axisList$zero) == 1){
       grid.lines(x  = unit(axisList$zero, "native"),
                  y  = 0:1,
-                 gp = do.call(gpar, gp_list))
+                 gp = zero_gp)
     }else if (length(axisList$zero) == 2){
       gp_list$fill <- gp_list$col
       grid.polygon(x  = unit(c(axisList$zero,
                                rev(axisList$zero)),
                              "native"),
                    y  = c(0, 0, 1, 1),
-                   gp = do.call(gpar, gp_list))
+                   gp = zero_gp)
     }
   }
 
@@ -1442,7 +1447,8 @@ prGetTextGrobCex <-  function(x) {
 prFpGetLines <- function(hrzl_lines,
                          is.summary,
                          total_columns,
-                         col){
+                         col,
+                         shapes_gp=fpShapesGp()){
   ret_lines <- lapply(1:(length(is.summary) + 1), function(x) NULL)
   if (missing(hrzl_lines) ||
         (is.logical(hrzl_lines) &&
@@ -1453,6 +1459,8 @@ prFpGetLines <- function(hrzl_lines,
   }
 
   std_line <- gpar(lty=1, lwd=1, col=col$hrz_lines, columns = 1:total_columns)
+  std_line <- prGetShapeGp(shapes_gp, NULL, "hrz_lines", default = std_line)
+
   if (inherits(hrzl_lines, "gpar")){
     std_line <- prGparMerge(std_line, hrzl_lines)
     hrzl_lines <- TRUE

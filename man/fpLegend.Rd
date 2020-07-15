@@ -51,6 +51,7 @@ among the arguments for the \code{\link{forestplot}} call.
 Other forestplot functions: 
 \code{\link{forestplot}()},
 \code{\link{fpColors}()},
-\code{\link{fpDrawNormalCI}()}
+\code{\link{fpDrawNormalCI}()},
+\code{\link{fpShapesGp}()}
 }
 \concept{forestplot functions}
