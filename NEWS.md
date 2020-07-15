@@ -1,9 +1,10 @@
 NEWS for the forestplot package
 
-Changes for 1.9.1
+Changes for 1.10
 -----------------
 * Minor improvement for error message when plotting lines
 * Bugfix for multicolumn expressions (issue #30, thanks André Gillibert)
+* Added `shapes_gp` parameter (issue #32, thanks André Gillibert)
 
 Changes for 1.9
 -----------------
