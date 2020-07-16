@@ -122,8 +122,8 @@ details}
 for details}
 
 \item{xlog}{If TRUE, x-axis tick marks are to follow a logarithmic scale, e.g. for
-logistic regressoin (OR), survival estimates (HR), poisson regression etc.
-\emph{Note:} This is an intentional break with the original \code{\link[rmeta]{forestplot}}
+logistic regressoin (OR), survival estimates (HR), Poisson regression etc.
+\emph{Note:} This is an intentional break with the original \code{forestplot}
 function as I've found that exponentiated ticks/clips/zero effect are more
 difficult to for non-statisticians and there are sometimes issues with rounding
 the tick marks properly.}
@@ -199,7 +199,7 @@ of all shapes drawn (squares, lines, diamonds, etc.). This overrides \code{col},
 }
 \description{
 The \emph{forestplot} is based on the \pkg{rmeta}-package`s
-\code{\link[rmeta]{forestplot}} function. This
+\code{forestplot} function. This
 function resolves some limitations of the original
 functions such as:
 \itemize{
@@ -249,7 +249,7 @@ The x-axis does not entirely respect the margin. Autosizing boxes is not
 always the best option, try to set these manually as much as possible.
 }
 
-\section{API-changes from \pkg{rmeta}-package`s \code{\link[rmeta]{forestplot}}}{
+\section{API-changes from \pkg{rmeta}-package`s \code{forestplot}}{
 
 \itemize{
   \item{xlog: }{The xlog outputs the axis in log() format but the input data should be in antilog/exp format}

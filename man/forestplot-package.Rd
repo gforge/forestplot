@@ -6,7 +6,7 @@
 \title{Package description}
 \description{
 The forest plot function, \code{\link{forestplot}}, is a more general
-version of the original \pkg{rmeta}-packages \code{\link[rmeta]{forestplot}}
+version of the original \pkg{rmeta}-packages \code{forestplot}
 implementation. The aim is at using forest plots for more than
 just meta-analyses.
 }
