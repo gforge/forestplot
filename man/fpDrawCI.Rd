@@ -9,27 +9,98 @@
 \alias{fpDrawBarCI}
 \title{Draw standard confidence intervals}
 \usage{
-fpDrawNormalCI(lower_limit, estimate, upper_limit, size, y.offset = 0.5,
-  clr.line, clr.marker, lwd, lty = 1, vertices, vertices.height = 0.1,
-  ...)
+fpDrawNormalCI(
+  lower_limit,
+  estimate,
+  upper_limit,
+  size,
+  y.offset = 0.5,
+  clr.line,
+  clr.marker,
+  lwd,
+  lty = 1,
+  vertices,
+  vertices.height = 0.1,
+  shapes_gp = fpShapesGp(),
+  shape_coordinates = structure(c(1, 1), max.coords = c(1, 1)),
+  ...
+)
 
-fpDrawDiamondCI(lower_limit, estimate, upper_limit, size, y.offset = 0.5,
-  clr.line, clr.marker, lwd, lty = 1, vertices, vertices.height = 0.1,
-  ...)
+fpDrawDiamondCI(
+  lower_limit,
+  estimate,
+  upper_limit,
+  size,
+  y.offset = 0.5,
+  clr.line,
+  clr.marker,
+  lwd,
+  lty = 1,
+  vertices,
+  vertices.height = 0.1,
+  shapes_gp = fpShapesGp(),
+  shape_coordinates = structure(c(1, 1), max.coords = c(1, 1)),
+  ...
+)
 
-fpDrawCircleCI(lower_limit, estimate, upper_limit, size, y.offset = 0.5,
-  clr.line, clr.marker, lwd, lty = 1, vertices, vertices.height = 0.1,
-  ...)
+fpDrawCircleCI(
+  lower_limit,
+  estimate,
+  upper_limit,
+  size,
+  y.offset = 0.5,
+  clr.line,
+  clr.marker,
+  lwd,
+  lty = 1,
+  vertices,
+  vertices.height = 0.1,
+  shapes_gp = fpShapesGp(),
+  shape_coordinates = structure(c(1, 1), max.coords = c(1, 1)),
+  ...
+)
 
-fpDrawPointCI(lower_limit, estimate, upper_limit, size, y.offset = 0.5,
-  clr.line, clr.marker, lwd, lty = 1, vertices, vertices.height = 0.1,
-  pch = 1, ...)
+fpDrawPointCI(
+  lower_limit,
+  estimate,
+  upper_limit,
+  size,
+  y.offset = 0.5,
+  clr.line,
+  clr.marker,
+  lwd,
+  lty = 1,
+  vertices,
+  vertices.height = 0.1,
+  pch = 1,
+  shapes_gp = fpShapesGp(),
+  shape_coordinates = structure(c(1, 1), max.coords = c(1, 1)),
+  ...
+)
 
-fpDrawSummaryCI(lower_limit, estimate, upper_limit, size, col,
-  y.offset = 0.5, ...)
+fpDrawSummaryCI(
+  lower_limit,
+  estimate,
+  upper_limit,
+  size,
+  col,
+  y.offset = 0.5,
+  shapes_gp = fpShapesGp(),
+  shape_coordinates = structure(c(1, 1), max.coords = c(1, 1)),
+  ...
+)
 
-fpDrawBarCI(lower_limit, estimate, upper_limit, size, col,
-  y.offset = 0.5, ...)
+fpDrawBarCI(
+  lower_limit,
+  estimate,
+  upper_limit,
+  size,
+  col,
+  y.offset = 0.5,
+  shapes_gp = fpShapesGp(),
+  shape_coordinates = structure(c(1, 1), max.coords = c(1, 1)),
+  ...
+)
 }
 \arguments{
 \item{lower_limit}{The lower limit of the confidence line.
@@ -75,6 +146,12 @@ at the very end, i.e. showing incorrectly narrow confidence interval.}
 \item{vertices.height}{The height hoft the vertices. Defaults to npc units
 corresponding to 10\% of the row height.}
 
+\item{shapes_gp}{A set of graphical parameters of class \code{\link{fpShapesGp}}}
+
+\item{shape_coordinates}{A vector of length 2 the label (first item of the vector)
+and the band (second item of the vector) of the confidence interval.
+This is used together with shapes_gp to retrieve graphical parameters for that item.}
+
 \item{...}{Allows additional parameters for sibling functions}
 
 \item{pch}{Type of point see \code{\link[grid]{grid.points}} for details}
@@ -92,27 +169,37 @@ Use the \code{fpDrawNormalCI} function as a
 template if you want to make your own funky line + marker.
 }
 \examples{
-ask <- par(ask=TRUE)
+ask <- par(ask = TRUE)
 
-test_data <- data.frame(coef1=c(1, 1.59, 1.3, 1.24),
-                        coef2=c(1, 1.7, 1.4, 1.04))
+test_data <- data.frame(
+  coef1 = c(1, 1.59, 1.3, 1.24),
+  coef2 = c(1, 1.7, 1.4, 1.04)
+)
 
-test_data$low1 <- test_data$coef1 - 1.96*c(0, .2, .1, .15)
-test_data$high1 <- test_data$coef1 + 1.96*c(0, .2, .1, .15)
+test_data$low1 <- test_data$coef1 - 1.96 * c(0, .2, .1, .15)
+test_data$high1 <- test_data$coef1 + 1.96 * c(0, .2, .1, .15)
 
-test_data$low2 <- test_data$coef2 - 1.96*c(0, .1, .15, .2)
-test_data$high2 <- test_data$coef2 + 1.96*c(0, .1, .15, .2)
+test_data$low2 <- test_data$coef2 - 1.96 * c(0, .1, .15, .2)
+test_data$high2 <- test_data$coef2 + 1.96 * c(0, .1, .15, .2)
 
 col_no <- grep("coef", colnames(test_data))
 row_names <- list(
   list("Category 1", "Category 2", "Category 3", expression(Category >= 4)),
-  list("ref",
-       substitute(expression(bar(x) == val),
-                  list(val = round(rowMeans(test_data[2, col_no]), 2))),
-       substitute(expression(bar(x) == val),
-                  list(val = round(rowMeans(test_data[3, col_no]), 2))),
-       substitute(expression(bar(x) == val),
-                  list(val = round(rowMeans(test_data[4, col_no]), 2))))
+  list(
+    "ref",
+    substitute(
+      expression(bar(x) == val),
+      list(val = round(rowMeans(test_data[2, col_no]), 2))
+    ),
+    substitute(
+      expression(bar(x) == val),
+      list(val = round(rowMeans(test_data[3, col_no]), 2))
+    ),
+    substitute(
+      expression(bar(x) == val),
+      list(val = round(rowMeans(test_data[4, col_no]), 2))
+    )
+  )
 )
 
 coef <- with(test_data, cbind(coef1, coef2))
@@ -121,37 +208,50 @@ high <- with(test_data, cbind(high1, high2))
 
 # Change all to diamonds
 forestplot(row_names, coef, low, high,
-           fn.ci_norm=fpDrawDiamondCI,
-           title="Cool study",
-           zero = 1, boxsize=0.25,
-           col=fpColors(box=c("royalblue", "gold"),
-                        line=c("darkblue", "orange"),
-                        summary=c("darkblue", "red")),
-           xlab="The estimates",
-           new_page = TRUE,
-           legend=c("Treatment", "Placebo"),
-           legend_args = fpLegend(title="Group",
-                                  pos = list("topright", inset=.1),
-                                  r=unit(.1, "snpc"),
-                                  gp = gpar(col="#CCCCCC", lwd=1.5)))
+  fn.ci_norm = fpDrawDiamondCI,
+  title = "Cool study",
+  zero = 1, boxsize = 0.25,
+  col = fpColors(
+    box = c("royalblue", "gold"),
+    line = c("darkblue", "orange"),
+    summary = c("darkblue", "red")
+  ),
+  xlab = "The estimates",
+  new_page = TRUE,
+  legend = c("Treatment", "Placebo"),
+  legend_args = fpLegend(
+    title = "Group",
+    pos = list("topright", inset = .1),
+    r = unit(.1, "snpc"),
+    gp = gpar(col = "#CCCCCC", lwd = 1.5)
+  )
+)
 
 # Change first to diamonds
 forestplot(row_names, coef, low, high,
-           fn.ci_norm=c("fpDrawDiamondCI",
-                             rep("fpDrawNormalCI",
-                                 times=nrow(coef)-1)),
-           title="Cool study",
-           zero = 1, boxsize=0.25,
-           col=fpColors(box=c("royalblue", "gold"),
-                        line=c("darkblue", "orange"),
-                        summary=c("darkblue", "red")),
-           xlab="The estimates",
-           new_page = TRUE,
-           legend=c("Treatment", "Placebo"),
-           legend_args = fpLegend(title="Group",
-                                  pos = list("topright", inset=.1),
-                                  r=unit(.1, "snpc"),
-                                  gp = gpar(col="#CCCCCC", lwd=1.5)))
+  fn.ci_norm = c(
+    "fpDrawDiamondCI",
+    rep("fpDrawNormalCI",
+      times = nrow(coef) - 1
+    )
+  ),
+  title = "Cool study",
+  zero = 1, boxsize = 0.25,
+  col = fpColors(
+    box = c("royalblue", "gold"),
+    line = c("darkblue", "orange"),
+    summary = c("darkblue", "red")
+  ),
+  xlab = "The estimates",
+  new_page = TRUE,
+  legend = c("Treatment", "Placebo"),
+  legend_args = fpLegend(
+    title = "Group",
+    pos = list("topright", inset = .1),
+    r = unit(.1, "snpc"),
+    gp = gpar(col = "#CCCCCC", lwd = 1.5)
+  )
+)
 
 # You can also use a list with the actual functions
 # as long as it is formatted [[row]][[column]]
@@ -159,28 +259,38 @@ forestplot(row_names, coef, low, high,
 # the software will reformat [[col]][[row]]
 # to [[row]][[col]]
 forestplot(row_names, coef, low, high,
-           fn.ci_norm=list(list(fpDrawDiamondCI, fpDrawCircleCI),
-                                list(fpDrawNormalCI, fpDrawNormalCI),
-                                list(fpDrawNormalCI, fpDrawCircleCI),
-                                list(fpDrawNormalCI, fpDrawNormalCI)),
-           title="Cool study",
-           zero = 1, boxsize=0.25,
-           col=fpColors(box=c("royalblue", "gold"),
-                        line=c("darkblue", "orange"),
-                        summary=c("darkblue", "red")),
-           xlab="The estimates",
-           new_page = TRUE,
-           legend=c("Treatment", "Placebo"),
-           legend_args = fpLegend(title="Group",
-                                  pos = list("topright", inset=.1),
-                                  r=unit(.1, "snpc"),
-                                  gp = gpar(col="#CCCCCC", lwd=1.5)))
+  fn.ci_norm = list(
+    list(fpDrawDiamondCI, fpDrawCircleCI),
+    list(fpDrawNormalCI, fpDrawNormalCI),
+    list(fpDrawNormalCI, fpDrawCircleCI),
+    list(fpDrawNormalCI, fpDrawNormalCI)
+  ),
+  title = "Cool study",
+  zero = 1, boxsize = 0.25,
+  col = fpColors(
+    box = c("royalblue", "gold"),
+    line = c("darkblue", "orange"),
+    summary = c("darkblue", "red")
+  ),
+  xlab = "The estimates",
+  new_page = TRUE,
+  legend = c("Treatment", "Placebo"),
+  legend_args = fpLegend(
+    title = "Group",
+    pos = list("topright", inset = .1),
+    r = unit(.1, "snpc"),
+    gp = gpar(col = "#CCCCCC", lwd = 1.5)
+  )
+)
 
-par(ask=ask)
+par(ask = ask)
 }
 \seealso{
-Other forestplot functions: \code{\link{forestplot}},
-  \code{\link{fpColors}}, \code{\link{fpLegend}}
+Other forestplot functions: 
+\code{\link{forestplot}()},
+\code{\link{fpColors}()},
+\code{\link{fpLegend}()},
+\code{\link{fpShapesGp}()}
 }
 \author{
 Max Gordon, Thomas Lumley

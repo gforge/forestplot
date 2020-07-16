@@ -80,6 +80,9 @@ fpDrawNormalCI <- function(lower_limit,
 
   # If the box is outside the plot the it shouldn't be plotted
   box <- convertX(unit(estimate, "native"), "npc", valueOnly = TRUE)
+  if (is.na(box)) {
+    stop("The estimate '", estimate, "' does not convert into a valid numeric value using grid::convertX")
+  }
   skipbox <- box < 0 || box > 1
 
   # Lastly draw the box if it is still there
@@ -94,12 +97,13 @@ fpDrawNormalCI <- function(lower_limit,
               y = y.offset,
               width = size,
               height = size,
-              gp = prGetShapeGp(shapes_gp, shape_coordinates, "box", default=gpar(fill = clr.marker, col = clr.marker)))
+              gp = prGetShapeGp(shapes_gp, shape_coordinates, "box",
+                                default = gpar(fill = clr.marker, col = clr.marker)))
   }
 }
 
 #' Construct default parameters from arguments that may include missing arguments
-#' 
+#'
 #' @param col Line color (or missing)
 #' @param lwd Line width (or missing)
 #' @param lty Line type (or missing)
@@ -107,10 +111,10 @@ fpDrawNormalCI <- function(lower_limit,
 #' @return a \code{\link[grid]{gpar}} object
 #'  containing these three attributes
 prDefaultGp <- function(col, lwd, lty) {
-  ret=list()
-  if (!missing(col)) {ret$col=col}
-  if (!missing(lwd)) {ret$lwd=lwd}
-  if (!missing(lty)) {ret$lty=lty}
+  ret = list()
+  if (!missing(col)) {ret$col = col}
+  if (!missing(lwd)) {ret$lwd = lwd}
+  if (!missing(lty)) {ret$lty = lty}
   return(do.call(grid::gpar, ret))
 }
 
@@ -122,9 +126,9 @@ prDefaultGp <- function(col, lwd, lty) {
 #' the upper limit the line is not drawn.
 #'
 #' @inheritParams fpDrawNormalCI
-#' @clr.line Legacy color of line (please, use line_gp)
-#' @lwd Legacy width of line (please, use line_gp)
-#' @lty Legacy type of line (please, use line_gp)
+#' @param clr.line Legacy color of line (please, use line_gp)
+#' @param lwd Legacy width of line (please, use line_gp)
+#' @param lty Legacy type of line (please, use line_gp)
 #' @param line_gp A \code{\link[grid]{gpar}} for drawing the horizontal line
 #' @param vertices_gp A \code{\link[grid]{gpar}} for drawing the vertices.
 #'  unspecified attributes in vertices_gp default to line_gp.
@@ -132,19 +136,19 @@ prDefaultGp <- function(col, lwd, lty) {
 #' @import magrittr
 #' @importFrom grid gpar
 #' @return \code{void}
-prFpDrawLine <- function (lower_limit, upper_limit, clr.line, lwd, lty, y.offset,
-                          vertices, vertices.height = .1, line_gp, vertices_gp) {
-  
+prFpDrawLine <- function(lower_limit, upper_limit, clr.line, lwd, lty, y.offset,
+                         vertices, vertices.height = .1, line_gp, vertices_gp) {
+
   # clr.line, lwd and lty are obsolete but are maintained for backward compatibility
-  line_gp0 = prDefaultGp(col=clr.line, lwd=lwd, lty=lty)
-  
+  line_gp0 = prDefaultGp(col = clr.line, lwd = lwd, lty = lty)
+
   if (missing(line_gp) & missing(vertices_gp)) {
     line_gp = line_gp0
     vertices_gp = line_gp0
   } else {
     line_gp = prMergeGp(line_gp0, line_gp)
   }
-  
+
   # Draw the lines if the lower limit is
   # actually below the upper limit
   if (lower_limit >= upper_limit)
@@ -153,13 +157,13 @@ prFpDrawLine <- function (lower_limit, upper_limit, clr.line, lwd, lty, y.offset
   if (any(vertices.height < 0))
     stop("The vertices height cannot be negative")
 
-  if (inherits(vertices.height, "unit")){
+  if (inherits(vertices.height, "unit")) {
     vertices.height <- convertY(vertices.height,
                                 unitTo = "npc",
                                 valueOnly = TRUE)
   }
 
-  if (!inherits(y.offset, "unit")){
+  if (!inherits(y.offset, "unit")) {
     y.offset <- unit(y.offset, "npc")
   }
 
@@ -208,7 +212,7 @@ prFpDrawLine <- function (lower_limit, upper_limit, clr.line, lwd, lty, y.offset
   # The arrows should not have dashed line type
   # and it seems that the simples solution is just to do
   # an arrow of my own through the line-call
-  if (clipupper || cliplower){
+  if (clipupper || cliplower) {
     # Make arrow the same height the intended vertices
     # Old code: unit(0.05, "inches")
     radians = 30 * pi/180
@@ -584,10 +588,10 @@ fpColors <- function (all.elements,
 #' The parameter \code{grid} can either be a single gpar or a list of gpars with as many
 #' elements as there are lines in the grid (as set by the \code{xticks} or \code{grid}
 #' arguments of forestplot)
-#' 
+#'
 #' Parameters \code{zero}, \code{axes}, \code{hrz_lines} must either be NULL or gpar
 #' but cannot be lists of gpars.
-#' 
+#'
 #' @param default A fallback \code{\link[grid]{gpar}} for all unspecified attributes.
 #'  If set to NULL then it defaults to legacy parameters, including
 #'  the \code{col}, \code{lwd.xaxis}, \code{lwd.ci} and \code{lty.ci}
@@ -612,7 +616,7 @@ fpColors <- function (all.elements,
 #'  (may not be a list of gpars)
 #' @param grid The graphical parameters (\code{gpar}) of the grid (vertical lines)
 #'  (may be a list of gpars)
-#' 
+#'
 #' @return list A list with the elements:
 #' \item{default}{the gpar for default attributes}
 #' \item{box}{the gpar or list of gpars of the box/marker}
@@ -653,7 +657,7 @@ fpShapesGp <- function (default=NULL,
    grid=grid
  )
 
- # check that objects have the correct type 
+ # check that objects have the correct type
  for(nm in names(ret)) {
    obj = ret[[nm]]
    if (!is.null(obj) & !inherits(obj, "gpar")) {
@@ -683,15 +687,15 @@ fpShapesGp <- function (default=NULL,
 #'  and number of confidence bands by label for the forest plot.
 #'  The first coordinate specify the label number and the second coordinate (for multi-band forest plots)
 #'  specifies the band number within the label.
-#' @param object One of \code{"box"}, \code{"lines"}, \code{"vertices"}, \code{"summary"}, \code{"zero"}, 
+#' @param object One of \code{"box"}, \code{"lines"}, \code{"vertices"}, \code{"summary"}, \code{"zero"},
 #'  \code{"axes"}, \code{"hrz_lines"} or \code{"grid"}, refering to the object for which the
 #'  graphical parameters are requested.
 #' @param default Default attributes to rely on when neither found in \code{shapes_gp$object}
 #'  nor in \code{shapes_gp$default}
 #' @param nodefault Logical. If TRUE, do not search attribute in shapes_gp$default
-#' 
+#'
 #' @return An object of class \code{\link[grid]{gpar}}
-#' 
+#'
 #' @author Andre GILLIBERT
 #' @export
 prGetShapeGp <- function(shapes_gp, coords, object, default=grid::gpar(), nodefault=FALSE) {
@@ -705,9 +709,9 @@ prGetShapeGp <- function(shapes_gp, coords, object, default=grid::gpar(), nodefa
   if (!(object %in% c("box", "lines", "vertices", "summary", "zero", "axes", "hrz_lines", "grid"))) {
     stop("`object` must be one of: \"box\", \"lines\", \"vertices\", \"summary\", \"zero\", \"axes\", \"hrz_lines\", \"grid\"")
   }
-  
+
   undefined_coords <- is.null(coords)
-  
+
   if (!(is.null(coords) || is.numeric(coords) & length(coords) == 2)) {
     stop(paste0("`coords` must be NULL or a numeric vector of length 2 rather than a ", class(coords)))
   }
@@ -726,7 +730,7 @@ prGetShapeGp <- function(shapes_gp, coords, object, default=grid::gpar(), nodefa
     max.coords=c(1,1)
     coords=c(1,1)
   }
-  
+
   if (nodefault) {
     gp <- default
   } else {

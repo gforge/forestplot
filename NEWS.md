@@ -1,5 +1,11 @@
 NEWS for the forestplot package
 
+Changes for 1.10
+-----------------
+* Minor improvement for error message when plotting lines
+* Bugfix for multicolumn expressions (issue #30, thanks André Gillibert)
+* Added `shapes_gp` parameter (issue #32, thanks André Gillibert)
+
 Changes for 1.9
 -----------------
 * Fixed bug for factor label argument
@@ -13,7 +19,7 @@ Changes for 1.8
 
 Changes for 1.7
 -----------------
-* Fixed bug when mergin gpar() with font & fontface options (thanks Katherine T. Mills)
+* Fixed bug when mergin `gpar()` with font & fontface options (thanks Katherine T. Mills)
 * Fixed input bug with 3-dim array
 * Improved autodetection of upper and lower intervals
 
@@ -24,14 +30,14 @@ Changes for 1.6
 * When any of the inputs is missing for a line the line is skipped (issue #5)
 * Added checkmate for argument validation
 * Added option of just specifying the rows that the CI should be applied to (issue #7)
-* Added fpDrawBarCI (thanks Christian Röver)
-* Fixed xlog bug
-* Added a colgap option
+* Added `fpDrawBarCI` (thanks Christian Röver)
+* Fixed `xlog` bug
+* Added a `colgap` option
 * Bug fix for plots wider than the div (Thanks Michael Obeda for reporting)
 
 Changes for 1.5
 -----------------
-* Changed new_page to default to TRUE
+* Changed `new_page` to default to TRUE
 * Removed warnings for compatibility
 * Fixed so that squared multiline tables should now follow color behavior
 
@@ -42,7 +48,7 @@ Changes for 1.4
 
 Changes for 1.3
 ---------------
-* Fixed bug when specifying graphwidth
+* Fixed bug when specifying `graphwidth`
 * Added ability to tailor the tick text
 * Added vertices example to vignette
 
@@ -67,9 +73,9 @@ Changes for 1.0
 * Name change - forestplot2 is now just forestplot in order to allow a deprecated call
   within the Gmisc package without generating a conflict
 * The fontfamily arguments are now embedded in the txt_gp that takes input from the
-  fpTxtGp function. The fonts for the labels/summaries can be specified down to the
+  `fpTxtGp` function. The fonts for the labels/summaries can be specified down to the
   cell level.
-* If provided a vector of length two for the zero argumente you get an area for the zero-effect
-* There is a maximum colgap length for the box corresponding to the box height
-* confintNormalFn, confintSummaryFn, legendMarkerFn are now called fn.ci_norm, fn.ci_sum, fn.legend
-* Argument main in forestplot has changed to title
+* If provided a vector of length two for the `zero` argument you get an area for the zero-effect
+* There is a maximum `colgap` length for the box corresponding to the box height
+* `confintNormalFn`, `confintSummaryFn`, `legendMarkerFn` are now called `fn.ci_norm`, `fn.ci_sum`, `fn.legend`
+* Argument `main` in forestplot has changed to `title`

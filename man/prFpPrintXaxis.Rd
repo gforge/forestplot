@@ -4,7 +4,7 @@
 \alias{prFpPrintXaxis}
 \title{Plots the x-axis for forestplot}
 \usage{
-prFpPrintXaxis(axisList, col, lwd.zero)
+prFpPrintXaxis(axisList, col, lwd.zero, shapes_gp = fpShapesGp())
 }
 \arguments{
 \item{axisList}{The list from \code{\link{prFpGetGraphTicksAndClips}}}
@@ -13,6 +13,10 @@ prFpPrintXaxis(axisList, col, lwd.zero)
 details}
 
 \item{lwd.zero}{lwd for the vertical line that gives the no-effect line, see \code{\link[grid]{gpar}}}
+
+\item{shapes_gp}{Sets graphical parameters (squares and lines widths, styles, etc.)
+of all shapes drawn (squares, lines, diamonds, etc.). This overrides \code{col},
+\code{lwd.xaxis}, \code{lwd.zero}, \code{lwd.ci} and \code{lty.ci}.}
 }
 \value{
 void

@@ -209,6 +209,63 @@ forestplot(tabletext,
            xlab="EQ-5D index")
 ```
 
+Custom box size
+---------------
+
+You can force the box size to a certain size through the `boxsize` argument.
+
+```{r}
+forestplot(tabletext, 
+           boxsize = 0.2,
+           rbind(HRQoL$Sweden),
+           clip =c(-.1, Inf),
+           col=clrs,
+           xlab="EQ-5D index")
+```
+
+If you want to keep the relative sizes you need to provide a wrapper to the draw function that transforms the boxes. Below shows how this is done, also how you combine multiple foresplots into one image:
+
+```{r fig.width=10, fig.height=4}
+library(grid)
+grid.newpage()
+borderWidth <- unit(4, "pt")
+width <- unit(convertX(unit(1, "npc") - borderWidth, unitTo = "npc", valueOnly = TRUE)/2, "npc")
+pushViewport(viewport(layout = grid.layout(nrow=1, 
+                                           ncol=3, 
+                                           widths = unit.c(width,
+                                                           borderWidth,
+                                                           width))
+                      )
+             )
+pushViewport(viewport(layout.pos.row = 1,
+                      layout.pos.col = 1))
+forestplot(tabletext, 
+           title = "Original (1x)",
+           rbind(HRQoL$Sweden),
+           clip =c(-.1, Inf),
+           col=clrs,
+           xlab="EQ-5D index",
+           new_page = FALSE)
+upViewport()
+pushViewport(viewport(layout.pos.row = 1,
+                      layout.pos.col = 2))
+grid.rect(gp = gpar(fill="#dddddd", col="#eeeeee"))
+upViewport()
+pushViewport(viewport(layout.pos.row = 1,
+                      layout.pos.col = 3))
+forestplot(tabletext, 
+           title = "0.5x",
+           fn.ci_norm = function(size, ...) {
+             fpDrawNormalCI(size = size * 0.5, ...)
+           },
+           rbind(HRQoL$Sweden),
+           clip =c(-.1, Inf),
+           col=clrs,
+           xlab="EQ-5D index",
+           new_page = FALSE)
+upViewport(2)
+```
+
 
 Multiple confidence bands
 -------------------------

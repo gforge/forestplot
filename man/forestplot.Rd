@@ -7,17 +7,46 @@
 \usage{
 forestplot(...)
 
-\method{forestplot}{default}(labeltext, mean, lower, upper, align,
-  is.summary = FALSE, graph.pos = "right", hrzl_lines, clip = c(-Inf,
-  Inf), xlab = "", zero = ifelse(xlog, 1, 0), graphwidth = "auto",
-  colgap, lineheight = "auto", line.margin, col = fpColors(),
-  txt_gp = fpTxtGp(), xlog = FALSE, xticks, xticks.digits = 2,
-  grid = FALSE, lwd.xaxis, lwd.zero, lwd.ci, lty.ci = 1, ci.vertices,
-  ci.vertices.height = 0.1, boxsize, mar = unit(rep(5, times = 4),
-  "mm"), title, legend, legend_args = fpLegend(),
+\method{forestplot}{default}(
+  labeltext,
+  mean,
+  lower,
+  upper,
+  align,
+  is.summary = FALSE,
+  graph.pos = "right",
+  hrzl_lines,
+  clip = c(-Inf, Inf),
+  xlab = "",
+  zero = ifelse(xlog, 1, 0),
+  graphwidth = "auto",
+  colgap,
+  lineheight = "auto",
+  line.margin,
+  col = fpColors(),
+  txt_gp = fpTxtGp(),
+  xlog = FALSE,
+  xticks,
+  xticks.digits = 2,
+  grid = FALSE,
+  lwd.xaxis,
+  lwd.zero,
+  lwd.ci,
+  lty.ci = 1,
+  ci.vertices,
+  ci.vertices.height = 0.1,
+  boxsize,
+  mar = unit(rep(5, times = 4), "mm"),
+  title,
+  legend,
+  legend_args = fpLegend(),
   new_page = getOption("forestplot_new_page", TRUE),
-  fn.ci_norm = fpDrawNormalCI, fn.ci_sum = fpDrawSummaryCI, fn.legend,
-  ...)
+  fn.ci_norm = fpDrawNormalCI,
+  fn.ci_sum = fpDrawSummaryCI,
+  fn.legend,
+  shapes_gp = fpShapesGp(),
+  ...
+)
 }
 \arguments{
 \item{...}{Passed on to the \code{fn.ci_norm} and
@@ -160,6 +189,10 @@ and it defaults to \code{\link{fpDrawSummaryCI}}.}
 legends, this can be a list if you want different functions. It defaults to
 a box if you have anything else than a single function or the number of columns
 in the \code{mean} argument}
+
+\item{shapes_gp}{Sets graphical parameters (squares and lines widths, styles, etc.)
+of all shapes drawn (squares, lines, diamonds, etc.). This overrides \code{col},
+\code{lwd.xaxis}, \code{lwd.zero}, \code{lwd.ci} and \code{lty.ci}.}
 }
 \value{
 \code{NULL}
@@ -229,21 +262,24 @@ always the best option, try to set these manually as much as possible.
 # Simple examples of how to do a forestplot #
 #############################################
 
-ask <- par(ask=TRUE)
+ask <- par(ask = TRUE)
 
 # A basic example, create some fake data
 row_names <- list(list("test = 1", expression(test >= 2)))
-test_data <- data.frame(coef=c(1.59, 1.24),
-                        low=c(1.4, 0.78),
-                        high=c(1.8, 1.55))
+test_data <- data.frame(
+  coef = c(1.59, 1.24),
+  low = c(1.4, 0.78),
+  high = c(1.8, 1.55)
+)
 forestplot(row_names,
-           test_data$coef,
-           test_data$low,
-           test_data$high,
-           zero = 1,
-           cex  = 2,
-           lineheight = "auto",
-           xlab = "Lab axis txt")
+  test_data$coef,
+  test_data$low,
+  test_data$high,
+  zero = 1,
+  cex  = 2,
+  lineheight = "auto",
+  xlab = "Lab axis txt"
+)
 
 # Print two plots side by side using the grid
 # package's layout option for viewports
@@ -251,92 +287,142 @@ grid.newpage()
 pushViewport(viewport(layout = grid.layout(1, 2)))
 pushViewport(viewport(layout.pos.col = 1))
 forestplot(row_names,
-           test_data$coef,
-           test_data$low,
-           test_data$high,
-           zero = 1,
-           cex  = 2,
-           lineheight = "auto",
-           xlab = "Lab axis txt",
-           new_page = FALSE)
+  test_data$coef,
+  test_data$low,
+  test_data$high,
+  zero = 1,
+  cex  = 2,
+  lineheight = "auto",
+  xlab = "Lab axis txt",
+  new_page = FALSE
+)
 popViewport()
 pushViewport(viewport(layout.pos.col = 2))
 forestplot(row_names,
-           test_data$coef,
-           test_data$low,
-           test_data$high,
-           zero = 1,
-           cex  = 2,
-           lineheight = "auto",
-           xlab = "Lab axis txt",
-           new_page = FALSE)
+  test_data$coef,
+  test_data$low,
+  test_data$high,
+  zero = 1,
+  cex  = 2,
+  lineheight = "auto",
+  xlab = "Lab axis txt",
+  new_page = FALSE
+)
 popViewport(2)
 
 
 # An advanced test
-test_data <- data.frame(coef1=c(1, 1.59, 1.3, 1.24),
-                        coef2=c(1, 1.7, 1.4, 1.04),
-                        low1=c(1, 1.3, 1.1, 0.99),
-                        low2=c(1, 1.6, 1.2, 0.7),
-                        high1=c(1, 1.94, 1.6, 1.55),
-                        high2=c(1, 1.8, 1.55, 1.33))
+test_data <- data.frame(
+  coef1 = c(1, 1.59, 1.3, 1.24),
+  coef2 = c(1, 1.7, 1.4, 1.04),
+  low1 = c(1, 1.3, 1.1, 0.99),
+  low2 = c(1, 1.6, 1.2, 0.7),
+  high1 = c(1, 1.94, 1.6, 1.55),
+  high2 = c(1, 1.8, 1.55, 1.33)
+)
 
 col_no <- grep("coef", colnames(test_data))
 row_names <- list(
   list("Category 1", "Category 2", "Category 3", expression(Category >= 4)),
-  list("ref",
-       substitute(expression(bar(x) == val),
-                  list(val = round(rowMeans(test_data[2, col_no]), 2))),
-       substitute(expression(bar(x) == val),
-                  list(val = round(rowMeans(test_data[3, col_no]), 2))),
-       substitute(expression(bar(x) == val),
-                  list(val = round(rowMeans(test_data[4, col_no]), 2))))
+  list(
+    "ref",
+    substitute(
+      expression(bar(x) == val),
+      list(val = round(rowMeans(test_data[2, col_no]), 2))
+    ),
+    substitute(
+      expression(bar(x) == val),
+      list(val = round(rowMeans(test_data[3, col_no]), 2))
+    ),
+    substitute(
+      expression(bar(x) == val),
+      list(val = round(rowMeans(test_data[4, col_no]), 2))
+    )
+  )
 )
 
 coef <- with(test_data, cbind(coef1, coef2))
 low <- with(test_data, cbind(low1, low2))
 high <- with(test_data, cbind(high1, high2))
 forestplot(row_names, coef, low, high,
-           title="Cool study",
-           zero = c(0.98, 1.02),
-           grid = structure(c(2^-.5, 2^.5), gp = gpar(col = "steelblue", lty=2)),
-           boxsize=0.25,
-           col=fpColors(box=c("royalblue", "gold"),
-                        line=c("darkblue", "orange"),
-                        summary=c("darkblue", "red")),
-           xlab="The estimates",
-           new_page = TRUE,
-           legend=c("Treatment", "Placebo"),
-           legend_args = fpLegend(pos = list("topright"),
-                                  title="Group",
-                                  r = unit(.1, "snpc"),
-                                  gp = gpar(col="#CCCCCC", lwd=1.5)))
+  title = "Cool study",
+  zero = c(0.98, 1.02),
+  grid = structure(c(2^-.5, 2^.5),
+    gp = gpar(col = "steelblue", lty = 2)
+  ),
+  boxsize = 0.25,
+  col = fpColors(
+    box = c("royalblue", "gold"),
+    line = c("darkblue", "orange"),
+    summary = c("darkblue", "red")
+  ),
+  xlab = "The estimates",
+  new_page = TRUE,
+  legend = c("Treatment", "Placebo"),
+  legend_args = fpLegend(
+    pos = list("topright"),
+    title = "Group",
+    r = unit(.1, "snpc"),
+    gp = gpar(col = "#CCCCCC", lwd = 1.5)
+  )
+)
 
 # An example of how the exponential works
-test_data <- data.frame(coef=c(2.45, 0.43),
-                        low=c(1.5, 0.25),
-                        high=c(4, 0.75),
-                        boxsize=c(0.5, 0.5))
-row_names <- cbind(c("Name", "Variable A", "Variable B"),
-                   c("HR", test_data$coef))
+test_data <- data.frame(
+  coef = c(2.45, 0.43),
+  low = c(1.5, 0.25),
+  high = c(4, 0.75),
+  boxsize = c(0.5, 0.5)
+)
+row_names <- cbind(
+  c("Name", "Variable A", "Variable B"),
+  c("HR", test_data$coef)
+)
 test_data <- rbind(rep(NA, 3), test_data)
 
-forestplot(labeltext = row_names,
-           test_data[,c("coef", "low", "high")],
-           is.summary=c(TRUE, FALSE, FALSE),
-           boxsize   = test_data$boxsize,
-           zero      = 1,
-           xlog      = TRUE,
-           col = fpColors(lines="red", box="darkred"))
+forestplot(
+  labeltext = row_names,
+  test_data[, c("coef", "low", "high")],
+  is.summary = c(TRUE, FALSE, FALSE),
+  boxsize = test_data$boxsize,
+  zero = 1,
+  xlog = TRUE,
+  col = fpColors(lines = "red", box = "darkred")
+)
 
+# An example using shapes_gp
+forestplot(
+  labeltext = cbind(Author = c("Smith et al", "Smooth et al", "Al et al")),
+  mean = cbind(1:3, 1.5:3.5),
+  lower = cbind(0:2, 0.5:2.5),
+  upper = cbind(4:6, 5.5:7.5),
+  is.summary = c(FALSE, FALSE, TRUE),
+  shapes_gp = fpShapesGp(
+    default = gpar(lineend = "square", linejoin = "mitre", lwd = 3, col = "pink"),
+    box = gpar(fill = "black", col = "red"), # only one parameter
+    lines = list( # as many parameters as CI
+      gpar(lwd = 10), gpar(lwd = 5),
+      gpar(), gpar(),
+      gpar(lwd = 2), gpar(lwd = 1)
+    ),
+    summary = list( # as many parameters as band per label
+      gpar(fill = "violet", col = "gray", lwd = 10),
+      gpar(fill = "orange", col = "gray", lwd = 10)
+    )
+  ),
+  vertices = TRUE
+)
 
-par(ask=ask)
+par(ask = ask)
 # See vignette for a more detailed description
 # vignette("forestplot",  package="forestplot")
 }
 \seealso{
-Other forestplot functions: \code{\link{fpColors}},
-  \code{\link{fpDrawNormalCI}}, \code{\link{fpLegend}}
+Other forestplot functions: 
+\code{\link{fpColors}()},
+\code{\link{fpDrawNormalCI}()},
+\code{\link{fpLegend}()},
+\code{\link{fpShapesGp}()}
 }
 \author{
 Max Gordon, Thomas Lumley

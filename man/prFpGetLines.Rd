@@ -4,7 +4,13 @@
 \alias{prFpGetLines}
 \title{Prepares the hrzl_lines for the plot}
 \usage{
-prFpGetLines(hrzl_lines, is.summary, total_columns, col)
+prFpGetLines(
+  hrzl_lines,
+  is.summary,
+  total_columns,
+  col,
+  shapes_gp = fpShapesGp()
+)
 }
 \arguments{
 \item{hrzl_lines}{Add horizontal lines to graph. Can either be \code{TRUE} or a \code{list}
@@ -18,6 +24,10 @@ font-style}
 
 \item{col}{Set the colors for all the elements. See \code{\link{fpColors}} for
 details}
+
+\item{shapes_gp}{Sets graphical parameters (squares and lines widths, styles, etc.)
+of all shapes drawn (squares, lines, diamonds, etc.). This overrides \code{col},
+\code{lwd.xaxis}, \code{lwd.zero}, \code{lwd.ci} and \code{lty.ci}.}
 }
 \description{
 Prepares the hrzl_lines for the plot

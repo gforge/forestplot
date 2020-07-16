@@ -17,5 +17,5 @@ heightDetails.xaxis <- function(x) {
   cex <- prGetTextGrobCex(x$children$labels)
 
   grobHeight(x$children$ticks) +
-    unit(1.5*cex, "line")
+    unit(1.5 * cex, "line")
 }

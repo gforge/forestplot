@@ -4,8 +4,13 @@
 \alias{fpLegend}
 \title{A function for the legend used in forestplot()}
 \usage{
-fpLegend(pos = "top", gp = NULL, r = unit(0, "snpc"),
-  padding = unit(ifelse(!is.null(gp), 3, 0), "mm"), title = NULL)
+fpLegend(
+  pos = "top",
+  gp = NULL,
+  r = unit(0, "snpc"),
+  padding = unit(ifelse(!is.null(gp), 3, 0), "mm"),
+  title = NULL
+)
 }
 \arguments{
 \item{pos}{The position of the legend, either at the "top" or the "right" unlesss
@@ -43,7 +48,10 @@ This function encapsulates all the legend options that are used in the
 among the arguments for the \code{\link{forestplot}} call.
 }
 \seealso{
-Other forestplot functions: \code{\link{forestplot}},
-  \code{\link{fpColors}}, \code{\link{fpDrawNormalCI}}
+Other forestplot functions: 
+\code{\link{forestplot}()},
+\code{\link{fpColors}()},
+\code{\link{fpDrawNormalCI}()},
+\code{\link{fpShapesGp}()}
 }
 \concept{forestplot functions}

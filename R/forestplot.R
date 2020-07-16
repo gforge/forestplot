@@ -853,7 +853,10 @@ forestplot.default <- function (labeltext,
         }
 
         # Do the actual drawing of the object
-        eval(as.call(call_list))
+        tryCatch(eval(as.call(call_list)),
+                 error = function(e) {
+                   stop("On row ", i, " the print of the estimate failed: ", e$message)
+                 })
       }
     }else{
       shape_coordinates <- c(i,1)
@@ -903,8 +906,13 @@ forestplot.default <- function (labeltext,
       }
 
       # Do the actual drawing of the object
-      if (!is.na(mean_values))
-        eval(as.call(call_list))
+      if (!is.na(mean_values)){
+        tryCatch(eval(as.call(call_list)),
+                 error = function(e) {
+                   stop("On row ", i, " the print of the estimate failed: ", e$message)
+                 })
+
+      }
     }
 
     upViewport()

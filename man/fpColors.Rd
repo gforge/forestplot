@@ -4,9 +4,16 @@
 \alias{fpColors}
 \title{A function for the color elements used in forestplot()}
 \usage{
-fpColors(all.elements, box = "black", lines = "gray",
-  summary = "black", zero = "lightgray", text = "black",
-  axes = "black", hrz_lines = "black")
+fpColors(
+  all.elements,
+  box = "black",
+  lines = "gray",
+  summary = "black",
+  zero = "lightgray",
+  text = "black",
+  axes = "black",
+  hrz_lines = "black"
+)
 }
 \arguments{
 \item{all.elements}{A color for all the elements. If set to NULL then
@@ -41,6 +48,11 @@ This function encapsulates all the colors that are used in the
 options this function gathers them all in one place.
 }
 \details{
+Further customization of non-text elements can be performed with
+\code{\link{fpShapesGp}} passed as \code{shapes_gp} parameter to
+\code{\link{forestplot}}. The \code{fpColors} function is kept for
+backwards compatibility.
+
 If you have several values per row in a forestplot you can set
 a color to a vector where the first value represents the first
 line/box, second the second line/box etc. The vectors are only
@@ -50,31 +62,40 @@ This function is a copy of the \code{\link[rmeta]{meta.colors}}
 function in the \pkg{rmeta} package.
 }
 \examples{
-ask <- par(ask=TRUE)
+ask <- par(ask = TRUE)
 
 # An example of how the exponential works
-test_data <- data.frame(coef=c(2.45, 0.43),
-                        low=c(1.5, 0.25),
-                        high=c(4, 0.75),
-                        boxsize=c(0.5, 0.5))
-row_names <- cbind(c("Name", "Variable A", "Variable B"),
-                   c("HR", test_data$coef))
+test_data <- data.frame(
+  coef = c(2.45, 0.43),
+  low = c(1.5, 0.25),
+  high = c(4, 0.75),
+  boxsize = c(0.5, 0.5)
+)
+row_names <- cbind(
+  c("Name", "Variable A", "Variable B"),
+  c("HR", test_data$coef)
+)
 test_data <- rbind(rep(NA, 3), test_data)
 
-forestplot(labeltext = row_names,
-           test_data[,c("coef", "low", "high")],
-           is.summary=c(TRUE, FALSE, FALSE),
-           boxsize   = test_data$boxsize,
-           zero      = 1,
-           xlog      = TRUE,
-           col = fpColors(lines="#990000", box="#660000", zero = "darkblue"),
-           new_page = TRUE)
+forestplot(
+  labeltext = row_names,
+  test_data[, c("coef", "low", "high")],
+  is.summary = c(TRUE, FALSE, FALSE),
+  boxsize = test_data$boxsize,
+  zero = 1,
+  xlog = TRUE,
+  col = fpColors(lines = "#990000", box = "#660000", zero = "darkblue"),
+  new_page = TRUE
+)
 
-par(ask=ask)
+par(ask = ask)
 }
 \seealso{
-Other forestplot functions: \code{\link{forestplot}},
-  \code{\link{fpDrawNormalCI}}, \code{\link{fpLegend}}
+Other forestplot functions: 
+\code{\link{forestplot}()},
+\code{\link{fpDrawNormalCI}()},
+\code{\link{fpLegend}()},
+\code{\link{fpShapesGp}()}
 }
 \author{
 Max Gordon, Thomas Lumley
