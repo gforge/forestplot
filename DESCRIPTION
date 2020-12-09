@@ -28,7 +28,8 @@ Suggests:
     testthat,
     abind,
     knitr,
-    rmarkdown
+    rmarkdown,
+    rmeta
 Encoding: UTF-8
 NeedsCompilation: no
 VignetteBuilder: knitr
