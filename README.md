@@ -1,4 +1,4 @@
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/forestplot)](https://cran.r-project.org/package=forestplot)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/forestplot)](https://cran.r-project.org/package=forestplot)
 [![](https://cranlogs.r-pkg.org/badges/forestplot)](https://cran.r-project.org/package=forestplot)
 
 # The Forestplot package
@@ -7,7 +7,7 @@ A forest plot that allows for multiple confidence intervals per row, custom font
 
 ## Questions
 
-Due to the package's popularity I suggest that you start with asking questions on [StackOverflow](http://stackoverflow.com/) so that others can learn from your own problems. Add the tag [r](http://stackoverflow.com/questions/tagged/r) and [forestplot](http://stackoverflow.com/questions/tagged/forestplot) so that others can quickly find the question.
+Due to the package's popularity I suggest that you start with asking questions on [StackOverflow](https://stackoverflow.com/) so that others can learn from your own problems. Add the tag [r](https://stackoverflow.com/questions/tagged/r) and [forestplot](https://stackoverflow.com/questions/tagged/forestplot) so that others can quickly find the question.
 
 ## Contributing
 

@@ -15,7 +15,7 @@ Changes for 1.8
 * Fixed issue #10 with non-log grid lines
 * Supressing the "zero" line #8
 * Fixed bug when automatic lower/upper are to be identified and the data contains NA
-* Fixed bug reported related to legends on SO: http://stackoverflow.com/questions/43217570/forestplot-want-to-give-legend-for-each-4-colums
+* Fixed bug reported related to legends on SO: https://stackoverflow.com/questions/43217570/forestplot-want-to-give-legend-for-each-4-colums
 
 Changes for 1.7
 -----------------
