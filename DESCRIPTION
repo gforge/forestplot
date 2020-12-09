@@ -17,7 +17,7 @@ Description: A forest plot that allows for
     This is a more general version of the original 'rmeta' package's forestplot()
     function and relies heavily on the 'grid' package.
 License: GPL-2
-URL: http://gforge.se/packages/
+URL: https://gforge.se/packages/
 BugReports: https://github.com/gforge/forestplot/issues
 Biarch: yes
 Depends:
