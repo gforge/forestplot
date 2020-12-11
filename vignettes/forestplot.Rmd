@@ -280,7 +280,7 @@ upViewport(2)
 Multiple confidence bands
 -------------------------
 
-When combining similar outcomes for the same exposure I've found it useful to use multiple bands per row. This efficiently increases the data-ink ratio while making the comparison between the two bands trivial. The first time I've used this was in [my article](http://www.biomedcentral.com/1471-2474/14/316/abstract) comparing Swedish with Danish patients 1 year after total hip arthroplasty. Here the clipping also becomes obvious as the Danish sample was much smaller, resulting in wider confidence intervals.
+When combining similar outcomes for the same exposure I've found it useful to use multiple bands per row. This efficiently increases the data-ink ratio while making the comparison between the two bands trivial. The first time I've used this was in [my paper](https://doi.org/10.1186/1471-2474-14-316) comparing Swedish with Danish patients 1 year after total hip arthroplasty. Here the clipping also becomes obvious as the Danish sample was much smaller, resulting in wider confidence intervals.
 
 ```{r}
 tabletext <- tabletext[,1]
