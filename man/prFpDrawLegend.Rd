@@ -17,17 +17,17 @@ prFpDrawLegend(lGrobs, col, colgap, pos, gp, r, padding, fn.legend, ...)
 positioned inside the plot. If you want the legend to be positioned inside the plot
 then you have to provide a list with the same x & y qualities as \code{\link[graphics]{legend}}.
 For instance if you want the legend to be positioned at the top right corner then
-use \code{pos = list("topright")} - this is equivalent to \code{pos = list(x=1, y=1)}.
+use \code{pos = list("topright")} - this is equivalent to \code{pos = list(x = 1, y = 1)}.
 If you want to have a distance from the edge of the graph then add a inset to the list,
-e.g. \code{pos = list("topright", "inset"=.1)} - the inset should be either a \code{\link[grid]{unit}}
+e.g. \code{pos = list("topright", "inset" = .1)} - the inset should be either a \code{\link[grid]{unit}}
 element or a value between 0 and 1. The default is to have the boxes aligned vertical, if
 you want them to be in a line then you can specify the "align" option, e.g.
-\code{pos = list("topright", "inset"=.1, "align"="horizontal")}}
+\code{pos = list("topright", "inset" = .1, "align" = "horizontal")}}
 
 \item{gp}{The \code{\link[grid]{gpar}} options for the legend. If you want
 the background color to be light grey then use \code{gp = gpar(fill = "lightgrey")}.
-If you want a border then set the col argument: \code{gp = gpar(fill = "lightgrey", col="black")}.
-You can also use the lwd and lty argument as usual, \code{gp = gpar(lwd=2, lty=1)}, will result
+If you want a border then set the col argument: \code{gp = gpar(fill = "lightgrey", col = "black")}.
+You can also use the lwd and lty argument as usual, \code{gp = gpar(lwd = 2, lty = 1)}, will result
 in a black border box of line type 1 and line width 2.}
 
 \item{r}{The box can have rounded edges, check out \code{\link[grid]{grid.roundrect}}. The

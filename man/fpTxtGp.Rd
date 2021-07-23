@@ -46,5 +46,5 @@ arguments.
 }
 
 \examples{
-fpTxtGp(label=gpar(fontfamily="HersheySerif"))
+fpTxtGp(label = gpar(fontfamily = "HersheySerif"))
 }

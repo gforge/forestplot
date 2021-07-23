@@ -37,7 +37,7 @@ ticks you can set this parameter to \code{TRUE}. If you set the parameter
 to a vector of values lines will be drawn at the corresponding positions.
 If you want to specify the \code{\link[grid]{gpar}} of the lines then either
 directly pass a \code{\link[grid]{gpar}} object or set the gp attribute e.g.
-\code{attr(line_vector, "gp") <- \link[grid]{gpar}(lty=2, col = "red")}}
+\code{attr(line_vector, "gp") <- \link[grid]{gpar}(lty = 2, col = "red")}}
 
 \item{xlog}{If TRUE, x-axis tick marks are to follow a logarithmic scale, e.g. for
 logistic regressoin (OR), survival estimates (HR), Poisson regression etc.

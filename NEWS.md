@@ -1,5 +1,9 @@
 NEWS for the forestplot package
 
+Changes for 1.11
+----------------
+*
+
 Changes for 1.10
 -----------------
 * Minor improvement for error message when plotting lines
@@ -13,15 +17,15 @@ Changes for 1.9
 Changes for 1.8
 -----------------
 * Fixed issue #10 with non-log grid lines
-* Supressing the "zero" line #8
+* Suppressing the "zero" line #8
 * Fixed bug when automatic lower/upper are to be identified and the data contains NA
 * Fixed bug reported related to legends on SO: https://stackoverflow.com/questions/43217570/forestplot-want-to-give-legend-for-each-4-colums
 
 Changes for 1.7
 -----------------
-* Fixed bug when mergin `gpar()` with font & fontface options (thanks Katherine T. Mills)
+* Fixed bug when merging `gpar()` with font & fontface options (thanks Katherine T. Mills)
 * Fixed input bug with 3-dim array
-* Improved autodetection of upper and lower intervals
+* Improved auto detection of upper and lower intervals
 
 Changes for 1.6
 -----------------

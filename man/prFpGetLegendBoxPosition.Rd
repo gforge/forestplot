@@ -11,12 +11,12 @@ prFpGetLegendBoxPosition(pos)
 positioned inside the plot. If you want the legend to be positioned inside the plot
 then you have to provide a list with the same x & y qualities as \code{\link[graphics]{legend}}.
 For instance if you want the legend to be positioned at the top right corner then
-use \code{pos = list("topright")} - this is equivalent to \code{pos = list(x=1, y=1)}.
+use \code{pos = list("topright")} - this is equivalent to \code{pos = list(x = 1, y = 1)}.
 If you want to have a distance from the edge of the graph then add a inset to the list,
-e.g. \code{pos = list("topright", "inset"=.1)} - the inset should be either a \code{\link[grid]{unit}}
+e.g. \code{pos = list("topright", "inset" = .1)} - the inset should be either a \code{\link[grid]{unit}}
 element or a value between 0 and 1. The default is to have the boxes aligned vertical, if
 you want them to be in a line then you can specify the "align" option, e.g.
-\code{pos = list("topright", "inset"=.1, "align"="horizontal")}}
+\code{pos = list("topright", "inset" = .1, "align" = "horizontal")}}
 }
 \value{
 \code{list} Returns the \code{pos} list with

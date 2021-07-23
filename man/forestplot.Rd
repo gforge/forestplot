@@ -56,7 +56,7 @@ forestplot(...)
 row. The list should be wrapped in m x n number to resemble a matrix:
 \code{list(list("rowname 1 col 1", "rowname 2 col 1"), list("r1c2", expression(beta))}.
 You can also provide a matrix although this cannot have expressions by design:
-\code{matrix(c("rowname 1 col 1", "rowname 2 col 1", "r1c2", "beta"), ncol=2)}.
+\code{matrix(c("rowname 1 col 1", "rowname 2 col 1", "r1c2", "beta"), ncol = 2)}.
 Use \code{NA}:s for blank spaces and if you provide a full column with \code{NA} then
 that column is a empty column that adds some space. \emph{Note:} If you do not
 provide the mean/lower/upper arguments the function expects the label text
@@ -143,7 +143,7 @@ ticks you can set this parameter to \code{TRUE}. If you set the parameter
 to a vector of values lines will be drawn at the corresponding positions.
 If you want to specify the \code{\link[grid]{gpar}} of the lines then either
 directly pass a \code{\link[grid]{gpar}} object or set the gp attribute e.g.
-\code{attr(line_vector, "gp") <- \link[grid]{gpar}(lty=2, col = "red")}}
+\code{attr(line_vector, "gp") <- \link[grid]{gpar}(lty = 2, col = "red")}}
 
 \item{lwd.xaxis}{lwd for the xaxis, see \code{\link[grid]{gpar}}}
 
@@ -231,7 +231,7 @@ elements:
  \item{\code{TRUE}}{A line will be added based upon the \code{is.summary} rows. If the first line is a summary it}
  \item{\code{\link[grid]{gpar}}}{The same as above but the lines will be formatted according to the
                                  \code{\link[grid]{gpar}} element}
- \item{\code{list}}{The list must either be numbered, i.e. \code{list("2" = gpar(lty=1))}, or have the same length
+ \item{\code{list}}{The list must either be numbered, i.e. \code{list("2" = gpar(lty = 1))}, or have the same length
                     as the \code{NROW(mean) + 1}. If the list is numbered the numbers should not exceed the \code{NROW(mean) + 1}.
                     The no. \emph{1 row designates the top}, i.e. the line above the first row, all other correspond  to
                     \emph{the row below}. Each element in the list needs to be \code{TRUE}, \code{NULL}, or
