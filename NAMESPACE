@@ -2,6 +2,8 @@
 
 S3method(forestplot,default)
 S3method(heightDetails,xaxis)
+S3method(plot,gforge_forestplot)
+S3method(print,gforge_forestplot)
 export(forestplot)
 export(fpColors)
 export(fpDrawBarCI)

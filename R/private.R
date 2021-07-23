@@ -24,20 +24,20 @@ prFpGetConfintFnList <- function(fn, no_rows, no_cols, missing_rows, is.summary,
                         missing_rows = missing_rows,
                         is.summary = is.summary, summary = summary)
 
-  makeCalleable <- function(value){
-    if (is.function(value)){
+  makeCalleable <- function(value) {
+    if (is.function(value)) {
       return(value)
     }
 
-    if (is.character(value)){
+    if (is.character(value)) {
       return(get(value))
     }
 
-    if (!is.list(value)){
+    if (!is.list(value)) {
       stop("Cannot handle non-list/character/function elements in this function")
     }
 
-    for (i in 1:length(value)){
+    for (i in 1:length(value)) {
       value[[i]] <- makeCalleable(value[[i]])
     }
     return(value)

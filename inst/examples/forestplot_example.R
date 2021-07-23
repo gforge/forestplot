@@ -12,14 +12,13 @@ test_data <- data.frame(
   high = c(1.8, 1.55)
 )
 forestplot(row_names,
-  test_data$coef,
-  test_data$low,
-  test_data$high,
-  zero = 1,
-  cex  = 2,
-  lineheight = "auto",
-  xlab = "Lab axis txt"
-)
+           test_data$coef,
+           test_data$low,
+           test_data$high,
+           zero = 1,
+           cex  = 2,
+           lineheight = "auto",
+           xlab = "Lab axis txt")
 
 # Print two plots side by side using the grid
 # package's layout option for viewports
