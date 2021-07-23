@@ -51,7 +51,9 @@
 #' }
 #'
 #' @param labeltext A list, matrix, vector or expression with the names of each
-#'  row. The list should be wrapped in m x n number to resemble a matrix:
+#'  row or the name of the column if using the *dplyr* select syntax - defaults to "labeltext".
+#'  Note that when using `group_by` a separate labeltext is not allowed.
+#'  The list should be wrapped in m x n number to resemble a matrix:
 #'  \code{list(list("rowname 1 col 1", "rowname 2 col 1"), list("r1c2", expression(beta))}.
 #'  You can also provide a matrix although this cannot have expressions by design:
 #'  \code{matrix(c("rowname 1 col 1", "rowname 2 col 1", "r1c2", "beta"), ncol = 2)}.
@@ -60,14 +62,15 @@
 #'  provide the mean/lower/upper arguments the function expects the label text
 #'  to be a matrix containing the labeltext in the rownames and then columns for
 #'  mean, lower, and upper.
-#' @param mean A vector or a matrix with the averages. You can also provide a 2D/3D
+#' @param mean The name of the column if using the *dplyr* select syntax - defaults to "mean",
+#'  else it should be a vector or a matrix with the averages. You can also provide a 2D/3D
 #'  matrix that is automatically converted to the lower/upper parameters. The values
 #'  should be in exponentiated form if they follow this interpretation, e.g. use
 #'  exp(mean) if you have the output from a logistic regression
 #' @param lower The lower bound of the confidence interval for the forestplot, needs
-#'   to be the same format as the mean, i.e. matrix/vector of equal columns & length
+#'   to be the same format as the mean.
 #' @param upper The upper bound of the confidence interval for the forestplot, needs
-#'   to be the same format as the mean, i.e. matrix/vector of equal columns \& length
+#'   to be the same format as the mean.
 #' @param align Vector giving alignment (l,r,c) for the table columns
 #' @param is.summary A vector indicating by \code{TRUE}/\code{FALSE} if
 #'   the value is a summary value which means that it will have a different

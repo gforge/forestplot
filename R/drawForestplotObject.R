@@ -18,12 +18,12 @@ drawForestplotObject <- function(obj) {
                          right = marList$right,
                          name = "forestplot_margins")
 
-    if (!is.na(title)) {
+    if (!all(is.na(title))) {
       prGridPlotTitle(title = title, gp = txt_gp$title)
     }
 
     # Initiate the legend
-    if (!is.na(legend)) {
+    if (!all(is.na(legend))) {
       lGrobs <- prFpGetLegendGrobs(legend = legend,
                                    txt_gp = txt_gp,
                                    title = legend_args$title)
@@ -84,7 +84,7 @@ drawForestplotObject <- function(obj) {
 
     # If the legend should be positioned within the plot then wait
     # until after the plot has been drawn
-    if (!is.na(legend) > 0 && !is.list(legend_args$pos)) {
+    if (!all(is.na(legend)) > 0 && !is.list(legend_args$pos)) {
       pushViewport(prFpGetLayoutVP(lineheight = lineheight,
                                    labels = labels,
                                    nr = nr,
@@ -176,7 +176,7 @@ drawForestplotObject <- function(obj) {
                           name = "BaseGrid"))
 
     # Create the fourth argument 4 the fpDrawNormalCI() function
-    if (!is.na(boxsize)) {
+    if (!all(is.na(boxsize))) {
       # If matrix is provided this will convert it
       # to a vector but it doesn't matter in this case
       info <- rep(boxsize, length = length(mean))
@@ -291,10 +291,10 @@ drawForestplotObject <- function(obj) {
                    shape_coordinates = shape_coordinates
               )
 
-            if (!is.na(ci.vertices))
+            if (!all(is.na(ci.vertices)))
               call_list$vertices = ci.vertices;
 
-            if (!is.na(lwd.ci))
+            if (!all(is.na(lwd.ci)))
               call_list$lwd <- lwd.ci
           }
 
@@ -342,10 +342,10 @@ drawForestplotObject <- function(obj) {
                  shape_coordinates = shape_coordinates
             )
 
-          if (!is.na(ci.vertices))
+          if (!all(is.na(ci.vertices)))
             call_list$vertices = ci.vertices;
 
-          if (!is.na(lwd.ci))
+          if (!all(is.na(lwd.ci)))
             call_list$lwd <- lwd.ci
         }
 
@@ -356,7 +356,7 @@ drawForestplotObject <- function(obj) {
         }
 
         # Do the actual drawing of the object
-        if (!is.na(mean_values)) {
+        if (!all(is.na(mean_values))) {
           tryCatch(eval(as.call(call_list)),
                    error = function(e) {
                      stop("On row ", i, " the print of the estimate failed: ", e$message)
@@ -369,7 +369,7 @@ drawForestplotObject <- function(obj) {
     }
 
     # Output the legend if it is inside the main plot
-    if (!is.na(legend) &&
+    if (!all(is.na(legend)) &&
         is.list(legend_args$pos)) {
       plot_vp <- viewport(layout.pos.row = 1:nr,
                           layout.pos.col = 2 * graph.pos - 1,

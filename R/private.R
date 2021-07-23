@@ -890,15 +890,14 @@ prFpGetLabels <- function(label_type, labeltext, align,
                           col){
   labels <- vector("list", nc)
 
-  if (attr(txt_gp$label, "txt_dim") %in% 0:1){
-    txt_gp$label <-
-      prListRep(list(prListRep(txt_gp$label, nc)), sum(!is.summary))
+  if (attr(txt_gp$label, "txt_dim") %in% 0:1) {
+    txt_gp$label <- prListRep(list(prListRep(txt_gp$label, nc)), sum(!is.summary))
   }else{
     ncols <- sapply(txt_gp$label, length)
     if (all(ncols != ncols[1]))
       stop("Your fpTxtGp$label list has invalid number of columns",
            ", they should all be of equal length - yours have ",
-           "'", paste(ncols, collapse="', '"), "'")
+           "'", paste(ncols, collapse = "', '"), "'")
     if (length(txt_gp$label) != sum(!is.summary))
       stop("Your fpTxtGp$label list has invalid number of rows",
            ", the should be equal the of the number rows that aren't summaries.",
@@ -907,7 +906,7 @@ prFpGetLabels <- function(label_type, labeltext, align,
            " where '", sum(!is.summary), "' are not summaries.")
   }
 
-  if (attr(txt_gp$summary, "txt_dim") %in% 0:1){
+  if (attr(txt_gp$summary, "txt_dim") %in% 0:1) {
     txt_gp$summary <-
       prListRep(list(prListRep(txt_gp$summary, nc)), sum(is.summary))
   }else{
@@ -915,7 +914,7 @@ prFpGetLabels <- function(label_type, labeltext, align,
     if (all(ncols != ncols[1]))
       stop("Your fpTxtGp$summary list has invalid number of columns",
            ", they should all be of equal length - yours have ",
-           "'", paste(ncols, collapse="', '"), "'")
+           "'", paste(ncols, collapse = "', '"), "'")
     if (length(txt_gp$summary) != sum(is.summary))
       stop("Your fpTxtGp$summary list has invalid number of rows",
            ", the should be equal the of the number rows that aren't summaries.",
@@ -940,7 +939,7 @@ prFpGetLabels <- function(label_type, labeltext, align,
       if (is.call(txt_out))
         txt_out <- eval(txt_out)
 
-      if (is.expression(txt_out) || is.character(txt_out) || is.numeric(txt_out) || is.factor(txt_out)){
+      if (is.expression(txt_out) || is.character(txt_out) || is.numeric(txt_out) || is.factor(txt_out)) {
         x <- switch(align[j], l = 0, r = 1, c = 0.5)
 
         just <- switch(align[j],
@@ -949,7 +948,7 @@ prFpGetLabels <- function(label_type, labeltext, align,
                        c = "center")
 
         # Bold the text if this is a summary
-        if (is.summary[i]){
+        if (is.summary[i]) {
           x <- switch(align[j], l = 0, r = 1, c = 0.5)
 
           gp_list <- txt_gp$summary[[sum(is.summary[1:i])]][[j]]
@@ -977,7 +976,7 @@ prFpGetLabels <- function(label_type, labeltext, align,
 
         attr(labels[[j]][[i]], "height") <- grobHeight(labels[[j]][[i]])
         attr(labels[[j]][[i]], "width") <- grobWidth(labels[[j]][[i]])
-        if (is.null(max_height)){
+        if (is.null(max_height)) {
           max_height <- attr(labels[[j]][[i]], "height")
           max_width <- attr(labels[[j]][[i]], "width")
         }else{

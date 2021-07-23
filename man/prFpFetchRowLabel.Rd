@@ -10,7 +10,9 @@ prFpFetchRowLabel(label_type, labeltext, i, j)
 \item{label_type}{The type of label}
 
 \item{labeltext}{A list, matrix, vector or expression with the names of each
-row. The list should be wrapped in m x n number to resemble a matrix:
+row or the name of the column if using the *dplyr* select syntax - defaults to "labeltext".
+Note that when using `group_by` a separate labeltext is not allowed.
+The list should be wrapped in m x n number to resemble a matrix:
 \code{list(list("rowname 1 col 1", "rowname 2 col 1"), list("r1c2", expression(beta))}.
 You can also provide a matrix although this cannot have expressions by design:
 \code{matrix(c("rowname 1 col 1", "rowname 2 col 1", "r1c2", "beta"), ncol = 2)}.

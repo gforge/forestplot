@@ -1,5 +1,5 @@
 Package: forestplot
-Version: 1.11.0
+Version: 2.0.0
 Title: Advanced Forest Plot Using 'grid' Graphics
 Authors@R: c(person(given = "Max",
                     family = "Gordon",
@@ -29,7 +29,9 @@ Suggests:
     abind,
     knitr,
     rmarkdown,
-    rmeta
+    rmeta,
+    dplyr,
+    rlang
 Encoding: UTF-8
 NeedsCompilation: no
 VignetteBuilder: knitr

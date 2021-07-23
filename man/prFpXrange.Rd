@@ -8,10 +8,10 @@ prFpXrange(upper, lower, clip, zero, xticks, xlog)
 }
 \arguments{
 \item{upper}{The upper bound of the confidence interval for the forestplot, needs
-to be the same format as the mean, i.e. matrix/vector of equal columns \& length}
+to be the same format as the mean.}
 
 \item{lower}{The lower bound of the confidence interval for the forestplot, needs
-to be the same format as the mean, i.e. matrix/vector of equal columns & length}
+to be the same format as the mean.}
 
 \item{clip}{Lower and upper limits for clipping confidence intervals to arrows}
 
