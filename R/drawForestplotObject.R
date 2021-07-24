@@ -97,6 +97,7 @@ drawForestplotObject <- function(obj) {
       # Draw the legend
       prFpDrawLegend(lGrobs = lGrobs,
                      col = col,
+                     shapes_gp = shapes_gp,
                      colgap = convertUnit(legend_colgap, unitTo = "mm"),
                      pos = legend_args$pos,
                      gp = legend_args$gp,
@@ -260,7 +261,7 @@ drawForestplotObject <- function(obj) {
           if (is.na(mean_values[j]))
             next;
 
-          shape_coordinates <- c(i,j)
+          shape_coordinates <- c(i, j)
           attr(shape_coordinates, "max.coords") <- c(nr, length(low_values))
 
           if (is.summary[i]) {
@@ -408,6 +409,7 @@ drawForestplotObject <- function(obj) {
       # Draw the legend
       prFpDrawLegend(lGrobs = lGrobs,
                      col = col,
+                     shape_gp = shape_gp,
                      colgap = legend_colgap,
                      pos = legend_args$pos,
                      gp = legend_args$gp,

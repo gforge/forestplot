@@ -329,7 +329,11 @@ When combining similar outcomes for the same exposure I've found it useful to us
 dfHRQoL %>%
   group_by(group) %>%
   forestplot(clip = c(-.1, 0.075),
-             col = fpColors(box = c("blue", "darkred")),
+             shapes_gp = fpShapesGp(box = c("blue", "darkred") %>% lapply(function(x) gpar(fill = x, col = "#555555")),
+                                    default = gpar(vertices = TRUE)),
+             ci.vertices = TRUE,
+             ci.vertices.height = 0.05,
+             boxsize = .1,
              xlab = "EQ-5D index")
 ```
 
@@ -346,7 +350,8 @@ dfHRQoL %>%
              boxsize = .25, # We set the box size to better visualize the type
              line.margin = .1, # We need to add this to avoid crowding
              clip = c(-.125, 0.075),
-             col = fpColors(box = c("blue", "darkred")),
+             shapes_gp = fpShapesGp(box = c("blue", "darkred") %>% lapply(function(x) gpar(fill = x, col = "#555555")),
+                                    default = gpar(vertices = TRUE)),
              xlab = "EQ-5D index")
 ```
 
