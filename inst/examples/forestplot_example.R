@@ -11,54 +11,64 @@ test_data <- data.frame(
   low = c(1.4, 0.78),
   high = c(1.8, 1.55)
 )
-forestplot(row_names,
-           test_data$coef,
-           test_data$low,
-           test_data$high,
-           zero = 1,
-           cex  = 2,
-           lineheight = "auto",
-           xlab = "Lab axis txt")
+test_data %>%
+  forestplot(labeltext = row_names,
+             mean = coef,
+             lower = low,
+             upper = high,
+             zero = 1,
+             cex  = 2,
+             lineheight = "auto",
+             xlab = "Lab axis txt")
 
 # Print two plots side by side using the grid
 # package's layout option for viewports
 grid.newpage()
 pushViewport(viewport(layout = grid.layout(1, 2)))
 pushViewport(viewport(layout.pos.col = 1))
-forestplot(row_names,
-  test_data$coef,
-  test_data$low,
-  test_data$high,
-  zero = 1,
-  cex  = 2,
-  lineheight = "auto",
-  xlab = "Lab axis txt",
-  new_page = FALSE
-)
+test_data %>%
+  forestplot(labeltext = row_names,
+             mean = coef,
+             lower = low,
+             upper = high,
+             zero = 1,
+             cex  = 2,
+             lineheight = "auto",
+             xlab = "Lab axis txt",
+             new_page = FALSE)
 popViewport()
 pushViewport(viewport(layout.pos.col = 2))
-forestplot(row_names,
-  test_data$coef,
-  test_data$low,
-  test_data$high,
-  zero = 1,
-  cex  = 2,
-  lineheight = "auto",
-  xlab = "Lab axis txt",
-  new_page = FALSE
-)
+test_data %>%
+  forestplot(labeltext = row_names,
+             mean = coef,
+             lower = low,
+             upper = high,
+             zero = 1,
+             cex  = 2,
+             lineheight = "auto",
+             xlab = "Lab axis txt",
+             new_page = FALSE)
 popViewport(2)
 
 
 # An advanced test
-test_data <- data.frame(
-  coef1 = c(1, 1.59, 1.3, 1.24),
-  coef2 = c(1, 1.7, 1.4, 1.04),
-  low1 = c(1, 1.3, 1.1, 0.99),
-  low2 = c(1, 1.6, 1.2, 0.7),
-  high1 = c(1, 1.94, 1.6, 1.55),
-  high2 = c(1, 1.8, 1.55, 1.33)
-)
+library(dplyr)
+library(tidyr)
+test_data <- data.frame(id = 1:4,
+                        coef1 = c(1, 1.59, 1.3, 1.24),
+                        coef2 = c(1, 1.7, 1.4, 1.04),
+                        low1 = c(1, 1.3, 1.1, 0.99),
+                        low2 = c(1, 1.6, 1.2, 0.7),
+                        high1 = c(1, 1.94, 1.6, 1.55),
+                        high2 = c(1, 1.8, 1.55, 1.33))
+
+# Convert into dplyr formatted data
+out_data <- test_data %>%
+  pivot_longer(cols = everything() & -id) %>%
+  mutate(group = gsub("(.+)([12])$", "\\2", name),
+         name = gsub("(.+)([12])$", "\\1", name)) %>%
+  pivot_wider() %>%
+  group_by(group)
 
 col_no <- grep("coef", colnames(test_data))
 row_names <- list(
@@ -80,39 +90,37 @@ row_names <- list(
   )
 )
 
-coef <- with(test_data, cbind(coef1, coef2))
-low <- with(test_data, cbind(low1, low2))
-high <- with(test_data, cbind(high1, high2))
-forestplot(row_names, coef, low, high,
-  title = "Cool study",
-  zero = c(0.98, 1.02),
-  grid = structure(c(2^-.5, 2^.5),
-    gp = gpar(col = "steelblue", lty = 2)
-  ),
-  boxsize = 0.25,
-  col = fpColors(
-    box = c("royalblue", "gold"),
-    line = c("darkblue", "orange"),
-    summary = c("darkblue", "red")
-  ),
-  xlab = "The estimates",
-  new_page = TRUE,
-  legend = c("Treatment", "Placebo"),
-  legend_args = fpLegend(
-    pos = list("topright"),
-    title = "Group",
-    r = unit(.1, "snpc"),
-    gp = gpar(col = "#CCCCCC", lwd = 1.5)
-  )
-)
+out_data %>%
+  forestplot(mean = coef,
+             lower = low,
+             upper = high,
+             labeltext = row_names,
+             title = "Cool study",
+             zero = c(0.98, 1.02),
+             grid = structure(c(2^-.5, 2^.5),
+                              gp = gpar(col = "steelblue", lty = 2)
+             ),
+             boxsize = 0.25,
+             col = fpColors(
+               box = c("royalblue", "gold"),
+               line = c("darkblue", "orange"),
+               summary = c("darkblue", "red")
+             ),
+             xlab = "The estimates",
+             new_page = TRUE,
+             legend = c("Treatment", "Placebo"),
+             legend_args = fpLegend(
+               pos = list("topright"),
+               title = "Group",
+               r = unit(.1, "snpc"),
+               gp = gpar(col = "#CCCCCC", lwd = 1.5)
+             ))
 
 # An example of how the exponential works
-test_data <- data.frame(
-  coef = c(2.45, 0.43),
-  low = c(1.5, 0.25),
-  high = c(4, 0.75),
-  boxsize = c(0.5, 0.5)
-)
+test_data <- data.frame(coef = c(2.45, 0.43),
+                        low = c(1.5, 0.25),
+                        high = c(4, 0.75),
+                        boxsize = c(0.25, 0.25))
 row_names <- cbind(
   c("Name", "Variable A", "Variable B"),
   c("HR", test_data$coef)
