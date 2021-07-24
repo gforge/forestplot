@@ -409,7 +409,7 @@ drawForestplotObject <- function(obj) {
       # Draw the legend
       prFpDrawLegend(lGrobs = lGrobs,
                      col = col,
-                     shape_gp = shape_gp,
+                     shapes_gp = shapes_gp,
                      colgap = legend_colgap,
                      pos = legend_args$pos,
                      gp = legend_args$gp,
