@@ -37,7 +37,7 @@ prFpDrawLegend <- function(lGrobs,
     pushViewport(inner_vp)
   }
 
-  if (!(is.list(pos) && pos == "top") ||
+  if ((!is.list(pos) && pos == "top") ||
       (is.list(pos) && "align" %in% names(pos) && pos[["align"]] == "horizontal")) {
     orientation <- "horizontal"
   }else{
