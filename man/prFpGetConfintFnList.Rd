@@ -27,7 +27,7 @@ font-style}
 \code{list} The function returns a list that has
 the format [[row]][[col]] where each element contains the
 function that you need to call using the \code{\link[base]{as.call}}
-and \code{\link[base]{eval}} functions: \code{eval(as.call(list(fn[[row]][[col]], arg_1=1, arg_2=2)))}
+and \code{\link[base]{eval}} functions: \code{eval(as.call(list(fn[[row]][[col]], arg_1 = 1, arg_2 = 2)))}
 }
 \description{
 This function helps the \code{\link{forestplot}}

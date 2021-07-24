@@ -15,3 +15,4 @@ tests/**/*.pdf
 doc
 Meta
 revdep
+.vscode

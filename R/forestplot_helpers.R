@@ -88,17 +88,20 @@ fpDrawNormalCI <- function(lower_limit,
   # Lastly draw the box if it is still there
   if (!skipbox)  {
     # Convert size into 'snpc'
-    if(!is.unit(size))  {
+    if (!is.unit(size))  {
       size <- unit(size, "snpc")
     }
 
     # Draw the actual box
+    gp <- prGetShapeGp(shapes_gp = shapes_gp,
+                       coords = shape_coordinates,
+                       object = "box",
+                       default = gpar(fill = clr.marker, col = clr.marker))
     grid.rect(x = unit(estimate, "native"),
               y = y.offset,
               width = size,
               height = size,
-              gp = prGetShapeGp(shapes_gp, shape_coordinates, "box",
-                                default = gpar(fill = clr.marker, col = clr.marker)))
+              gp = gp)
   }
 }
 
