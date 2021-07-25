@@ -1,8 +1,10 @@
 NEWS for the forestplot package
 
-Changes for 1.11
+Changes for 2.0
 ----------------
-*
+* Changed function so that it returns a `gforge_forestplot` object instead of directly plotting. The `print.gforge_forestplot` calls the draw function that converts the object to the actual forestplot. **Breaking** if you have used the function within loops this will cause a break in the old behavior.
+* Implemented `dplyr` compatible API that allows using standard dplyr syntax
+* Fixed shapes_gp legend bug
 
 Changes for 1.10
 -----------------

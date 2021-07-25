@@ -1,5 +1,5 @@
 Package: forestplot
-Version: 1.11.0
+Version: 2.0.0
 Title: Advanced Forest Plot Using 'grid' Graphics
 Authors@R: c(person(given = "Max",
                     family = "Gordon",
@@ -21,6 +21,7 @@ URL: https://gforge.se/packages/
 BugReports: https://github.com/gforge/forestplot/issues
 Biarch: yes
 Depends:
+    R (>= 3.5.0),
     grid,
     magrittr,
     checkmate
@@ -29,7 +30,10 @@ Suggests:
     abind,
     knitr,
     rmarkdown,
-    rmeta
+    rmeta,
+    dplyr,
+    tidyr,
+    rlang
 Encoding: UTF-8
 NeedsCompilation: no
 VignetteBuilder: knitr

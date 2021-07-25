@@ -14,3 +14,5 @@ inst/doc
 tests/**/*.pdf
 doc
 Meta
+revdep
+.vscode
