@@ -224,10 +224,12 @@ Altering fonts
 Altering fonts may give a completely different feel to the table:
 
 ```{r}
+# Priority order of fonts allow us to be a little flexible, if HersheyScript doesn't exist we fall back on Helvetica
+font <- list("HersheyScript", "Helvetica", "Consolas")
 dfHRQoL %>% 
   filter(group == "Sweden") %>% 
   forestplot(labeltext = c(labeltext, est), 
-             txt_gp = fpTxtGp(label = gpar(fontfamily = "HersheyScript")),
+             txt_gp = fpTxtGp(label = gpar(fontfamily = font)),
              col = clrs,
              xlab = "EQ-5D index")
 ```
@@ -238,7 +240,7 @@ There is also the possibility of being selective in gp-styles:
 dfHRQoL %>% 
   filter(group == "Sweden") %>% 
   forestplot(labeltext = c(labeltext, est), 
-             txt_gp = fpTxtGp(label = list(gpar(fontfamily = "HersheyScript"),
+             txt_gp = fpTxtGp(label = list(gpar(fontfamily = rev(font)),
                                            gpar(fontfamily = "",
                                                 col = "#660000")),
                               ticks = gpar(fontfamily = "", cex = 1),
