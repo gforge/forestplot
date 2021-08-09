@@ -37,7 +37,7 @@ Elements not specified inherit their default settings from the
 
 You can provide a \code{list} of elements for the \code{label}
 and \code{summary} in order to specify separate elements. If you
-provide a \code{list} in one dimension the \code{gpar} elements are assummed
+provide a \code{list} in one dimension the \code{gpar} elements are assumed
 to follow the columns. If you provide a \code{list} of 2 dimensions the
 structure assumes is \code{list[[row]][[column]]} and the number of elements
 should correspond to the number of labels for the \code{label} argument, i.e.

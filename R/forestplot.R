@@ -17,7 +17,7 @@
 #' Using multiple bands, i.e. multiple lines, per variable can be interesting when
 #' you want to compare different outcomes. E.g. if you want to compare survival
 #' specific to heart disease to overall survival for smoking it may be useful to
-#' have two bands on top of eachother. Another useful implementation is to show
+#' have two bands on top of each other. Another useful implementation is to show
 #' crude and adjusted estimates as separate bands.
 #'
 #' @section Horizontal lines:
@@ -76,29 +76,29 @@
 #'   the value is a summary value which means that it will have a different
 #'   font-style
 #' @param graph.pos The position of the graph element within the table of text. The
-#'   position can be \code{1-(ncol(labeltext) + 1)}. You can also choose set the positin
+#'   position can be \code{1-(ncol(labeltext) + 1)}. You can also choose set the position
 #'   to \code{"left"} or \code{"right"}.
 #' @param hrzl_lines Add horizontal lines to graph. Can either be \code{TRUE} or a \code{list}
 #'   of \code{\link[grid]{gpar}}. See line section below for details.
 #' @param clip Lower and upper limits for clipping confidence intervals to arrows
 #' @param xlab x-axis label
 #' @param zero x-axis coordinate for zero line. If you provide a vector of length 2 it
-#'   will print a rectangle instead of just a line. If you provide NA the line is supressed.
+#'   will print a rectangle instead of just a line. If you provide NA the line is suppressed.
 #' @param graphwidth Width of confidence interval graph, see \code{\link[grid]{unit}} for
 #'   details on how to utilize mm etc. The default is \code{auto}, that is it uses up whatever
 #'   space that is left after adjusting for text size and legend
 #' @param colgap Sets the gap between columns, defaults to 6 mm but for relative widths.
 #'   Note that the value should be in \code{\link[grid]{unit}(,"npc")}.
-#' @param lineheight Height of the graph. By default this is \code{auto} and adjustes to the
+#' @param lineheight Height of the graph. By default this is \code{auto} and adjusts to the
 #'   space that is left after adjusting for x-axis size and legend. Sometimes
-#'   it might be desireable to set the line height to a certain height, for
+#'   it might be desirable to set the line height to a certain height, for
 #'   instance if you have several forestplots you may want to standardize their
 #'   line height, then you set this variable to a certain height, note this should
 #'   be provided as a \code{\link[grid]{unit}} object. A good option
 #'   is to set the line height to \code{unit(2, "cm")}. A third option
 #'   is to set line height to "lines" and then you get 50 \% more than what the
 #'   text height is as your line height
-#' @param line.margin Set the margin between rows, provided in numeric or \code{\link[grid]{unit}} formar.
+#' @param line.margin Set the margin between rows, provided in numeric or \code{\link[grid]{unit}} form.
 #'   When having multiple confidence lines per row setting the correct
 #'   margin in order to visually separate rows
 #' @param col Set the colors for all the elements. See \code{\link{fpColors}} for

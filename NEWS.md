@@ -61,7 +61,7 @@ Changes for 1.3
 Changes for 1.2
 ---------------
 * Line-type can be specified
-* Line endings can now be marked by a T vertice, this default for all line types other than 1
+* Line endings can now be marked by a T vertical, this default for all line types other than 1
 * The arrow height defaults to the same height as the vertices
 * Added a grid option
 * Improved documentation

@@ -14,7 +14,7 @@ prFpPrintLabels(labels, nc, nr, graph.pos)
 \item{nr}{Number of rows}
 
 \item{graph.pos}{The position of the graph element within the table of text. The
-position can be \code{1-(ncol(labeltext) + 1)}. You can also choose set the positin
+position can be \code{1-(ncol(labeltext) + 1)}. You can also choose set the position
 to \code{"left"} or \code{"right"}.}
 }
 \value{

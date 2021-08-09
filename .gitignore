@@ -16,3 +16,5 @@ doc
 Meta
 revdep
 .vscode
+/doc/
+/Meta/

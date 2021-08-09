@@ -182,7 +182,7 @@ cochrane_output_df %>%
 Positioning the graph element
 -----------------------------
 
-You can also choose to have the graph positioned within the text table by specifying the *graph.pos* argument:
+You can also choose to have the graph positioned within the text table by specifying the `graph.pos` argument:
 
 ```{r}
 cochrane_output_df %>% 
@@ -278,7 +278,7 @@ dfHRQoL %>%
              xlab = "EQ-5D index")
 ```
 
-If you want to keep the relative sizes you need to provide a wrapper to the draw function that transforms the boxes. Below shows how this is done, also how you combine multiple foresplots into one image:
+If you want to keep the relative sizes you need to provide a wrapper to the draw function that transforms the boxes. Below shows how this is done, also how you combine multiple forestplots into one image:
 
 ```{r fig.width=10, fig.height=4}
 library(grid)
@@ -428,7 +428,7 @@ dfHRQoL %>%
              xlab = "EQ-5D index")
 ```
 
-By adding a "labels" attribute to the ticks you can tailor the ticks even further, here's an example the supresses tick text for every other tick:
+By adding a "labels" attribute to the ticks you can tailor the ticks even further, here's an example the suppresses tick text for every other tick:
 
 ```{r}
 xticks <- seq(from = -.1, to = .05, by = 0.025)
