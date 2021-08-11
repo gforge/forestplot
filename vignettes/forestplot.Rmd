@@ -459,6 +459,7 @@ dfHRQoL %>%
              col = fpColors(box = c("blue", "darkred")),
              grid = TRUE,
              xticks = c(-.1, -0.05, 0, .05),
+             zero = 0,
              xlab = "EQ-5D index")
 ```
 
