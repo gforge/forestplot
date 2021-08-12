@@ -2,7 +2,7 @@
 % Please edit documentation in R/private.R
 \name{prGetTextGrobCex}
 \alias{prGetTextGrobCex}
-\title{Just a simple acces to the gp$cex parameter}
+\title{Just a simple access to the gp$cex parameter}
 \usage{
 prGetTextGrobCex(x)
 }
@@ -13,6 +13,6 @@ prGetTextGrobCex(x)
 \code{numeric} The cex value, 1 if no cex was present
 }
 \description{
-Just a simple acces to the gp$cex parameter
+Just a simple access to the gp$cex parameter
 }
 \keyword{internal}

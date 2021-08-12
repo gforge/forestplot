@@ -59,7 +59,7 @@ for details}
 \item{clip}{Lower and upper limits for clipping confidence intervals to arrows}
 
 \item{zero}{x-axis coordinate for zero line. If you provide a vector of length 2 it
-will print a rectangle instead of just a line. If you provide NA the line is supressed.}
+will print a rectangle instead of just a line. If you provide NA the line is suppressed.}
 
 \item{x_range}{The range that the values from the different confidence
 interval span}
@@ -67,7 +67,7 @@ interval span}
 \item{mean}{The original means, either matrix or vector}
 
 \item{graph.pos}{The position of the graph element within the table of text. The
-position can be \code{1-(ncol(labeltext) + 1)}. You can also choose set the positin
+position can be \code{1-(ncol(labeltext) + 1)}. You can also choose set the position
 to \code{"left"} or \code{"right"}.}
 
 \item{shapes_gp}{Sets graphical parameters (squares and lines widths, styles, etc.)

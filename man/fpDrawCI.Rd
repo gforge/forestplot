@@ -156,7 +156,7 @@ This is used together with shapes_gp to retrieve graphical parameters for that i
 
 \item{pch}{Type of point see \code{\link[grid]{grid.points}} for details}
 
-\item{col}{The color of the summary objecct}
+\item{col}{The color of the summary object}
 }
 \value{
 \code{void} The function outputs the line using grid compatible
