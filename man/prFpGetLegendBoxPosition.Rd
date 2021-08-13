@@ -7,7 +7,7 @@
 prFpGetLegendBoxPosition(pos)
 }
 \arguments{
-\item{pos}{The position of the legend, either at the "top" or the "right" unlesss
+\item{pos}{The position of the legend, either at the "top" or the "right" unless
 positioned inside the plot. If you want the legend to be positioned inside the plot
 then you have to provide a list with the same x & y qualities as \code{\link[graphics]{legend}}.
 For instance if you want the legend to be positioned at the top right corner then

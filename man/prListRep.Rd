@@ -2,7 +2,7 @@
 % Please edit documentation in R/private.R
 \name{prListRep}
 \alias{prListRep}
-\title{An alternativ to rep()}
+\title{An alternative to rep()}
 \usage{
 prListRep(x, length.out)
 }

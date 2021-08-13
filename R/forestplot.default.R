@@ -170,7 +170,7 @@ forestplot.default <- function(labeltext,
         (!missing(clip) && any(clip <= 0, na.rm = TRUE)) ||
         (!missing(grid) && any(grid <= 0, na.rm = TRUE))) {
       stop("All argument values (mean, lower, upper, zero, grid and clip)",
-           " should be provided as exponentials when using the log scale.",
+           " should be provided in exponential form when using the log scale.",
            " This is an intentional break with the original forestplot function in order",
            " to simplify other arguments such as ticks, clips, and more.")
     }

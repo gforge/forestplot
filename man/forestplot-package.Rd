@@ -28,7 +28,7 @@ The forestplot:
 
 
 The \code{\link{getTicks}} tries to format ticks for plots in a nicer way.
-The major use is for exponentials where ticks are generated using the
+The major use is for exponential form where ticks are generated using the
 \eqn{2^n} since a doubling is a concept easy to grasp for less mathematical-savvy
 readers.
 }

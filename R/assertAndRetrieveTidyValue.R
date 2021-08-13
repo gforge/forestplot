@@ -1,6 +1,6 @@
-#' Retriever of tidyselect
+#' Retriever of `tidyselect`
 #'
-#' As forestpot has evolved we now primarily use tidyverse select style. This
+#' As forestpot has evolved we now primarily use `tidyverse` select style. This
 #' function helps with backward compatibility
 #'
 #' @param x The data with the potential value

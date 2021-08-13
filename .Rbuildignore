@@ -7,3 +7,4 @@ cran-comments.md
 ^.vscode
 ^doc$
 ^Meta$
+^cran-comments\.md$

@@ -576,7 +576,7 @@ prFpPrintLabels <- function(labels, nc, nr, graph.pos) {
   }
 }
 
-#' An alternativ to rep()
+#' An alternative to rep()
 #'
 #' The rep() doesn't work with length.out
 #' when lists are supposed to be their own
@@ -587,7 +587,7 @@ prFpPrintLabels <- function(labels, nc, nr, graph.pos) {
 #' @return \code{list}
 #' @keywords internal
 prListRep <- function(x, length.out) {
-  lapply(0:(length.out-1),
+  lapply(0:(length.out - 1),
          function(x, g) {
            if (!is.list(g) ||
                  !is.list(g[[1]]))
@@ -866,18 +866,18 @@ prFpFetchRowLabel <- function(label_type, labeltext, i, j) {
   return(row_column_text)
 }
 
-#' Get the main foresplot
+#' Get the main `forestplot`
 #'
 #' The layout makes space for a legend if needed
 #'
 #' @param labels The labels
 #' @param nr Number of rows
 #' @param legend_layout A legend layout object if applicable
-#' @return \code{viewport} Returns the viewport needed
+#' @return \code{viewport} Returns the `viewport` needed
 #'
 #' @inheritParams forestplot
 #' @keywords internal
-prFpGetLayoutVP <- function (lineheight, labels, nr, legend_layout = NULL) {
+prFpGetLayoutVP <- function(lineheight, labels, nr, legend_layout = NULL) {
   if (!is.unit(lineheight)) {
     if (lineheight == "auto") {
       lvp_height <- unit(1, "npc")
@@ -1258,7 +1258,7 @@ prGridPlotTitle <- function(title,
   pushViewport(viewport(layout.pos.row = 3, name = "main"))
 }
 
-#' Just a simple acces to the gp$cex parameter
+#' Just a simple access to the gp$cex parameter
 #'
 #' @param x The text-grob of interest
 #' @return \code{numeric} The cex value, 1 if no cex was present

@@ -438,7 +438,7 @@ fpDrawPointCI <- function(lower_limit,
 }
 
 #' @rdname fpDrawCI
-#' @param col The color of the summary objecct
+#' @param col The color of the summary object
 #' @export
 fpDrawSummaryCI <- function(lower_limit, estimate, upper_limit,
                             size, col, y.offset = 0.5,
@@ -792,7 +792,7 @@ prMergeGp <- function(weak = gpar(), strong = gpar()) {
 #' \code{\link{forestplot}} function. This is in order to limit the crowding
 #' among the arguments for the \code{\link{forestplot}} call.
 #'
-#' @param pos The position of the legend, either at the "top" or the "right" unlesss
+#' @param pos The position of the legend, either at the "top" or the "right" unless
 #'  positioned inside the plot. If you want the legend to be positioned inside the plot
 #'  then you have to provide a list with the same x & y qualities as \code{\link[graphics]{legend}}.
 #'  For instance if you want the legend to be positioned at the top right corner then
@@ -839,7 +839,7 @@ fpLegend <- function(pos           = "top",
 #'
 #' You can provide a \code{list} of elements for the \code{label}
 #' and \code{summary} in order to specify separate elements. If you
-#' provide a \code{list} in one dimension the \code{gpar} elements are assummed
+#' provide a \code{list} in one dimension the \code{gpar} elements are assumed
 #' to follow the columns. If you provide a \code{list} of 2 dimensions the
 #' structure assumes is \code{list[[row]][[column]]} and the number of elements
 #' should correspond to the number of labels for the \code{label} argument, i.e.

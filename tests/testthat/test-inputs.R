@@ -1,6 +1,6 @@
 library(testthat)
 library(abind)
-context("Tests for foresplot inputs")
+context("Tests for forestplot inputs")
 
 test_that("Check different input formats",{
   basic_data <- cbind(0:2,1:3,2:4)
