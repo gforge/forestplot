@@ -143,7 +143,7 @@ cochrane_output_df %>%
                             summary = "royalblue"))
 ```
 
-We can also choose what lines we want by provifing a list where the name is the line number affected, in the example below 3rd line and 11th counting the first line to be above the first row (not that there is an empty row before summary):
+We can also choose what lines we want by providing a list where the name is the line number affected, in the example below 3rd line and 11th counting the first line to be above the first row (not that there is an empty row before summary):
 
 ```{r, fig.height=4, fig.width=8, message=FALSE}
 cochrane_output_df %>% 
