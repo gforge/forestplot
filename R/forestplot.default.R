@@ -398,7 +398,7 @@ forestplot.default <- function(labeltext,
                  lty.ci = lty.ci,
                  ci.vertices.height = ci.vertices.height,
                  ci.vertices = handleMissing(ci.vertices),
-                 lwd.zero = handleMissing(lwd.zero),
+                 lwd.zero = handleMissing(lwd.zero, default = 1),
                  lwd.ci = handleMissing(lwd.ci),
                  extra_arguments = list(...)),
             class = "gforge_forestplot")
