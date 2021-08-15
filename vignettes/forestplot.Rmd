@@ -143,7 +143,7 @@ cochrane_output_df %>%
                             summary = "royalblue"))
 ```
 
-We can also choose what lines we want by provifing a list where the name is the line number affected, in the example below 3rd line and 11th counting the first line to be above the first row (not that there is an empty row before summary):
+We can also choose what lines we want by providing a list where the name is the line number affected, in the example below 3rd line and 11th counting the first line to be above the first row (not that there is an empty row before summary):
 
 ```{r, fig.height=4, fig.width=8, message=FALSE}
 cochrane_output_df %>% 
@@ -224,11 +224,15 @@ Altering fonts
 Altering fonts may give a completely different feel to the table:
 
 ```{r}
-# Priority order of fonts allow us to be a little flexible, if HersheyScript doesn't exist we fall back on Helvetica
+# You can set directly the font to desired value, the next three lines are just for handling MacOs on CRAN
+font <- "mono"
+if (grepl("Ubuntu", Sys.info()["version"])) {
+  font <- "HersheyGothicEnglish"
+}
 dfHRQoL %>% 
   filter(group == "Sweden") %>% 
   forestplot(labeltext = c(labeltext, est), 
-             txt_gp = fpTxtGp(label = gpar(fontfamily = "mono")),
+             txt_gp = fpTxtGp(label = gpar(fontfamily = font)),
              col = clrs,
              xlab = "EQ-5D index")
 ```
@@ -239,11 +243,11 @@ There is also the possibility of being selective in gp-styles:
 dfHRQoL %>% 
   filter(group == "Sweden") %>% 
   forestplot(labeltext = c(labeltext, est), 
-             txt_gp = fpTxtGp(label = list(gpar(fontfamily = "mono"),
+             txt_gp = fpTxtGp(label = list(gpar(fontfamily = font),
                                            gpar(fontfamily = "",
                                                 col = "#660000")),
                               ticks = gpar(fontfamily = "", cex = 1),
-                              xlab  = gpar(fontfamily = "serif", cex = 1.5)),
+                              xlab  = gpar(fontfamily = font, cex = 1.5)),
              col = clrs,
              xlab = "EQ-5D index")
 ```
@@ -459,6 +463,7 @@ dfHRQoL %>%
              col = fpColors(box = c("blue", "darkred")),
              grid = TRUE,
              xticks = c(-.1, -0.05, 0, .05),
+             zero = 0,
              xlab = "EQ-5D index")
 ```
 

@@ -1,5 +1,10 @@
 NEWS for the forestplot package
 
+Changes for 2.0.1
+-----------------
+* Fixed missing `lwd.zero` (issue #42)
+* Fixed ignored `clip` argument when `zero` was outside the `clip` area.
+
 Changes for 2.0
 ----------------
 * Changed function so that it returns a `gforge_forestplot` object instead of directly plotting. The `print.gforge_forestplot` calls the draw function that converts the object to the actual forestplot. **Breaking** if you have used the function within loops this will cause a break in the old behavior.
