@@ -4,6 +4,7 @@ Changes for 2.0.1
 -----------------
 * Fixed missing `lwd.zero` (issue #42)
 * Fixed ignored `clip` argument when `zero` was outside the `clip` area.
+* zero-line is now properly ignored when NA
 
 Changes for 2.0
 ----------------
