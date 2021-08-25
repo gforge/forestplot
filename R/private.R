@@ -437,14 +437,6 @@ prFpXrange <- function(upper, lower, clip, zero, xticks, xlog) {
   top <- min(max(upper, na.rm = TRUE), clip[2])
   bottom <- max(min(lower, na.rm = TRUE), clip[1])
 
-  if (length(zero) == 1 && is.na(zero)) {
-    if (clip[1] > zero) {
-      zero = clip[1]
-    } else if (clip[2] < zero) {
-      zero = clip[2]
-    }
-  }
-
   # Although perhaps not entirely intuitive
   # I've decided that the function should
   # extend the range to include the clip
