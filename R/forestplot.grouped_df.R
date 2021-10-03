@@ -30,7 +30,8 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
     lblid <- substitute(labeltext)
   }
   ret <- tryCatch(suppressMessages(x %>% dplyr::select({{ lblid }})),
-                  error = function(e) e)
+    error = function(e) e
+  )
   if (inherits(ret, "error")) {
     # Note, we re-throw the original error if it fails
     ret <- tryCatch(labeltext, error = function(e) stop(ret))
@@ -53,35 +54,41 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
   labeltext <- ret
 
 
-  estimates <- list(mean = x %>% dplyr::pull({{ mean }}),
-                    lower = x %>% dplyr::pull({{ lower }}),
-                    upper = x %>% dplyr::pull({{ upper }}))
+  estimates <- list(
+    mean = x %>% dplyr::pull({{ mean }}),
+    lower = x %>% dplyr::pull({{ lower }}),
+    upper = x %>% dplyr::pull({{ upper }})
+  )
   estimates <- sapply(estimates,
-                      function(est) {
-                        suppressMessages(groups$.rows %>%
-                                           lapply(function(row_numbers) est[row_numbers]) %>%
-                                           dplyr::bind_cols() %>%
-                                           as.matrix())
-                      },
-                      simplify = FALSE)
+    function(est) {
+      suppressMessages(groups$.rows %>%
+        lapply(function(row_numbers) est[row_numbers]) %>%
+        dplyr::bind_cols() %>%
+        as.matrix())
+    },
+    simplify = FALSE
+  )
 
 
   if (missing(legend)) {
-    legend <- groups %>% dplyr::select(-.rows) %>% apply(MARGIN = 1, function(x) paste(x, collapse = ", "))
+    legend <- groups %>%
+      dplyr::select(-.rows) %>%
+      apply(MARGIN = 1, function(x) paste(x, collapse = ", "))
   }
 
   if (!missing(is.summary)) {
     sumid <- substitute(is.summary)
     is.summary <- tryCatch(x %>% dplyr::pull({{ sumid }}) %>% sapply(function(x) ifelse(is.na(x), FALSE, x)),
-                           error = function(e) is.summary)
+      error = function(e) is.summary
+    )
   } else {
-    is.summary = FALSE
+    is.summary <- FALSE
   }
 
-  forestplot.default(labeltext = labeltext, mean = estimates$mean, lower = estimates$lower, upper = estimates$upper, legend = legend,
-                     is.summary = is.summary, ...)
+  forestplot.default(
+    labeltext = labeltext, mean = estimates$mean, lower = estimates$lower, upper = estimates$upper, legend = legend,
+    is.summary = is.summary, ...
+  )
 }
 
 globalVariables(c("data", ".", ".rows"))
-
-

@@ -172,7 +172,6 @@
 #' @rdname forestplot
 #' @export forestplot
 #' @aliases forestplot forestplot.default
-forestplot <- function(...)
-{
+forestplot <- function(...) {
   UseMethod("forestplot")
 }

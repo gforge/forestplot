@@ -20,9 +20,11 @@
 #' @inheritParams forestplot
 #' @keywords internal
 prFpGetConfintFnList <- function(fn, no_rows, no_cols, missing_rows, is.summary, summary) {
-  ret <- prPopulateList(fn, no_rows = no_rows, no_cols = no_cols,
-                        missing_rows = missing_rows,
-                        is.summary = is.summary, summary = summary)
+  ret <- prPopulateList(fn,
+    no_rows = no_rows, no_cols = no_cols,
+    missing_rows = missing_rows,
+    is.summary = is.summary, summary = summary
+  )
 
   makeCalleable <- function(value) {
     if (is.function(value)) {
@@ -80,7 +82,7 @@ prPopulateList <- function(elmnt, no_rows, no_cols, missing_rows, is.summary, su
       for (i in 1:no_rows) {
         ret[[i]] <- elmnt
       }
-    }else{
+    } else {
       for (i in 1:no_rows) {
         ret[[i]] <- list()
         for (ii in 1:no_cols) {
@@ -88,34 +90,40 @@ prPopulateList <- function(elmnt, no_rows, no_cols, missing_rows, is.summary, su
         }
       }
     }
-  }else if (is.character(elmnt) ||
-            is.numeric(elmnt)) {
+  } else if (is.character(elmnt) ||
+    is.numeric(elmnt)) {
     if (is.matrix(elmnt)) {
-      if (ncol(elmnt) != no_cols)
-        stop("Your columns do not add upp for your",
-             " confidence interval funcitons, ",
-             ncol(elmnt), " != ", no_cols)
-      if (nrow(elmnt) != no_rows)
-        stop("Your rows do not add upp for your",
-             " confidence interval funcitons, ",
-             nrow(elmnt), " != ", no_rows)
-
-    }else if (length(elmnt) == no_cols) {
+      if (ncol(elmnt) != no_cols) {
+        stop(
+          "Your columns do not add upp for your",
+          " confidence interval funcitons, ",
+          ncol(elmnt), " != ", no_cols
+        )
+      }
+      if (nrow(elmnt) != no_rows) {
+        stop(
+          "Your rows do not add upp for your",
+          " confidence interval funcitons, ",
+          nrow(elmnt), " != ", no_rows
+        )
+      }
+    } else if (length(elmnt) == no_cols) {
       elmnt <- matrix(elmnt, nrow = no_rows, ncol = no_cols, byrow = TRUE)
-    }else if (length(elmnt) %in% c(1, no_rows)) {
+    } else if (length(elmnt) %in% c(1, no_rows)) {
       elmnt <- matrix(elmnt, nrow = no_rows, ncol = no_cols)
-    }else{
-      stop("You have not provided the expected",
-           " number of elements: ",
-           length(elmnt), " is not 1, ", no_cols, " (columns), or ", no_rows, " (rows)")
-
+    } else {
+      stop(
+        "You have not provided the expected",
+        " number of elements: ",
+        length(elmnt), " is not 1, ", no_cols, " (columns), or ", no_rows, " (rows)"
+      )
     }
 
     # Convert into function format
     for (i in 1:no_rows) {
       if (no_cols == 1) {
         ret[[i]] <- elmnt[i, 1]
-      }else{
+      } else {
         ret[[i]] <- list()
         for (ii in 1:no_cols) {
           ## Go by row for the elmnt
@@ -123,47 +131,48 @@ prPopulateList <- function(elmnt, no_rows, no_cols, missing_rows, is.summary, su
         }
       }
     }
-
-  }else if (is.list(elmnt)) {
+  } else if (is.list(elmnt)) {
     if (no_cols == 1) {
       # Actually correct if the lengths add up
       if (length(elmnt) != no_rows) {
         if (length(elmnt) == sum(is.summary == summary)) {
-            ret <- list()
-            i <- 1
-            for (is_row_summary in is.summary) {
-              if (is_row_summary ==  summary) {
-                ret <- append(ret, elmnt[[i]])
-                i <- i + 1
-              }else{
-                # For simplicity all non-same elements have the last summary element
-                # As this element isn't outputted it doesn't matter
-                ret <- append(ret, elmnt[[i]])
-              }
-            }
-        }else if(length(elmnt) == sum(is.summary == summary & !missing_rows)) {
           ret <- list()
           i <- 1
-          for (row_no in 1:length(is.summary)) {
-            if (is.summary[row_no] ==  summary & !missing_rows[row_no]) {
+          for (is_row_summary in is.summary) {
+            if (is_row_summary == summary) {
               ret <- append(ret, elmnt[[i]])
               i <- i + 1
-            }else{
+            } else {
               # For simplicity all non-same elements have the last summary element
               # As this element isn't outputted it doesn't matter
               ret <- append(ret, elmnt[[i]])
             }
           }
-        }else{
-          stop("You do not have the same number of ",
-               "confidence interval functions as you have ",
-               "number of rows: ", length(elmnt), "!= ", no_rows,
-               " You should provide the same number.")
+        } else if (length(elmnt) == sum(is.summary == summary & !missing_rows)) {
+          ret <- list()
+          i <- 1
+          for (row_no in 1:length(is.summary)) {
+            if (is.summary[row_no] == summary & !missing_rows[row_no]) {
+              ret <- append(ret, elmnt[[i]])
+              i <- i + 1
+            } else {
+              # For simplicity all non-same elements have the last summary element
+              # As this element isn't outputted it doesn't matter
+              ret <- append(ret, elmnt[[i]])
+            }
+          }
+        } else {
+          stop(
+            "You do not have the same number of ",
+            "confidence interval functions as you have ",
+            "number of rows: ", length(elmnt), "!= ", no_rows,
+            " You should provide the same number."
+          )
         }
-      }else{
+      } else {
         ret <- elmnt
       }
-    }else{
+    } else {
       # Populate a new elmnt list
       if (length(elmnt) == no_rows) {
         # One dim-list provided
@@ -176,24 +185,26 @@ prPopulateList <- function(elmnt, no_rows, no_cols, missing_rows, is.summary, su
               ret[[i]][[ii]] <- elmnt[[i]]
             }
           }
-        }else{
+        } else {
           # Verify that the list structure
           # is provided as a valid matrix
           # with the correct size
           n <- sapply(elmnt, length)
           if (any(n != no_cols)) {
-            stop("You need to provide a 'square' list (of dim. n x m)",
-                 " of the same dimension as the number of lines",
-                 " in order for this function to work. Currently your",
-                 " confidence interval function has the format",
-                 " ", no_rows , " x ", paste(n, collapse = "/"),
-                 " where you want all of the second argument to be",
-                 " equal to ", no_cols)
+            stop(
+              "You need to provide a 'square' list (of dim. n x m)",
+              " of the same dimension as the number of lines",
+              " in order for this function to work. Currently your",
+              " confidence interval function has the format",
+              " ", no_rows, " x ", paste(n, collapse = "/"),
+              " where you want all of the second argument to be",
+              " equal to ", no_cols
+            )
           }
 
           ret <- elmnt
         }
-      }else if (length(elmnt) == no_cols) {
+      } else if (length(elmnt) == no_cols) {
         # One dim-list provided
         # now generate a two-dim list
         if (!is.list(elmnt[[1]])) {
@@ -204,18 +215,20 @@ prPopulateList <- function(elmnt, no_rows, no_cols, missing_rows, is.summary, su
               ret[[i]][[ii]] <- elmnt[[ii]]
             }
           }
-        }else{
+        } else {
           # Verify that the list structure
           # is provided as a matrix
           n <- sapply(elmnt, length)
           if (any(n != no_rows)) {
-            stop("You need to provide a 'square' list (of dim. n x m)",
-                 " of the same dimension as the number of lines",
-                 " in order for this function to work. Currently your",
-                 " confidence interval function has the format",
-                 " ", no_rows , " x ", paste(n, collapse = "/"),
-                 " where you want all of the second argument to be",
-                 " equal to ", no_cols)
+            stop(
+              "You need to provide a 'square' list (of dim. n x m)",
+              " of the same dimension as the number of lines",
+              " in order for this function to work. Currently your",
+              " confidence interval function has the format",
+              " ", no_rows, " x ", paste(n, collapse = "/"),
+              " where you want all of the second argument to be",
+              " equal to ", no_cols
+            )
           }
 
           # Change to the [[row]][[col]] format
@@ -227,18 +240,22 @@ prPopulateList <- function(elmnt, no_rows, no_cols, missing_rows, is.summary, su
             }
           }
         }
-      }else{
-        stop("The number of provided confidence intervals",
-             " functions, ", length(elmnt), ", ",
-             " does not seem to match up with either",
-             " number of rows, ", no_rows,
-             " or number of cols, ", no_cols)
+      } else {
+        stop(
+          "The number of provided confidence intervals",
+          " functions, ", length(elmnt), ", ",
+          " does not seem to match up with either",
+          " number of rows, ", no_rows,
+          " or number of cols, ", no_cols
+        )
       }
     }
-  }else{
-    stop("You have provided something else than",
-         " a function, list or function name: ",
-         class(elmnt))
+  } else {
+    stop(
+      "You have provided something else than",
+      " a function, list or function name: ",
+      class(elmnt)
+    )
   }
 
   return(ret)
@@ -263,22 +280,31 @@ prFpPrintXaxis <- function(axisList,
 
   # Plot the vertical "zero" axis
   gp_list <- list(col = col$zero)
-  if (!missing(lwd.zero))
+  if (!missing(lwd.zero)) {
     gp_list$lwd <- lwd.zero
-  zero_gp = prGetShapeGp(shapes_gp, NULL, "zero", default = do.call(gpar, gp_list))
+  }
+  zero_gp <- prGetShapeGp(shapes_gp, NULL, "zero", default = do.call(gpar, gp_list))
 
   if (length(axisList$zero) > 1 || !is.na(axisList$zero)) {
     if (length(axisList$zero) == 1) {
-      grid.lines(x  = unit(axisList$zero, "native"),
-                 y  = 0:1,
-                 gp = zero_gp)
-    }else if (length(axisList$zero) == 2) {
+      grid.lines(
+        x = unit(axisList$zero, "native"),
+        y = 0:1,
+        gp = zero_gp
+      )
+    } else if (length(axisList$zero) == 2) {
       gp_list$fill <- gp_list$col
-      grid.polygon(x  = unit(c(axisList$zero,
-                               rev(axisList$zero)),
-                             "native"),
-                   y  = c(0, 0, 1, 1),
-                   gp = zero_gp)
+      grid.polygon(
+        x = unit(
+          c(
+            axisList$zero,
+            rev(axisList$zero)
+          ),
+          "native"
+        ),
+        y = c(0, 0, 1, 1),
+        gp = zero_gp
+      )
     }
   }
 
@@ -299,13 +325,17 @@ prFpPrintXaxis <- function(axisList,
   if (is.grob(axisList$labGrob)) {
     # Add some padding between text and ticks proportional to the ticks height
     padding <-
-      unit(convertY(lab_grob_height, "lines", valueOnly = TRUE)*0.1,
-           "lines")
+      unit(
+        convertY(lab_grob_height, "lines", valueOnly = TRUE) * 0.1,
+        "lines"
+      )
 
     # The text is strangely messy
     # and needs its own viewport
-    pushViewport(viewport(height = grobHeight(axisList$labGrob),
-                          y = lab_y - padding, just = "top"))
+    pushViewport(viewport(
+      height = grobHeight(axisList$labGrob),
+      y = lab_y - padding, just = "top"
+    ))
     grid.draw(axisList$labGrob)
     upViewport()
   }
@@ -329,17 +359,19 @@ prFpPrintLabels <- function(labels, nc, nr, graph.pos) {
   # Output the labels
   # The column
   cols <- 1:(nc + 1)
-  cols <- cols[cols !=  graph.pos]
-  cols <- cols*2 - 1
+  cols <- cols[cols != graph.pos]
+  cols <- cols * 2 - 1
   for (label_col in 1:nc) {
     j <- cols[label_col]
     # The row
     for (i in 1:nr) {
       if (!is.null(labels[[label_col]][[i]])) {
         # The column position is 2 * j - 1 due to the column gap
-        vp <- viewport(layout.pos.row = i,
-                       layout.pos.col = j,
-                       name           = sprintf("Label_vp_%d_%d", i, j))
+        vp <- viewport(
+          layout.pos.row = i,
+          layout.pos.col = j,
+          name = sprintf("Label_vp_%d_%d", i, j)
+        )
         pushViewport(vp)
         grid.draw(labels[[label_col]][[i]])
         upViewport()
@@ -360,13 +392,16 @@ prFpPrintLabels <- function(labels, nc, nr, graph.pos) {
 #' @keywords internal
 prListRep <- function(x, length.out) {
   lapply(0:(length.out - 1),
-         function(x, g) {
-           if (!is.list(g) ||
-                 !is.list(g[[1]]))
-             return(g)
+    function(x, g) {
+      if (!is.list(g) ||
+        !is.list(g[[1]])) {
+        return(g)
+      }
 
-           return(g[[(x %% length(g)) + 1]])
-         }, g = x)
+      return(g[[(x %% length(g)) + 1]])
+    },
+    g = x
+  )
 }
 
 #' Gets the forestplot legend grobs
@@ -388,35 +423,44 @@ prFpGetLegendGrobs <- function(legend,
   max_height <- 0
   gp <- prListRep(txt_gp$legend, length.out = length(legend))
   for (n in 1:length(legend)) {
-    lGrobs[[n]] <- textGrob(legend[n], x = 0, just = "left",
-                            gp = do.call(gpar, gp[[n]]))
+    lGrobs[[n]] <- textGrob(legend[n],
+      x = 0, just = "left",
+      gp = do.call(gpar, gp[[n]])
+    )
 
     gw <- convertUnit(grobWidth(lGrobs[[n]]), "mm", valueOnly = TRUE)
     gh <- convertUnit(grobHeight(lGrobs[[n]]), "mm", valueOnly = TRUE)
-    if (gw > max_width)
+    if (gw > max_width) {
       max_width <- gw
-    if (gh > max_height)
+    }
+    if (gh > max_height) {
       max_height <- gh
+    }
 
     attr(lGrobs[[n]], "width") <- unit(gw, "mm")
     attr(lGrobs[[n]], "height") <- unit(gh, "mm")
   }
   attr(lGrobs, "max_height") <- unit(max_height, "mm")
   attr(lGrobs, "max_width") <- unit(max_width, "mm")
-  attr(lGrobs, "line_height_and_spacing") <- unit.c(attr(lGrobs, "max_height"),
-                                                    unit(.5, "lines"))
+  attr(lGrobs, "line_height_and_spacing") <- unit.c(
+    attr(lGrobs, "max_height"),
+    unit(.5, "lines")
+  )
 
   # Do title stuff if present
   if (is.character(title)) {
-    title <- textGrob(title, x = 0, just = "left",
-                      gp = do.call(gpar, txt_gp$legend.title))
+    title <- textGrob(title,
+      x = 0, just = "left",
+      gp = do.call(gpar, txt_gp$legend.title)
+    )
     attr(lGrobs, "title") <- title
 
     attr(lGrobs, "titleHeight") <- grobHeight(title)
     attr(lGrobs, "titleWidth") <- grobHeight(title)
     if (convertUnit(attr(lGrobs, "titleWidth"), unitTo = "npc", valueOnly = TRUE) >
-          convertUnit(attr(lGrobs, "max_width"), unitTo = "npc", valueOnly = TRUE))
+      convertUnit(attr(lGrobs, "max_width"), unitTo = "npc", valueOnly = TRUE)) {
       attr(lGrobs, "max_width") <- attr(lGrobs, "titleWidth")
+    }
   }
   class(lGrobs) <- c("Legend", class(lGrobs))
   return(lGrobs)
@@ -456,8 +500,7 @@ prFpXrange <- function(upper, lower, clip, zero, xticks, xlog) {
         na.rm = TRUE
       )
     )
-
-  }else{
+  } else {
     ret <- c(
       min(
         c(zero, bottom, xticks),
@@ -472,7 +515,7 @@ prFpXrange <- function(upper, lower, clip, zero, xticks, xlog) {
 
   if (xlog) {
     return(log(ret))
-  }else{
+  } else {
     return(ret)
   }
 }
@@ -500,35 +543,47 @@ prFpGetLabels <- function(label_type, labeltext, align,
 
   if (attr(txt_gp$label, "txt_dim") %in% 0:1) {
     txt_gp$label <- prListRep(list(prListRep(txt_gp$label, nc)), sum(!is.summary))
-  }else{
+  } else {
     ncols <- sapply(txt_gp$label, length)
-    if (all(ncols != ncols[1]))
-      stop("Your fpTxtGp$label list has invalid number of columns",
-           ", they should all be of equal length - yours have ",
-           "'", paste(ncols, collapse = "', '"), "'")
-    if (length(txt_gp$label) != sum(!is.summary))
-      stop("Your fpTxtGp$label list has invalid number of rows",
-           ", the should be equal the of the number rows that aren't summaries.",
-           " you have '", length(txt_gp$label) , "' rows in the fpTxtGp$label",
-           ", while the labeltext argument has '", nr, "' rows",
-           " where '", sum(!is.summary), "' are not summaries.")
+    if (all(ncols != ncols[1])) {
+      stop(
+        "Your fpTxtGp$label list has invalid number of columns",
+        ", they should all be of equal length - yours have ",
+        "'", paste(ncols, collapse = "', '"), "'"
+      )
+    }
+    if (length(txt_gp$label) != sum(!is.summary)) {
+      stop(
+        "Your fpTxtGp$label list has invalid number of rows",
+        ", the should be equal the of the number rows that aren't summaries.",
+        " you have '", length(txt_gp$label), "' rows in the fpTxtGp$label",
+        ", while the labeltext argument has '", nr, "' rows",
+        " where '", sum(!is.summary), "' are not summaries."
+      )
+    }
   }
 
   if (attr(txt_gp$summary, "txt_dim") %in% 0:1) {
     txt_gp$summary <-
       prListRep(list(prListRep(txt_gp$summary, nc)), sum(is.summary))
-  }else{
+  } else {
     ncols <- sapply(txt_gp$summary, length)
-    if (all(ncols != ncols[1]))
-      stop("Your fpTxtGp$summary list has invalid number of columns",
-           ", they should all be of equal length - yours have ",
-           "'", paste(ncols, collapse = "', '"), "'")
-    if (length(txt_gp$summary) != sum(is.summary))
-      stop("Your fpTxtGp$summary list has invalid number of rows",
-           ", the should be equal the of the number rows that aren't summaries.",
-           " you have '", length(txt_gp$summary) , "' rows in the fpTxtGp$summary",
-           ", while the labeltext argument has '", nr, "' rows",
-           " where '", sum(is.summary), "' are not summaries.")
+    if (all(ncols != ncols[1])) {
+      stop(
+        "Your fpTxtGp$summary list has invalid number of columns",
+        ", they should all be of equal length - yours have ",
+        "'", paste(ncols, collapse = "', '"), "'"
+      )
+    }
+    if (length(txt_gp$summary) != sum(is.summary)) {
+      stop(
+        "Your fpTxtGp$summary list has invalid number of rows",
+        ", the should be equal the of the number rows that aren't summaries.",
+        " you have '", length(txt_gp$summary), "' rows in the fpTxtGp$summary",
+        ", while the labeltext argument has '", nr, "' rows",
+        " where '", sum(is.summary), "' are not summaries."
+      )
+    }
   }
 
   max_height <- NULL
@@ -544,20 +599,30 @@ prFpGetLabels <- function(label_type, labeltext, align,
       txt_out <- prFpFetchRowLabel(label_type, labeltext, i, j)
       # If it's a call created by bquote or similar it
       # needs evaluating
-      if (is.call(txt_out))
+      if (is.call(txt_out)) {
         txt_out <- eval(txt_out)
+      }
 
       if (is.expression(txt_out) || is.character(txt_out) || is.numeric(txt_out) || is.factor(txt_out)) {
-        x <- switch(align[j], l = 0, r = 1, c = 0.5)
+        x <- switch(align[j],
+          l = 0,
+          r = 1,
+          c = 0.5
+        )
 
         just <- switch(align[j],
-                       l = "left",
-                       r = "right",
-                       c = "center")
+          l = "left",
+          r = "right",
+          c = "center"
+        )
 
         # Bold the text if this is a summary
         if (is.summary[i]) {
-          x <- switch(align[j], l = 0, r = 1, c = 0.5)
+          x <- switch(align[j],
+            l = 0,
+            r = 1,
+            c = 0.5
+          )
 
           gp_list <- txt_gp$summary[[sum(is.summary[1:i])]][[j]]
           gp_list[["col"]] <- rep(col$text, length = nr)[i]
@@ -567,19 +632,24 @@ prFpGetLabels <- function(label_type, labeltext, align,
           # in order to make the following possible:
           # list(rownames(x), list(expression(1 >= a), "b", "c"))
           labels[[j]][[i]] <-
-            textGrob(txt_out, x = x,
-                     just = just,
-                     gp = do.call(gpar, gp_list))
-        }else{
+            textGrob(txt_out,
+              x = x,
+              just = just,
+              gp = do.call(gpar, gp_list)
+            )
+        } else {
           gp_list <- txt_gp$label[[sum(!is.summary[1:i])]][[j]]
-          if (is.null(gp_list$col))
+          if (is.null(gp_list$col)) {
             gp_list[["col"]] <- rep(col$text, length = nr)[i]
+          }
 
           # Create a textGrob with the current row-cell for the label
           labels[[j]][[i]] <-
-            textGrob(txt_out, x = x,
-                     just = just,
-                     gp = do.call(gpar, gp_list))
+            textGrob(txt_out,
+              x = x,
+              just = just,
+              gp = do.call(gpar, gp_list)
+            )
         }
 
         attr(labels[[j]][[i]], "height") <- grobHeight(labels[[j]][[i]])
@@ -587,7 +657,7 @@ prFpGetLabels <- function(label_type, labeltext, align,
         if (is.null(max_height)) {
           max_height <- attr(labels[[j]][[i]], "height")
           max_width <- attr(labels[[j]][[i]], "width")
-        }else{
+        } else {
           max_height <- max(max_height, attr(labels[[j]][[i]], "height"))
           max_width <- max(max_width, attr(labels[[j]][[i]], "width"))
         }
@@ -597,8 +667,9 @@ prFpGetLabels <- function(label_type, labeltext, align,
   attr(labels, "max_height") <- max_height
   attr(labels, "max_width") <- max_width
   attr(labels, "cex") <- ifelse(any(is.summary),
-                                txt_gp$summary[[1]][[1]]$cex,
-                                txt_gp$label[[1]][[1]]$cex)
+    txt_gp$summary[[1]][[1]]$cex,
+    txt_gp$label[[1]][[1]]$cex
+  )
   return(labels)
 }
 
@@ -619,22 +690,22 @@ prFpFetchRowLabel <- function(label_type, labeltext, i, j) {
     # Haven't figured out it this is possible with
     # a multilevel expression
     row_column_text <- labeltext[[i]]
-  }
-  else if(label_type == "list") {
+  } else if (label_type == "list") {
     # I get annoying warnings with this
-    #if (!is.expression(labeltext[[j]][[i]]) && is.na(labeltext[[j]][[i]]))
+    # if (!is.expression(labeltext[[j]][[i]]) && is.na(labeltext[[j]][[i]]))
     #    return(FALSE)
     row_column_text <- labeltext[[j]][[i]]
-  }
-  else{
-    if (is.na(labeltext[i, j]))
+  } else {
+    if (is.na(labeltext[i, j])) {
       return(FALSE)
+    }
     row_column_text <- labeltext[i, j]
   }
   if (!is.expression(row_column_text) &&
-        !is.call(row_column_text) &&
-        is.na(row_column_text))
+    !is.call(row_column_text) &&
+    is.na(row_column_text)) {
     return("")
+  }
 
   return(row_column_text)
 }
@@ -654,29 +725,34 @@ prFpGetLayoutVP <- function(lineheight, labels, nr, legend_layout = NULL) {
   if (!is.unit(lineheight)) {
     if (lineheight == "auto") {
       lvp_height <- unit(1, "npc")
-    }else if (lineheight == "lines") {
-      lvp_height <- unit(nr*attr(labels, "cex")*1.5, "lines")
-    }else{
+    } else if (lineheight == "lines") {
+      lvp_height <- unit(nr * attr(labels, "cex") * 1.5, "lines")
+    } else {
       stop("The lineheight option '", lineheight, "'is yet not implemented")
     }
-  }else{
-    lvp_height <- unit(convertY(lineheight,
-                                unitTo = "lines",
-                                valueOnly = TRUE)*nr,
-                       "lines")
+  } else {
+    lvp_height <- unit(
+      convertY(lineheight,
+        unitTo = "lines",
+        valueOnly = TRUE
+      ) * nr,
+      "lines"
+    )
   }
 
   # If there is a legend on top then the size should be adjusted
   if (!is.null(legend_layout) &&
-        legend_layout$nrow == 3 &&
-        convertY(lvp_height, "npc", valueOnly = TRUE) < 1) {
+    legend_layout$nrow == 3 &&
+    convertY(lvp_height, "npc", valueOnly = TRUE) < 1) {
     lvp_height <- sum(lvp_height, legend_layout$heights[1:2])
   }
 
-  lvp <- viewport(height = lvp_height,
-                  layout = legend_layout,
-                  name = ifelse(is.null(legend_layout), "main", "main_and_legend"))
-  return (lvp)
+  lvp <- viewport(
+    height = lvp_height,
+    layout = legend_layout,
+    name = ifelse(is.null(legend_layout), "main", "main_and_legend")
+  )
+  return(lvp)
 }
 
 #' Validate the forestplot label list
@@ -690,14 +766,16 @@ prFpGetLayoutVP <- function(lineheight, labels, nr, legend_layout = NULL) {
 #'
 #' @keywords internal
 prFpValidateLabelList <- function(labelList) {
-  l = length(labelList[[1]])
-  if (length(labelList) == 1)
+  l <- length(labelList[[1]])
+  if (length(labelList) == 1) {
     return(TRUE)
+  }
 
-  for(i in 2:length(labelList)) {
+  for (i in 2:length(labelList)) {
     # All elements should have the same length
-    if (l != length(labelList[[i]]))
+    if (l != length(labelList[[i]])) {
       return(FALSE)
+    }
   }
 
   return(TRUE)
@@ -710,7 +788,7 @@ prFpValidateLabelList <- function(labelList) {
 #' @return \code{grid::unit} Returns the width \code{\link[grid]{unit}}
 #'  for the widest grob
 #' @keywords internal
-prFpFindWidestGrob <- function (grob.list, return_unit = "mm") {
+prFpFindWidestGrob <- function(grob.list, return_unit = "mm") {
   len <- c()
   for (i in seq(along.with = grob.list)) {
     if (is.object(grob.list[[i]])) {
@@ -718,7 +796,7 @@ prFpFindWidestGrob <- function (grob.list, return_unit = "mm") {
       # when there are expressions
       grob_width <- convertWidth(grobWidth(grob.list[[i]]), return_unit, valueOnly = TRUE)
       len <- append(len, grob_width)
-    }else{
+    } else {
       len <- append(len, 0)
     }
   }
@@ -735,79 +813,85 @@ prFpFindWidestGrob <- function (grob.list, return_unit = "mm") {
 #'
 #' @inheritParams fpLegend
 #' @keywords internal
-prFpGetLegendBoxPosition <- function (pos) {
+prFpGetLegendBoxPosition <- function(pos) {
   valid_txt_pos <- c("bottomright", "bottom", "bottomleft", "left", "topleft", "top", "topright", "right", "center")
   if (!all(c("x", "y") %in% names(pos)) &&
-        !(("x" %in% pos &&
-             any(pos[["x"]] == valid_txt_pos)) ||
-            any(pos[[1]] == valid_txt_pos)))
-    stop("If you want to specify the legend position in a certain corner",
-         " within the main plot then you need to have list names x and y specified,",
-         " or you should have the first list element to be '", paste(valid_txt_pos, collapse = "'/'"), "',",
-         " if you don't specify the first element then it can be the 'x' element")
+    !(("x" %in% pos &&
+      any(pos[["x"]] == valid_txt_pos)) ||
+      any(pos[[1]] == valid_txt_pos))) {
+    stop(
+      "If you want to specify the legend position in a certain corner",
+      " within the main plot then you need to have list names x and y specified,",
+      " or you should have the first list element to be '", paste(valid_txt_pos, collapse = "'/'"), "',",
+      " if you don't specify the first element then it can be the 'x' element"
+    )
+  }
 
   # Convert to the x & y format to make things easier
   if (!all(c("x", "y") %in% names(pos))) {
-    if ("x" %in% names(pos))
+    if ("x" %in% names(pos)) {
       txt_pos <- pos[["x"]]
-    else
+    } else {
       txt_pos <- pos[[1]]
+    }
 
     # The inset offsets the position
     if (!"inset" %in% names(pos)) {
       pos[["inset"]] <- unit(0, "npc")
-    }else if (!is.unit(pos[["inset"]])) {
-      if (pos[["inset"]] > 1 || pos[["inset"]] < 0)
+    } else if (!is.unit(pos[["inset"]])) {
+      if (pos[["inset"]] > 1 || pos[["inset"]] < 0) {
         stop("If you have not specified the unit of the pos inset then it should be between 0 and 1")
+      }
       pos[["inset"]] <- unit(pos[["inset"]], "npc")
-    }else{
-      if (convertUnit(pos[["inset"]], unitTo = "npc", valueOnly = TRUE) > 1)
+    } else {
+      if (convertUnit(pos[["inset"]], unitTo = "npc", valueOnly = TRUE) > 1) {
         stop("You have provided a value outside the possible range ('npc' bigger than 1)")
+      }
     }
 
     if (txt_pos == "bottomright") {
       pos[["x"]] <- unit(1, "npc") - pos[["inset"]]
       pos[["y"]] <- unit(0, "npc") + pos[["inset"]]
       pos[["just"]] <- c("right", "bottom")
-    }else if(txt_pos == "bottom") {
+    } else if (txt_pos == "bottom") {
       pos[["x"]] <- unit(0.5, "npc")
       pos[["y"]] <- unit(0, "npc") + pos[["inset"]]
       pos[["just"]] <- c("center", "bottom")
-    }else if (txt_pos == "bottomleft") {
+    } else if (txt_pos == "bottomleft") {
       pos[["x"]] <- unit(0, "npc") + pos[["inset"]]
       pos[["y"]] <- unit(0, "npc") + pos[["inset"]]
       pos[["just"]] <- c("left", "bottom")
-    }else if (txt_pos == "left") {
+    } else if (txt_pos == "left") {
       pos[["x"]] <- unit(0, "npc") + pos[["inset"]]
       pos[["y"]] <- unit(.5, "npc")
       pos[["just"]] <- c("left", "center")
-    }else if (txt_pos == "topleft") {
+    } else if (txt_pos == "topleft") {
       pos[["x"]] <- unit(0, "npc") + pos[["inset"]]
       pos[["y"]] <- unit(1, "npc") - pos[["inset"]]
       pos[["just"]] <- c("left", "top")
-    }else if (txt_pos == "top") {
+    } else if (txt_pos == "top") {
       pos[["x"]] <- unit(0.5, "npc")
       pos[["y"]] <- unit(1, "npc") - pos[["inset"]]
       pos[["just"]] <- c("center", "top")
-    }else if (txt_pos == "topright") {
+    } else if (txt_pos == "topright") {
       pos[["x"]] <- unit(1, "npc") - pos[["inset"]]
       pos[["y"]] <- unit(1, "npc") - pos[["inset"]]
       pos[["just"]] <- c("right", "top")
-    }else if (txt_pos == "right") {
+    } else if (txt_pos == "right") {
       pos[["x"]] <- unit(1, "npc") - pos[["inset"]]
       pos[["y"]] <- unit(.5, "npc")
       pos[["just"]] <- c("right", "center")
-    }else if (txt_pos == "center" || txt_pos == "centre") {
+    } else if (txt_pos == "center" || txt_pos == "centre") {
       pos[["x"]] <- unit(.5, "npc")
       pos[["y"]] <- unit(.5, "npc")
       pos[["just"]] <- c("center", "center")
-    }else{
+    } else {
       stop("Position '", pos[["x"]], "'not yet implemented")
     }
-  }else if(!"just" %in% names(pos)) {
+  } else if (!"just" %in% names(pos)) {
     pos[["just"]] <- c("center", "center")
   }
-  return (pos)
+  return(pos)
 }
 
 #' Prepares the legend marker function
@@ -819,17 +903,19 @@ prFpGetLegendBoxPosition <- function (pos) {
 #' @return \code{list}
 #'
 #' @keywords internal
-prFpPrepareLegendMarker <- function (fn.legend, col_no, row_no, fn.ci_norm) {
+prFpPrepareLegendMarker <- function(fn.legend, col_no, row_no, fn.ci_norm) {
   if (!missing(fn.legend)) {
     if (is.function(fn.legend)) {
       return(lapply(1:col_no, function(x) fn.legend))
     }
-    if(is.character(fn.legend)) {
+    if (is.character(fn.legend)) {
       if (length(fn.legend) == 1) {
         fn.legend <- rep(fn.legend, times = col_no)
-      }else if (length(fn.legend) != col_no) {
-        stop("The number of legend markers, ", length(fn.legend),
-             ", should be the same as the number of columns for the mean, ", col_no)
+      } else if (length(fn.legend) != col_no) {
+        stop(
+          "The number of legend markers, ", length(fn.legend),
+          ", should be the same as the number of columns for the mean, ", col_no
+        )
       }
 
       tmp <- list()
@@ -840,32 +926,39 @@ prFpPrepareLegendMarker <- function (fn.legend, col_no, row_no, fn.ci_norm) {
       return(tmp)
     }
 
-    if(is.list(fn.legend)) {
-      if(length(fn.legend) != col_no) {
-        stop("The number of legend markers, ", length(fn.legend), ",",
-             " should be the same as the number of columns for the mean, ", col_no)
-      }else if(!all(sapply(fn.legend, function(x) is.function(x)))) {
+    if (is.list(fn.legend)) {
+      if (length(fn.legend) != col_no) {
+        stop(
+          "The number of legend markers, ", length(fn.legend), ",",
+          " should be the same as the number of columns for the mean, ", col_no
+        )
+      } else if (!all(sapply(fn.legend, function(x) is.function(x)))) {
         stop("If you provide a list for fn.legend then each element should be a function")
       }
 
       return(fn.legend)
     }
 
-    stop("The legend marked function designated by the fn.legend",
-         " is neither a character or a function")
+    stop(
+      "The legend marked function designated by the fn.legend",
+      " is neither a character or a function"
+    )
   }
 
   if (length(fn.ci_norm) == col_no) {
-    return(prFpGetConfintFnList(fn = fn.ci_norm,
-                                no_rows = row_no,
-                                no_cols = col_no)[[1]])
+    return(prFpGetConfintFnList(
+      fn = fn.ci_norm,
+      no_rows = row_no,
+      no_cols = col_no
+    )[[1]])
   }
 
   # Not sure what to do if the number don't match the number of legends
   # and it ain't 1 and it therefore defaults to the normal confidence
   # interval marker
-  if (length(fn.ci_norm) != 1)
+  if (length(fn.ci_norm) != 1) {
     fn.ci_norm <- fpDrawNormalCI
+  }
 
   return(lapply(1:col_no, function(x) fn.ci_norm))
 }
@@ -879,70 +972,86 @@ prFpPrepareLegendMarker <- function (fn.legend, col_no, row_no, fn.ci_norm) {
 prFpConvertMultidimArray <- function(x) {
   cleanX <- na.omit(x)
   switch(as.character(length(dim(cleanX))),
-         "2" = {
-           # Loop through the different rows as a row with only a label may have NA in it
-           lower_cnr <- NULL
-           upper_cnr <- NULL
-           for (d1 in dim(cleanX)[1]) {
-             if (length(unique(cleanX[d1,])) < 3)
-               next;
+    "2" = {
+      # Loop through the different rows as a row with only a label may have NA in it
+      lower_cnr <- NULL
+      upper_cnr <- NULL
+      for (d1 in dim(cleanX)[1]) {
+        if (length(unique(cleanX[d1, ])) < 3) {
+          next
+        }
 
-             lower_cnr <- which.min(cleanX[d1,])
-             upper_cnr <- which.max(cleanX[d1,])
-             if (length(lower_cnr) == 1 &&
-                   length(upper_cnr) == 1) {
-               break;
-             }
-           }
-           if (length(lower_cnr) != 1 ||
-                 length(upper_cnr) != 1)
-             stop("Sorry did not manage to automatically identify",
-                  " the upper/lower boundaries.")
+        lower_cnr <- which.min(cleanX[d1, ])
+        upper_cnr <- which.max(cleanX[d1, ])
+        if (length(lower_cnr) == 1 &&
+          length(upper_cnr) == 1) {
+          break
+        }
+      }
+      if (length(lower_cnr) != 1 ||
+        length(upper_cnr) != 1) {
+        stop(
+          "Sorry did not manage to automatically identify",
+          " the upper/lower boundaries."
+        )
+      }
 
-           lower <- x[,lower_cnr,drop = TRUE]
-           upper <- x[,upper_cnr,drop = TRUE]
-           mean <- x[,-c(upper_cnr, lower_cnr),drop = TRUE]
+      lower <- x[, lower_cnr, drop = TRUE]
+      upper <- x[, upper_cnr, drop = TRUE]
+      mean <- x[, -c(upper_cnr, lower_cnr), drop = TRUE]
+    },
+    "3" = {
+      # Loop through the different rows as a row with only a label may have NA in it
+      # this is a little complicated as we're doing a 3D loop and exiting
+      # as soon as the vars have been identified
+      lower_cnr <- NULL
+      upper_cnr <- NULL
+      for (d3 in 1:dim(cleanX)[3]) {
+        for (d1 in 1:dim(cleanX)[1]) {
+          if (length(unique(cleanX[d1, , d3])) < 3) {
+            next
+          }
 
-           },
-         "3" = {
-           # Loop through the different rows as a row with only a label may have NA in it
-           # this is a little complicated as we're doing a 3D loop and exiting
-           # as soon as the vars have been identified
-           lower_cnr <- NULL
-           upper_cnr <- NULL
-           for (d3 in 1:dim(cleanX)[3]) {
-             for (d1 in 1:dim(cleanX)[1]) {
-               if (length(unique(cleanX[d1,,d3])) < 3)
-                 next;
+          lower_cnr <- which.min(cleanX[d1, , d3])
+          upper_cnr <- which.max(cleanX[d1, , d3])
 
-               lower_cnr <- which.min(cleanX[d1,,d3])
-               upper_cnr <- which.max(cleanX[d1,,d3])
-
-               if (length(lower_cnr) == 1 &&
-                     length(upper_cnr) == 1)
-                 break;
-             }
-             if (length(lower_cnr) == 1 &&
-                   length(upper_cnr) == 1)
-               break;
-
-           }
-           if (length(lower_cnr) != 1 ||
-                 length(upper_cnr) != 1)
-             stop("Sorry did not manage to automatically identify",
-                  " the upper/lower boundaries.")
-           lower <- x[,lower_cnr,,drop = TRUE]
-           upper <- x[,upper_cnr,,drop = TRUE]
-           mean <- x[,-c(upper_cnr, lower_cnr),,drop = TRUE]},{
-             stop("Invalid number of dimensions of the mean argument,",
-                  " should be either 2 or 3 - you have '", length(dim(mean)),"'")
-           })
+          if (length(lower_cnr) == 1 &&
+            length(upper_cnr) == 1) {
+            break
+          }
+        }
+        if (length(lower_cnr) == 1 &&
+          length(upper_cnr) == 1) {
+          break
+        }
+      }
+      if (length(lower_cnr) != 1 ||
+        length(upper_cnr) != 1) {
+        stop(
+          "Sorry did not manage to automatically identify",
+          " the upper/lower boundaries."
+        )
+      }
+      lower <- x[, lower_cnr, , drop = TRUE]
+      upper <- x[, upper_cnr, , drop = TRUE]
+      mean <- x[, -c(upper_cnr, lower_cnr), , drop = TRUE]
+    },
+    {
+      stop(
+        "Invalid number of dimensions of the mean argument,",
+        " should be either 2 or 3 - you have '", length(dim(mean)), "'"
+      )
+    }
+  )
 
   if (!all(lower <= upper, na.rm = TRUE) ||
-      !all(lower <= mean, na.rm = TRUE) ||
-      !all(mean <= upper, na.rm = TRUE))
-    stop("Sorry did not manage to correctly identify",
-         " the upper/lower boundaries from the input matrix.")
+    !all(lower <= mean, na.rm = TRUE) ||
+    !all(mean <= upper, na.rm = TRUE)) {
+    stop(
+      "Sorry did not manage to correctly identify",
+      " the upper/lower boundaries from the input matrix."
+    )
+  }
 
   return(list(mean = mean, lower = lower, upper = upper))
 }
@@ -962,25 +1071,32 @@ prFpConvertMultidimArray <- function(x) {
 #'
 #' @keywords internal
 prPushMarginViewport <- function(bottom, left, top, right, name = NULL) {
-  if (!is.unit(bottom))
+  if (!is.unit(bottom)) {
     bottom <- unit(bottom, "npc")
+  }
 
-  if (!is.unit(top))
+  if (!is.unit(top)) {
     top <- unit(top, "npc")
+  }
 
-  if (!is.unit(left))
+  if (!is.unit(left)) {
     left <- unit(left, "npc")
+  }
 
-  if (!is.unit(right))
+  if (!is.unit(right)) {
     right <- unit(right, "npc")
+  }
 
   layout_name <- NULL
-  if (!is.character(name))
+  if (!is.character(name)) {
     layout_name <- sprintf("margin_grid_%s", name)
+  }
 
-  gl <- grid.layout(nrow = 3, ncol = 3,
-                    heights = unit.c(top, unit(1, "npc") - top - bottom, bottom),
-                    widths = unit.c(left, unit(1, "npc") - left - right, right))
+  gl <- grid.layout(
+    nrow = 3, ncol = 3,
+    heights = unit.c(top, unit(1, "npc") - top - bottom, bottom),
+    widths = unit.c(left, unit(1, "npc") - left - right, right)
+  )
 
   pushViewport(viewport(layout = gl, name = layout_name))
   pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 2, name = name))
@@ -1002,26 +1118,31 @@ prGridPlotTitle <- function(title,
                             space_below) {
   tg_list <- list(
     label = title,
-    just = "center")
+    just = "center"
+  )
   if (!is.null(gp$just)) {
     tg_list$just <- gp$just
     gp$just <- NULL
   }
   tg_list$gp <- do.call(gpar, gp)
 
-  titleGrob <- do.call(textGrob,
-                       tg_list)
+  titleGrob <- do.call(
+    textGrob,
+    tg_list
+  )
 
   # The y/g/j letters are not included in the height
-  gh <- unit(convertUnit(grobHeight(titleGrob), "mm", valueOnly = TRUE)*1.5, "mm")
+  gh <- unit(convertUnit(grobHeight(titleGrob), "mm", valueOnly = TRUE) * 1.5, "mm")
   if (missing(space_below)) {
-    space_below <- unit(convertUnit(gh, "mm", valueOnly = TRUE)/2, "mm")
-  }else if (!is.unit(space_below)) {
+    space_below <- unit(convertUnit(gh, "mm", valueOnly = TRUE) / 2, "mm")
+  } else if (!is.unit(space_below)) {
     space_below <- unit(space_below, "npc")
   }
 
-  gl <- grid.layout(nrow = 3, ncol = 1,
-                    heights = unit.c(gh, space_below, unit(1, "npc") - space_below - gh))
+  gl <- grid.layout(
+    nrow = 3, ncol = 1,
+    heights = unit.c(gh, space_below, unit(1, "npc") - space_below - gh)
+  )
 
   pushViewport(viewport(layout = gl, name = "title_layout"))
   pushViewport(viewport(layout.pos.row = 1, name = "title"))
@@ -1036,10 +1157,11 @@ prGridPlotTitle <- function(title,
 #' @param x The text-grob of interest
 #' @return \code{numeric} The cex value, 1 if no cex was present
 #' @keywords internal
-prGetTextGrobCex <-  function(x) {
+prGetTextGrobCex <- function(x) {
   cex <- 1
-  if (!is.null(x$gp$cex))
+  if (!is.null(x$gp$cex)) {
     cex <- x$gp$cex
+  }
 
   return(cex)
 }
@@ -1058,10 +1180,10 @@ prFpGetLines <- function(hrzl_lines,
                          shapes_gp = fpShapesGp()) {
   ret_lines <- lapply(1:(length(is.summary) + 1), function(x) NULL)
   if (missing(hrzl_lines) ||
-        (is.logical(hrzl_lines) &&
-           all(hrzl_lines == FALSE)) ||
-        (is.list(hrzl_lines) &&
-           all(sapply(hrzl_lines, is.null)))) {
+    (is.logical(hrzl_lines) &&
+      all(hrzl_lines == FALSE)) ||
+    (is.list(hrzl_lines) &&
+      all(sapply(hrzl_lines, is.null)))) {
     return(ret_lines)
   }
 
@@ -1076,38 +1198,38 @@ prFpGetLines <- function(hrzl_lines,
   # If provided with TRUE alone
   # Note that FALSE has already been processed above
   if (is.logical(hrzl_lines) &&
-        length(hrzl_lines) == 1) {
-      if (is.summary[1] == TRUE) {
-        line_pos <- which(is.summary == FALSE)[1]
-        ret_lines[[line_pos]] <-
-          std_line
+    length(hrzl_lines) == 1) {
+    if (is.summary[1] == TRUE) {
+      line_pos <- which(is.summary == FALSE)[1]
+      ret_lines[[line_pos]] <-
+        std_line
 
-        is.summary[1:line_pos] <- FALSE
+      is.summary[1:line_pos] <- FALSE
+    }
+
+    if (tail(is.summary, 1)) {
+      line_pos <- length(is.summary) + 1 - (which(rev(is.summary) == FALSE)[1] - 1)
+
+      ret_lines[[line_pos]] <-
+        std_line
+
+      ret_lines[[length(ret_lines)]] <-
+        std_line
+
+      is.summary[line_pos:length(is.summary)] <- FALSE
+    }
+
+    for (line_pos in which(is.summary == TRUE)) {
+      if (is.summary[line_pos + 1]) {
+        line_pos <-
+          line_pos +
+          tail(which(is.summary[(line_pos + 1):length(is.summary)]), 1)
       }
+      ret_lines[[line_pos + 1]] <-
+        std_line
+    }
 
-      if (tail(is.summary, 1)) {
-        line_pos <- length(is.summary) + 1 - (which(rev(is.summary) == FALSE)[1] - 1)
-
-        ret_lines[[line_pos]] <-
-          std_line
-
-        ret_lines[[length(ret_lines)]] <-
-          std_line
-
-        is.summary[line_pos:length(is.summary)] <- FALSE
-      }
-
-      for (line_pos in which(is.summary == TRUE)) {
-        if (is.summary[line_pos + 1]) {
-          line_pos <-
-            line_pos +
-            tail(which(is.summary[(line_pos + 1):length(is.summary)]), 1)
-        }
-        ret_lines[[line_pos + 1]] <-
-          std_line
-      }
-
-      return(ret_lines)
+    return(ret_lines)
   }
 
   if (is.logical(hrzl_lines)) {
@@ -1115,10 +1237,12 @@ prFpGetLines <- function(hrzl_lines,
       ret_lines[[hrzl_lines]] <-
         std_line
       return(ret_lines)
-    }else{
-      stop("You have provided a logical hrzl_lines input of length '", length(hrzl_lines), "'",
-           " but the software expects the length to be number of rows + 1",
-           " i.e. ", length(is.summary), " + 1 = ", length(is.summary) + 1)
+    } else {
+      stop(
+        "You have provided a logical hrzl_lines input of length '", length(hrzl_lines), "'",
+        " but the software expects the length to be number of rows + 1",
+        " i.e. ", length(is.summary), " + 1 = ", length(is.summary) + 1
+      )
     }
   }
 
@@ -1131,34 +1255,42 @@ prFpGetLines <- function(hrzl_lines,
       return(lapply(hrzl_lines, function(x, std) {
         if (is.null(x)) {
           x
-        }else if (inherits(x, "gpar")) {
+        } else if (inherits(x, "gpar")) {
           prGparMerge(std, x)
-        }else{
+        } else {
           std
         }
-      }
-      , std = std_line))
-    }else{
-      stop("You have provided a logical hrzl_lines input of length '", length(hrzl_lines), "'",
-           " but the software expects the length to be number of rows + 1",
-           " i.e. ", length(is.summary), " + 1 = ", length(is.summary) + 1)
+      },
+      std = std_line
+      ))
+    } else {
+      stop(
+        "You have provided a logical hrzl_lines input of length '", length(hrzl_lines), "'",
+        " but the software expects the length to be number of rows + 1",
+        " i.e. ", length(is.summary), " + 1 = ", length(is.summary) + 1
+      )
     }
   }
 
-  if (!all(sapply(hrzl_lines, function(x) inherits(x, "gpar") || x == TRUE)))
+  if (!all(sapply(hrzl_lines, function(x) inherits(x, "gpar") || x == TRUE))) {
     stop("The list must consist of only gpar or logical TRUE elements")
+  }
 
   for (n in names(hrzl_lines)) {
     nn <- as.integer(n)
-    if (is.na(nn))
-      stop("Your name '", n ,"' for the list gpars cannot be converted to an integer")
-    if (!nn %in% 1:(length(is.summary) + 1))
-      stop("The integer that you have provided '", n, "'",
-           " falls outside the scope of possible values 1:", length(is.summary) + 1)
+    if (is.na(nn)) {
+      stop("Your name '", n, "' for the list gpars cannot be converted to an integer")
+    }
+    if (!nn %in% 1:(length(is.summary) + 1)) {
+      stop(
+        "The integer that you have provided '", n, "'",
+        " falls outside the scope of possible values 1:", length(is.summary) + 1
+      )
+    }
     if (is.logical(hrzl_lines[[n]])) {
       ret_lines[[nn]] <-
         std_line
-    }else{
+    } else {
       ret_lines[[nn]] <-
         prGparMerge(std_line, hrzl_lines[[n]])
     }
@@ -1176,18 +1308,19 @@ prFpGetLines <- function(hrzl_lines,
 #' @keywords internal
 prFpDrawLines <- function(hrzl_lines, nr, colwidths,
                           graph.pos) {
-  getCSpan <- function (columns, colwidths) {
+  getCSpan <- function(columns, colwidths) {
     span_cols <- c()
     col_pos <- NULL
     for (i in 1:length(columns)) {
       pos <- columns[i]
-      pos <- pos*2 - 1
+      pos <- pos * 2 - 1
       span_cols <- c(span_cols, pos)
 
       if (pos < length(colwidths) &&
-            i != length(columns) &&
-            columns[i] + 1 == columns[i + 1])
+        i != length(columns) &&
+        columns[i] + 1 == columns[i + 1]) {
         span_cols <- c(span_cols, pos + 1)
+      }
     }
 
     span_cols
@@ -1197,23 +1330,27 @@ prFpDrawLines <- function(hrzl_lines, nr, colwidths,
     if (!is.null(hrzl_lines[[i]])) {
       span_cols <- getCSpan(hrzl_lines[[i]]$columns, colwidths)
 
-      for(c in span_cols) {
-        line_vp <- viewport(layout.pos.row = i,
-                            layout.pos.col = c)
+      for (c in span_cols) {
+        line_vp <- viewport(
+          layout.pos.row = i,
+          layout.pos.col = c
+        )
         pushViewport(line_vp)
-        grid.lines(y = unit(c(1,1), "npc"), gp = hrzl_lines[[i]])
+        grid.lines(y = unit(c(1, 1), "npc"), gp = hrzl_lines[[i]])
         popViewport()
       }
     }
 
     if (i == nr &&
-          !is.null(hrzl_lines[[i + 1]])) {
+      !is.null(hrzl_lines[[i + 1]])) {
       span_cols <- getCSpan(hrzl_lines[[i + 1]]$columns, colwidths)
 
-      line_vp <- viewport(layout.pos.row = i,
-                          layout.pos.col = span_cols)
+      line_vp <- viewport(
+        layout.pos.row = i,
+        layout.pos.col = span_cols
+      )
       pushViewport(line_vp)
-      grid.lines(y = unit(c(0,0), "npc"), gp = hrzl_lines[[i + 1]])
+      grid.lines(y = unit(c(0, 0), "npc"), gp = hrzl_lines[[i + 1]])
       popViewport()
     }
   }
@@ -1229,7 +1366,9 @@ prFpDrawLines <- function(hrzl_lines, nr, colwidths,
 #' @keywords internal
 prGparMerge <- function(l1, l2) {
   cleanFont4Fontface <- function(element) {
-    if (is.null(element$font)) return (element)
+    if (is.null(element$font)) {
+      return(element)
+    }
 
     if (is.null(element$fontface)) {
       element$fontface <- names(element$font)
@@ -1242,8 +1381,9 @@ prGparMerge <- function(l1, l2) {
   l1 <- cleanFont4Fontface(l1)
   l2 <- cleanFont4Fontface(l2)
   out <- c(l1, l2)
-  if (!any(duplicated(names(out))))
+  if (!any(duplicated(names(out)))) {
     return(out)
+  }
 
   dups <- unique(names(out)[duplicated(names(out))])
   for (n in dups) {
@@ -1253,4 +1393,3 @@ prGparMerge <- function(l1, l2) {
   class(out) <- unique(c(class(out), class(l1)))
   return(out)
 }
-
