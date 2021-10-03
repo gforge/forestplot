@@ -242,11 +242,15 @@ drawForestplotObject <- function(obj) {
         unitTo = "npc",
         valueOnly = TRUE
       )
+
       info <- 1 / cwidth * 0.75
-      info <- info / max(info[!is.summary], na.rm = TRUE)
-      # Adjust the dots as it gets ridiculous with small text and huge dots
-      if (any(textHeight * (nr + .5) * 1.5 < info)) {
-        info <- textHeight * (nr + .5) * 1.5 * info / max(info, na.rm = TRUE) + textHeight * (nr + .5) * 1.5 / 4
+      if (!all(is.summary)) {
+        info <- info / max(info[!is.summary], na.rm = TRUE)
+
+        # Adjust the dots as it gets ridiculous with small text and huge dots
+        if (any(textHeight * (nr + .5) * 1.5 < info)) {
+          info <- textHeight * (nr + .5) * 1.5 * info / max(info, na.rm = TRUE) + textHeight * (nr + .5) * 1.5 / 4
+        }
       }
 
       # Set summary to maximum size

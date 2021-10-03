@@ -1,5 +1,9 @@
 NEWS for the forestplot package
 
+Changes for 2.0.2
+-----------------
+* Fixed case when all rows are summaries (Thanks Christian Röver)
+
 Changes for 2.0.1
 -----------------
 * Fixed missing `lwd.zero` (issue #42)
