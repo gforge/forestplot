@@ -8,12 +8,12 @@ test_that("Feeding a data.frame", {
     labels = LETTERS[1:3]
   )
 
-  obj <- forestplot(df %>% dplyr::select("labels"),
+  obj <- forestplot(df |> dplyr::select("labels"),
     mean = df$est,
     lower = df$lb,
     upper = df$ub
   )
   expect_class(obj, "gforge_forestplot")
-  expect_equal(obj$labels %>% length(), 1)
-  expect_equal(obj$labels[[1]] %>% length(), 3)
+  expect_equal(obj$labels |> length(), 1)
+  expect_equal(obj$labels[[1]] |> length(), 3)
 })

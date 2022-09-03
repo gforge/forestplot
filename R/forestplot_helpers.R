@@ -148,7 +148,6 @@ prDefaultGp <- function(col, lwd, lty) {
 #' @param vertices_gp A \code{\link[grid]{gpar}} for drawing the vertices.
 #'  unspecified attributes in vertices_gp default to line_gp.
 #' @keywords internal
-#' @import magrittr
 #' @importFrom grid gpar
 #' @return \code{void}
 prFpDrawLine <- function(lower_limit, upper_limit, clr.line, lwd, lty, y.offset,
@@ -256,7 +255,7 @@ prFpDrawLine <- function(lower_limit, upper_limit, clr.line, lwd, lty, y.offset,
               y_mm - vertices.height_mm
             ),
             "mm"
-          ) %>%
+          ) |>
             convertY("npc")
       )
     gp_list$lty <- 1
@@ -268,7 +267,7 @@ prFpDrawLine <- function(lower_limit, upper_limit, clr.line, lwd, lty, y.offset,
         x - unit(arrow_length, "mm"),
         x,
         x - unit(arrow_length, "mm")
-      ) %>%
+      ) |>
         convertX("npc")
       arrow_args$x <- x
       do.call(grid.lines, arrow_args)
@@ -280,7 +279,7 @@ prFpDrawLine <- function(lower_limit, upper_limit, clr.line, lwd, lty, y.offset,
         x + unit(arrow_length, "mm"),
         x,
         x + unit(arrow_length, "mm")
-      ) %>%
+      ) |>
         convertX("npc")
       arrow_args$x <- x
       do.call(grid.lines, arrow_args)
@@ -1022,7 +1021,7 @@ fpTxtGp <- function(label,
     )
 
   if (!missing(title)) {
-    if (class(title) != "gpar") {
+    if (!inherits(title, "gpar")) {
       stop("You can only provide arguments from gpar() to the function")
     }
     ret$title <- prGparMerge(
@@ -1038,7 +1037,7 @@ fpTxtGp <- function(label,
     )
 
   if (!missing(xlab)) {
-    if (class(xlab) != "gpar") {
+    if (!inherits(xlab, "gpar")) {
       stop("You can only provide arguments from gpar() to the function")
     }
     ret$xlab <- prGparMerge(
@@ -1054,7 +1053,7 @@ fpTxtGp <- function(label,
     )
 
   if (!missing(ticks)) {
-    if (class(ticks) != "gpar") {
+    if (!inherits(ticks, "gpar")) {
       stop("You can only provide arguments from gpar() to the function")
     }
     ret$ticks <- prGparMerge(
@@ -1072,7 +1071,7 @@ fpTxtGp <- function(label,
   attr(ret$legend, "txt_dim") <- 0
 
   if (!missing(legend)) {
-    if (class(legend) != "gpar") {
+    if (!inherits(legend, "gpar")) {
       stop("You can only provide arguments from gpar() to the function")
     }
 
@@ -1092,7 +1091,7 @@ fpTxtGp <- function(label,
     )
 
   if (!missing(legend.title)) {
-    if (class(legend.title) != "gpar") {
+    if (!inherits(legend.title, "gpar")) {
       stop("You can only provide arguments from gpar() to the function")
     }
     ret$legend.title <- prGparMerge(

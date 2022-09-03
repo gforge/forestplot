@@ -11,7 +11,7 @@ test_data <- data.frame(
   low = c(1.4, 0.78),
   high = c(1.8, 1.55)
 )
-test_data %>%
+test_data |>
   forestplot(labeltext = row_names,
              mean = coef,
              lower = low,
@@ -26,7 +26,7 @@ test_data %>%
 grid.newpage()
 pushViewport(viewport(layout = grid.layout(1, 2)))
 pushViewport(viewport(layout.pos.col = 1))
-test_data %>%
+test_data |>
   forestplot(labeltext = row_names,
              mean = coef,
              lower = low,
@@ -38,7 +38,7 @@ test_data %>%
              new_page = FALSE)
 popViewport()
 pushViewport(viewport(layout.pos.col = 2))
-test_data %>%
+test_data |>
   forestplot(labeltext = row_names,
              mean = coef,
              lower = low,
@@ -63,38 +63,27 @@ test_data <- data.frame(id = 1:4,
                         high2 = c(1, 1.8, 1.55, 1.33))
 
 # Convert into dplyr formatted data
-out_data <- test_data %>%
-  pivot_longer(cols = everything() & -id) %>%
+out_data <- test_data |>
+  pivot_longer(cols = everything() & -id) |>
   mutate(group = gsub("(.+)([12])$", "\\2", name),
-         name = gsub("(.+)([12])$", "\\1", name)) %>%
-  pivot_wider() %>%
+         name = gsub("(.+)([12])$", "\\1", name)) |>
+  pivot_wider() |>
+  group_by(id) |>
+  mutate(col1 = lapply(id, \(x) ifelse(x < 4,
+                                       paste("Category", id),
+                                       expression(Category >= 4))),
+         col2 = lapply(1:n(), \(i) substitute(expression(bar(x) == val),
+                                              list(val = mean(coef) |> round(2)))),
+         col2 = if_else(id == 1,
+                        rep("ref", n()) |> as.list(),
+                        col2)) |>
   group_by(group)
 
-col_no <- grep("coef", colnames(test_data))
-row_names <- list(
-  list("Category 1", "Category 2", "Category 3", expression(Category >= 4)),
-  list(
-    "ref",
-    substitute(
-      expression(bar(x) == val),
-      list(val = round(rowMeans(test_data[2, col_no]), 2))
-    ),
-    substitute(
-      expression(bar(x) == val),
-      list(val = round(rowMeans(test_data[3, col_no]), 2))
-    ),
-    substitute(
-      expression(bar(x) == val),
-      list(val = round(rowMeans(test_data[4, col_no]), 2))
-    )
-  )
-)
-
-out_data %>%
+out_data |>
   forestplot(mean = coef,
              lower = low,
              upper = high,
-             labeltext = row_names,
+             labeltext = c(col1, col2),
              title = "Cool study",
              zero = c(0.98, 1.02),
              grid = structure(c(2^-.5, 2^.5),
@@ -125,7 +114,7 @@ row_names <- cbind(
   c("Name", "Variable A", "Variable B"),
   c("HR", test_data$coef)
 )
-test_data <- rbind(rep(NA, 3), test_data)
+test_data <- rbind(rep(NA, ncol(test_data)), test_data)
 
 forestplot(
   labeltext = row_names,

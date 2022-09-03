@@ -243,51 +243,93 @@ xticks <- seq(from = -.1, to = .05, by = 0.025)
 xtlab <- rep(c(TRUE, FALSE), length.out = length(xticks))
 attr(xticks, "labels") <- xtlab
 forestplot(tabletext,
-  legend = c("Sweden", "Denmark"),
-  fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
-  boxsize = .25, # We set the box size to better visualize the type
-  line.margin = .1, # We need to add this to avoid crowding
-  mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
-  lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
-  upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
-  clip = c(-.125, 0.075),
-  col = fpColors(box = c("blue", "darkred")),
-  xticks = xticks,
-  xlab = "EQ-5D index"
+           legend = c("Sweden", "Denmark"),
+           fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+           boxsize = .25, # We set the box size to better visualize the type
+           line.margin = .1, # We need to add this to avoid crowding
+           mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
+           lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
+           upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
+           clip = c(-.125, 0.075),
+           col = fpColors(box = c("blue", "darkred")),
+           xticks = xticks,
+           xlab = "EQ-5D index"
 )
 
 ## ------------------------------------------------------------------------
 forestplot(tabletext,
-  legend = c("Sweden", "Denmark"),
-  fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
-  boxsize = .25, # We set the box size to better visualize the type
-  line.margin = .1, # We need to add this to avoid crowding
-  mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
-  lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
-  upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
-  clip = c(-.125, 0.075),
-  col = fpColors(box = c("blue", "darkred")),
-  grid = TRUE,
-  xticks = c(-.1, -0.05, 0, .05),
-  xlab = "EQ-5D index"
+           legend = c("Sweden", "Denmark"),
+           fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+           boxsize = .25, # We set the box size to better visualize the type
+           line.margin = .1, # We need to add this to avoid crowding
+           mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
+           lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
+           upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
+           clip = c(-.125, 0.075),
+           col = fpColors(box = c("blue", "darkred")),
+           grid = TRUE,
+           xticks = c(-.1, -0.05, 0, .05),
+           xlab = "EQ-5D index"
 )
 
 ## ------------------------------------------------------------------------
 forestplot(tabletext,
-  legend = c("Sweden", "Denmark"),
-  fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
-  boxsize = .25, # We set the box size to better visualize the type
-  line.margin = .1, # We need to add this to avoid crowding
-  mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
-  lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
-  upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
-  clip = c(-.125, 0.075),
-  col = fpColors(box = c("blue", "darkred")),
-  grid = structure(c(-.1, -.05, .05),
-    gp = gpar(lty = 2, col = "#CCCCFF")
-  ),
-  xlab = "EQ-5D index"
+           legend = c("Sweden", "Denmark"),
+           fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+           boxsize = .25, # We set the box size to better visualize the type
+           line.margin = .1, # We need to add this to avoid crowding
+           mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
+           lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
+           upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
+           clip = c(-.125, 0.075),
+           col = fpColors(box = c("blue", "darkred")),
+           grid = structure(c(-.1, -.05, .05),
+                            gp = gpar(lty = 2, col = "#CCCCFF")
+           ),
+           xlab = "EQ-5D index"
 )
+
+##----Test group_by with tidy-syntax--------------------------------
+HRQoL |>
+  sapply(\(x) data.frame(x) |> tibble::rownames_to_column(),
+         simplify = FALSE) |>
+  dplyr::bind_rows(.id = "Country") |>
+  dplyr::group_by(Country) |>
+  forestplot(mean = coef,
+             lower = lower,
+             upper = upper,
+             labeltext = rowname,
+             legend = c("Sweden", "Denmark"),
+             fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+             boxsize = .25, # We set the box size to better visualize the type
+             line.margin = .1, # We need to add this to avoid crowding
+             clip = c(-.125, 0.075),
+             col = fpColors(box = c("blue", "darkred")),
+             xticks = c(-.1, -0.05, 0, .05),
+             xlab = "EQ-5D index"
+  )
+
+##----How to handle missing rows when group_by have ----------------
+##----different names--------------------------------
+HRQoL |>
+  sapply(\(x) data.frame(x) |> tibble::rownames_to_column(),
+         simplify = FALSE) |>
+  dplyr::bind_rows(.id = "Country") |>
+  dplyr::filter(Country == "Sweden" | rowname != "Males vs Female") |>
+  dplyr::group_by(Country) |>
+  forestplot(mean = coef,
+             lower = lower,
+             upper = upper,
+             labeltext = rowname,
+             legend = c("Sweden", "Denmark"),
+             fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+             boxsize = .25, # We set the box size to better visualize the type
+             line.margin = .1, # We need to add this to avoid crowding
+             clip = c(-.125, 0.075),
+             col = fpColors(box = c("blue", "darkred")),
+             xticks = c(-.1, -0.05, 0, .05),
+             xlab = "EQ-5D index"
+  )
 
 ## ---- eval=FALSE, echo=TRUE----------------------------------------------
 #  grid_arg <- c(-.1, -.05, .05)

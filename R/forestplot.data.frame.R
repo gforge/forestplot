@@ -21,7 +21,7 @@ forestplot.data.frame <- function(x, mean, lower, upper, labeltext, is.summary, 
 
   if (!missing(is.summary)) {
     sumid <- substitute(is.summary)
-    is.summary <- tryCatch(x %>% dplyr::pull({{ sumid }}) %>% sapply(function(x) ifelse(is.na(x), FALSE, x)),
+    is.summary <- tryCatch(x |> dplyr::pull({{ sumid }}) |> sapply(function(x) ifelse(is.na(x), FALSE, x)),
       error = function(e) is.summary
     )
   } else {

@@ -212,7 +212,7 @@ tabletext <- list(c(NA, dfHRQoL |> filter(group == "Sweden") |> pull(labeltext))
 
 dfHRQoL |> 
   filter(group == "Sweden") |> 
-  bind_rows(tibble(mean = NA_real_), .) |> 
+  tibble::add_row(tibble(mean = NA_real_), .before = 1) |> 
   forestplot(labeltext = tabletext, 
              col = clrs,
              xlab = "EQ-5D index")

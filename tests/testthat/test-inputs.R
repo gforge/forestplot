@@ -9,7 +9,7 @@ test_that("Check different input formats", {
     abind(basic_data,
       basic_data + 1,
       along = 3
-    ) %>%
+    ) |>
       forestplot(labeltext = 1:3)
   )
 
@@ -17,7 +17,7 @@ test_that("Check different input formats", {
     abind(basic_data,
       basic_data + 1,
       along = 3
-    ) %>%
+    ) |>
       forestplot()
   )
 
@@ -52,7 +52,7 @@ test_that("Check different input formats", {
     abind(basic_data,
       cbind(0:2, 3:1, 2:4),
       along = 3
-    ) %>%
+    ) |>
       forestplot()
   )
 })

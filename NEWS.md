@@ -1,5 +1,11 @@
 NEWS for the forestplot package
 
+Changes for 2.1.0
+-----------------
+* Fixed bug with how grouped data frames are processed and presented.
+* Expressions are now allowed in data.frame tidyverse input
+* Moved to native R-pipe operator (|> instead of %>%)
+
 Changes for 2.0.2
 -----------------
 * Fixed case when all rows are summaries (Thanks Christian Röver)
