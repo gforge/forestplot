@@ -33,9 +33,11 @@ assertAndRetrieveTidyValue <- function(x,
   # We are one-caller removed from the original call so we need to
   # do this nasty hack to get the parameter of the parent function
   orgName <- eval(substitute(substitute(value)), envir = parent.frame())
-  tryCatch(dplyr::select(x, {{orgName}}) %>% structure(tidyFormat = TRUE),
-           error = function(e) {
-             return(structure(value,
-                              tidyFormat = FALSE))
-           })
+  tryCatch(dplyr::select(x, {{ orgName }}) %>% structure(tidyFormat = TRUE),
+    error = function(e) {
+      return(structure(value,
+        tidyFormat = FALSE
+      ))
+    }
+  )
 }

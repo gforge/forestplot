@@ -23,24 +23,26 @@ prFpDrawLegend <- function(lGrobs,
                            r,
                            padding,
                            fn.legend,
-                           ...)
-{
-  if (!inherits(lGrobs, "Legend"))
+                           ...) {
+  if (!inherits(lGrobs, "Legend")) {
     stop("The lGrobs object should be created by the internal Gmisc:::prFpGetLegendGrobs and be of class 'Legend'.")
+  }
 
   # Draw the rounded rectangle at first
   # if there is a gpar specified.
   if (length(gp) > 0) {
     grid.roundrect(gp = gp, r = r)
-    inner_vp <- viewport(width = unit(1, "npc") - padding - padding,
-                         height = unit(1, "npc") - padding - padding)
+    inner_vp <- viewport(
+      width = unit(1, "npc") - padding - padding,
+      height = unit(1, "npc") - padding - padding
+    )
     pushViewport(inner_vp)
   }
 
   if ((!is.list(pos) && pos == "top") ||
-      (is.list(pos) && "align" %in% names(pos) && pos[["align"]] == "horizontal")) {
+    (is.list(pos) && "align" %in% names(pos) && pos[["align"]] == "horizontal")) {
     orientation <- "horizontal"
-  }else{
+  } else {
     orientation <- "vertical"
   }
 
@@ -54,17 +56,18 @@ prFpDrawLegend <- function(lGrobs,
 
     call_list <-
       list(fn.legend[[i]],
-           lower_limit = 0,
-           estimate = .5,
-           upper_limit = 1,
-           size = attr(lGrobs, "max_height"),
-           y.offset = .5,
-           clr.marker = col$box[i],
-           clr.line = col$lines[i],
-           shapes_gp = shapes_gp,
-           shape_coordinates = shape_coordinates,
-           lwd = 1,
-           ... = ...)
+        lower_limit = 0,
+        estimate = .5,
+        upper_limit = 1,
+        size = attr(lGrobs, "max_height"),
+        y.offset = .5,
+        clr.marker = col$box[i],
+        clr.line = col$lines[i],
+        shapes_gp = shapes_gp,
+        shape_coordinates = shape_coordinates,
+        lwd = 1,
+        ... = ...
+      )
 
     # Do the actual drawing of the object
     eval(as.call(call_list))
@@ -76,23 +79,32 @@ prFpDrawLegend <- function(lGrobs,
     # Output the horizontal boxes and texts
     widths <- NULL
     for (n in 1:length(lGrobs)) {
-      if (length(widths) == 0)
+      if (length(widths) == 0) {
         widths <- unit.c(boxSize, colgap, attr(lGrobs[[n]], "width"))
-      else
+      } else {
         widths <- unit.c(widths, colgap, boxSize, colgap, attr(lGrobs[[n]], "width"))
+      }
     }
     heights <- attr(lGrobs, "max_height")
     # Add title height if any
-    if (!is.null(attr(lGrobs, "title"))) heights <- unit.c(attr(lGrobs, "titleHeight"),
-                                                           attr(lGrobs, "line_height_and_spacing")[2],
-                                                           heights)
+    if (!is.null(attr(lGrobs, "title"))) {
+      heights <- unit.c(
+        attr(lGrobs, "titleHeight"),
+        attr(lGrobs, "line_height_and_spacing")[2],
+        heights
+      )
+    }
 
-    l_layout <- grid.layout(nrow = length(heights),
-                            heights = heights,
-                            ncol = length(widths),
-                            widths = widths)
-    lvp <- viewport(layout = l_layout,
-                    name = "legend_details")
+    l_layout <- grid.layout(
+      nrow = length(heights),
+      heights = heights,
+      ncol = length(widths),
+      widths = widths
+    )
+    lvp <- viewport(
+      layout = l_layout,
+      name = "legend_details"
+    )
     pushViewport(lvp)
     row <- 1
     # Output title
@@ -106,37 +118,48 @@ prFpDrawLegend <- function(lGrobs,
     }
     for (i in 1:length(lGrobs)) {
       offset <- 4 * (i - 1)
-      vp <- viewport(layout.pos.row = row,
-                     layout.pos.col = 1 + offset,
-                     xscale = c(0, 1))
+      vp <- viewport(
+        layout.pos.row = row,
+        layout.pos.col = 1 + offset,
+        xscale = c(0, 1)
+      )
       drawBox(vp, i, col, lGrobs)
-      vp <- viewport(layout.pos.row = row,
-                     layout.pos.col = 3 + offset)
+      vp <- viewport(
+        layout.pos.row = row,
+        layout.pos.col = 3 + offset
+      )
       pushViewport(vp)
       grid.draw(lGrobs[[i]])
       upViewport()
     }
     upViewport()
-
-  }else{
+  } else {
     # Output the vertical boxes and texts
     widths <- unit.c(boxSize, colgap, attr(lGrobs, "max_width"))
 
     # Remove bottom line
-    heights <- attr(lGrobs, "line_height_and_spacing")[rep(1:2, length.out = length(lGrobs)*2 - 1)]
-    #heights <- unit(convertUnit(heights, unitTo = "npc", valueOnly = TRUE)/sum(convertUnit(heights, unitTo = "npc", valueOnly = TRUE), "npc")
+    heights <- attr(lGrobs, "line_height_and_spacing")[rep(1:2, length.out = length(lGrobs) * 2 - 1)]
+    # heights <- unit(convertUnit(heights, unitTo = "npc", valueOnly = TRUE)/sum(convertUnit(heights, unitTo = "npc", valueOnly = TRUE), "npc")
     # Add title height if any
-    if (!is.null(attr(lGrobs, "title"))) heights <- unit.c(attr(lGrobs, "titleHeight"),
-                                                           attr(lGrobs, "line_height_and_spacing")[2],
-                                                           heights)
+    if (!is.null(attr(lGrobs, "title"))) {
+      heights <- unit.c(
+        attr(lGrobs, "titleHeight"),
+        attr(lGrobs, "line_height_and_spacing")[2],
+        heights
+      )
+    }
 
-    l_layout <- grid.layout(ncol = length(widths),
-                            nrow = length(heights),
-                            widths = widths,
-                            heights = heights)
+    l_layout <- grid.layout(
+      ncol = length(widths),
+      nrow = length(heights),
+      widths = widths,
+      heights = heights
+    )
 
-    lvp <- viewport(layout = l_layout, just = "left", x = 0,
-                    name = "legend")
+    lvp <- viewport(
+      layout = l_layout, just = "left", x = 0,
+      name = "legend"
+    )
     pushViewport(lvp)
     row_start <- 1
     # Output title
@@ -149,13 +172,17 @@ prFpDrawLegend <- function(lGrobs,
     }
 
     for (i in 1:length(lGrobs)) {
-      vp <- viewport(layout.pos.row = row_start + (i - 1) * 2,
-                     layout.pos.col = 1,
-                     xscale = c(0, 1))
+      vp <- viewport(
+        layout.pos.row = row_start + (i - 1) * 2,
+        layout.pos.col = 1,
+        xscale = c(0, 1)
+      )
       drawBox(vp, i, col, lGrobs)
 
-      vp <- viewport(layout.pos.row = row_start + (i - 1) * 2,
-                     layout.pos.col = 3)
+      vp <- viewport(
+        layout.pos.row = row_start + (i - 1) * 2,
+        layout.pos.col = 3
+      )
       pushViewport(vp)
       grid.draw(lGrobs[[i]])
       upViewport()

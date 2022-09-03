@@ -1,5 +1,5 @@
 Package: forestplot
-Version: 2.0.1
+Version: 2.0.2
 Title: Advanced Forest Plot Using 'grid' Graphics
 Authors@R: c(person(given = "Max",
                     family = "Gordon",

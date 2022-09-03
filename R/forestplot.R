@@ -106,7 +106,7 @@
 #' @param txt_gp Set the fonts etc for all text elements. See \code{\link{fpTxtGp}}
 #'   for details
 #' @param xlog If TRUE, x-axis tick marks are to follow a logarithmic scale, e.g. for
-#'   logistic regressoin (OR), survival estimates (HR), Poisson regression etc.
+#'   logistic regression (OR), survival estimates (HR), Poisson regression etc.
 #'   \emph{Note:} This is an intentional break with the original \code{forestplot}
 #'   function as I've found that exponentiated ticks/clips/zero effect are more
 #'   difficult to for non-statisticians and there are sometimes issues with rounding
@@ -172,7 +172,6 @@
 #' @rdname forestplot
 #' @export forestplot
 #' @aliases forestplot forestplot.default
-forestplot <- function(...)
-{
+forestplot <- function(...) {
   UseMethod("forestplot")
 }
