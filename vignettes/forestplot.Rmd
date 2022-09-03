@@ -70,7 +70,7 @@ tabletext <- cbind(c("", "Study", "Auckland", "Block", "Doran", "Gamsu", "Morris
                    c("Deaths", "(placebo)", "60", "5", "11", "20", "7", "7", "10", NA, NA),
                    c("", "OR", "0.58", "0.16", "0.25", "0.70", "0.35", "0.14", "1.02", NA, "0.53"))
 
-cochrane_from_rmeta %>% 
+cochrane_from_rmeta |> 
   forestplot(labeltext = tabletext, 
              is.summary = c(rep(TRUE, 2), rep(FALSE, 8), TRUE),
              clip = c(0.1, 2.5), 
@@ -115,7 +115,7 @@ cochrane_output_df <- bind_rows(header,
                                 empty_row,
                                 summary)
 
-cochrane_output_df %>% 
+cochrane_output_df |> 
   forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR), 
              is.summary = summary,
              clip = c(0.1, 2.5), 
@@ -132,7 +132,7 @@ Summary lines
 The same as above but with lines based on the summary elements and also using a direct call with matrix input instead of relying on dplyr.
 
 ```{r, fig.height=4, fig.width=8, message=FALSE}
-cochrane_output_df %>% 
+cochrane_output_df |> 
   forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR), 
              is.summary = summary,
              clip = c(0.1, 2.5), 
@@ -146,7 +146,7 @@ cochrane_output_df %>%
 We can also choose what lines we want by providing a list where the name is the line number affected, in the example below 3rd line and 11th counting the first line to be above the first row (not that there is an empty row before summary):
 
 ```{r, fig.height=4, fig.width=8, message=FALSE}
-cochrane_output_df %>% 
+cochrane_output_df |> 
   forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR), 
              is.summary = summary,
              clip = c(0.1, 2.5), 
@@ -165,7 +165,7 @@ Adding vertices to the whiskers
 For marking the start/end points it is common to add a vertical line at the end of each whisker. In forestplot you simply specify the `vertices` argument:
 
 ```{r, fig.height=4, fig.width=8, message=FALSE}
-cochrane_output_df %>% 
+cochrane_output_df |> 
   forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR), 
              is.summary = summary,
              hrzl_lines = list("3" = gpar(lty = 2), 
@@ -185,7 +185,7 @@ Positioning the graph element
 You can also choose to have the graph positioned within the text table by specifying the `graph.pos` argument:
 
 ```{r}
-cochrane_output_df %>% 
+cochrane_output_df |> 
   forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR), 
              is.summary = summary,
              graph.pos = 4,
@@ -204,15 +204,15 @@ If we present a regression output it is sometimes convenient to have non-ascii l
 
 ```{r}
 data(dfHRQoL)
-dfHRQoL <- dfHRQoL %>% mutate(est = sprintf("%.2f", mean), .after = labeltext)
+dfHRQoL <- dfHRQoL |> mutate(est = sprintf("%.2f", mean), .after = labeltext)
 
 clrs <- fpColors(box = "royalblue",line = "darkblue", summary = "royalblue")
-tabletext <- list(c(NA, dfHRQoL %>% filter(group == "Sweden") %>% pull(labeltext)),
-                  append(list(expression(beta)), dfHRQoL %>% filter(group == "Sweden") %>% pull(est)))
+tabletext <- list(c(NA, dfHRQoL |> filter(group == "Sweden") |> pull(labeltext)),
+                  append(list(expression(beta)), dfHRQoL |> filter(group == "Sweden") |> pull(est)))
 
-dfHRQoL %>% 
-  filter(group == "Sweden") %>% 
-  bind_rows(tibble(mean = NA_real_), .) %>% 
+dfHRQoL |> 
+  filter(group == "Sweden") |> 
+  bind_rows(tibble(mean = NA_real_), .) |> 
   forestplot(labeltext = tabletext, 
              col = clrs,
              xlab = "EQ-5D index")
@@ -229,8 +229,8 @@ font <- "mono"
 if (grepl("Ubuntu", Sys.info()["version"])) {
   font <- "HersheyGothicEnglish"
 }
-dfHRQoL %>% 
-  filter(group == "Sweden") %>% 
+dfHRQoL |> 
+  filter(group == "Sweden") |> 
   forestplot(labeltext = c(labeltext, est), 
              txt_gp = fpTxtGp(label = gpar(fontfamily = font)),
              col = clrs,
@@ -240,8 +240,8 @@ dfHRQoL %>%
 There is also the possibility of being selective in gp-styles:
 
 ```{r}
-dfHRQoL %>% 
-  filter(group == "Sweden") %>% 
+dfHRQoL |> 
+  filter(group == "Sweden") |> 
   forestplot(labeltext = c(labeltext, est), 
              txt_gp = fpTxtGp(label = list(gpar(fontfamily = font),
                                            gpar(fontfamily = "",
@@ -258,8 +258,8 @@ Confidence intervals
 Clipping the interval is convenient for uncertain estimates in order to retain the resolution for those of more interest. The clipping simply adds an arrow to the confidence interval, see the bottom estimate below:
 
 ```{r}
-dfHRQoL %>% 
-  filter(group == "Sweden") %>% 
+dfHRQoL |> 
+  filter(group == "Sweden") |> 
   forestplot(labeltext = c(labeltext, est), 
              clip = c(-.1, Inf),
              col = clrs,
@@ -272,8 +272,8 @@ Custom box size
 You can force the box size to a certain size through the `boxsize` argument.
 
 ```{r}
-dfHRQoL %>% 
-  filter(group == "Sweden") %>% 
+dfHRQoL |> 
+  filter(group == "Sweden") |> 
   forestplot(labeltext = c(labeltext, est), 
              boxsize = 0.2,
              clip = c(-.1, Inf),
@@ -297,8 +297,8 @@ pushViewport(viewport(layout = grid.layout(nrow = 1,
              )
 pushViewport(viewport(layout.pos.row = 1,
                       layout.pos.col = 1))
-dfHRQoL %>% 
-  filter(group == "Sweden") %>% 
+dfHRQoL |> 
+  filter(group == "Sweden") |> 
   forestplot(labeltext = c(labeltext, est), 
              title = "Sweden",
              clip = c(-.1, Inf),
@@ -313,8 +313,8 @@ upViewport()
 pushViewport(viewport(layout.pos.row = 1,
                       layout.pos.col = 3))
 
-dfHRQoL %>% 
-  filter(group == "Denmark") %>% 
+dfHRQoL |> 
+  filter(group == "Denmark") |> 
   forestplot(labeltext = c(labeltext, est), 
              title = "Denmark",
              clip = c(-.1, Inf),
@@ -331,10 +331,10 @@ Multiple confidence bands
 When combining similar outcomes for the same exposure I've found it useful to use multiple bands per row. This efficiently increases the data-ink ratio while making the comparison between the two bands trivial. The first time I've used this was in [my paper](https://doi.org/10.1186/1471-2474-14-316) comparing Swedish with Danish patients 1 year after total hip arthroplasty. Here the clipping also becomes obvious as the Danish sample was much smaller, resulting in wider confidence intervals. With the new *2.0* dplyr adapted version we can merge the groups into one table and group
 
 ```{r}
-dfHRQoL %>%
-  group_by(group) %>%
+dfHRQoL |>
+  group_by(group) |>
   forestplot(clip = c(-.1, 0.075),
-             shapes_gp = fpShapesGp(box = c("blue", "darkred") %>% lapply(function(x) gpar(fill = x, col = "#555555")),
+             shapes_gp = fpShapesGp(box = c("blue", "darkred") |> lapply(function(x) gpar(fill = x, col = "#555555")),
                                     default = gpar(vertices = TRUE)),
              ci.vertices = TRUE,
              ci.vertices.height = 0.05,
@@ -349,13 +349,13 @@ Estimate indicator
 You can choose between a number of different estimate indicators. Using the example above we can set the Danish results to circles.
 
 ```{r}
-dfHRQoL %>%
-  group_by(group) %>%
+dfHRQoL |>
+  group_by(group) |>
   forestplot(fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
              boxsize = .25, # We set the box size to better visualize the type
              line.margin = .1, # We need to add this to avoid crowding
              clip = c(-.125, 0.075),
-             shapes_gp = fpShapesGp(box = c("blue", "darkred") %>% lapply(function(x) gpar(fill = x, col = "#555555")),
+             shapes_gp = fpShapesGp(box = c("blue", "darkred") |> lapply(function(x) gpar(fill = x, col = "#555555")),
                                     default = gpar(vertices = TRUE)),
              xlab = "EQ-5D index")
 ```
@@ -368,8 +368,8 @@ Choosing line type
 You can furthermore choose between all available line types through the *lty.ci* that can also be specified element specific.
 
 ```{r}
-dfHRQoL %>%
-  group_by(group) %>%
+dfHRQoL |>
+  group_by(group) |>
   forestplot(fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
              boxsize = .25, # We set the box size to better visualize the type
              line.margin = .1, # We need to add this to avoid crowding
@@ -386,8 +386,8 @@ Legends
 Legends are automatically added when using `group_by` but we can also control them directly through the `legend` argument:
 
 ```{r}
-dfHRQoL %>%
-  group_by(group) %>%
+dfHRQoL |>
+  group_by(group) |>
   forestplot(legend = c("Swedes", "Danes"),
              fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
              boxsize = .25, # We set the box size to better visualize the type
@@ -400,8 +400,8 @@ dfHRQoL %>%
 This can be further customized by setting the `legend_args` argument using the `fpLegend` function:
 
 ```{r}
-dfHRQoL %>%
-  group_by(group) %>%
+dfHRQoL |>
+  group_by(group) |>
   forestplot(legend = c("Swedes", "Danes"),
              legend_args = fpLegend(pos = list(x = .85, y = 0.25), 
                                     gp = gpar(col = "#CCCCCC", fill = "#F9F9F9")),
@@ -420,8 +420,8 @@ Ticks and grids
 If the automated ticks don't match the desired once it is easy to change these using the xticks argument:
 
 ```{r}
-dfHRQoL %>%
-  group_by(group) %>%
+dfHRQoL |>
+  group_by(group) |>
   forestplot(fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
              boxsize = .25, # We set the box size to better visualize the type
              line.margin = .1, # We need to add this to avoid crowding
@@ -438,8 +438,8 @@ xticks <- seq(from = -.1, to = .05, by = 0.025)
 xtlab <- rep(c(TRUE, FALSE), length.out = length(xticks))
 attr(xticks, "labels") <- xtlab
 
-dfHRQoL %>%
-  group_by(group) %>%
+dfHRQoL |>
+  group_by(group) |>
   forestplot(fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
              boxsize = .25, # We set the box size to better visualize the type
              line.margin = .1, # We need to add this to avoid crowding
@@ -454,8 +454,8 @@ to make it easier to see the tick marks. This can be useful in non-inferiority
 or equivalence studies. You can do this through the `grid` argument:
 
 ```{r}
-dfHRQoL %>%
-  group_by(group) %>%
+dfHRQoL |>
+  group_by(group) |>
   forestplot(fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
              boxsize = .25, # We set the box size to better visualize the type
              line.margin = .1, # We need to add this to avoid crowding
@@ -470,8 +470,8 @@ dfHRQoL %>%
 You can easily customize both what grid lines to use and what type they should be by adding the gpar object to a vector:
 
 ```{r}
-dfHRQoL %>%
-  group_by(group) %>%
+dfHRQoL |>
+  group_by(group) |>
   forestplot(fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
              boxsize = .25, # We set the box size to better visualize the type
              line.margin = .1, # We need to add this to avoid crowding
