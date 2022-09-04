@@ -223,114 +223,12 @@ forestplot.default <- function(labeltext,
     upper <- as.vector(upper)
   }
 
-  nr <- NROW(org_mean)
-
-  # Get the number of columns (nc) and number of rows (nr)
-  # if any columns are to be spacers the widthcolumn variable
-  if (is.expression(labeltext)) {
-    widthcolumn <- c(TRUE)
-    # Can't figure out multiple levels of expressions
-    nc <- 1
-    label_type <- "expression"
-    label_nr <- length(labeltext)
-  } else if (is.list(labeltext)) {
-    if (all(sapply(labeltext, function(x) {
-      length(x) == 1 &&
-        !is.list(x)
-    }))) {
-      labeltext <-
-        list(labeltext)
-    }
-    if (!prFpValidateLabelList(labeltext)) {
-      stop("Invalid labellist, it has to be formed as a matrix m x n elements")
-    }
-
-    # Can't figure out multiple levels of expressions
-    nc <- length(labeltext)
-
-    widthcolumn <- c()
-    # Should mark the columns that don't contain
-    # epressions, text or numbers as widthcolumns
-    for (col.no in seq(along = labeltext)) {
-      empty_row <- TRUE
-      for (row.no in seq(along = labeltext[[col.no]])) {
-        if (is.expression(labeltext[[col.no]][[row.no]]) ||
-          !is.na(labeltext[[col.no]][[row.no]])) {
-          empty_row <- FALSE
-          break
-        }
-      }
-      widthcolumn <- append(widthcolumn, empty_row)
-    }
-
-    label_type <- "list"
-    label_nr <- length(labeltext[[1]])
-  } else if (is.vector(labeltext)) {
-    widthcolumn <- c(FALSE)
-    nc <- 1
-
-    labeltext <- matrix(labeltext, ncol = 1)
-    label_type <- "matrix"
-    label_nr <- NROW(labeltext)
-  } else {
-    # Original code for matrixes
-    widthcolumn <- !apply(is.na(labeltext), 1, any)
-    nc <- NCOL(labeltext)
-    label_type <- "matrix"
-    label_nr <- NROW(labeltext)
-  }
-
-  if (nr != label_nr) {
-    stop(
-      "You have provided ", nr, " rows in your",
-      " mean arguement while the labels have ", label_nr, " rows"
-    )
-  }
-
-  if (is.character(graph.pos)) {
-    graph.pos <-
-      switch(graph.pos,
-        right = nc + 1,
-        last = nc + 1,
-        left = 1,
-        first = 1,
-        stop(
-          "The graph.pos argument has an invalid text argument.",
-          " The only values accepted are 'left'/'right' or 'first'/'last'.",
-          " You have provided the value '", graph.pos, "'"
-        )
-      )
-  } else if (is.numeric(graph.pos)) {
-    if (!graph.pos %in% 1:(nc + 1)) {
-      stop(
-        "The graph position must be between 1 and ", (nc + 1), ".",
-        " You have provided the value '", graph.pos, "'."
-      )
-    }
-  } else {
-    stop(
-      "The graph pos must either be a string consisting of 'left'/'right' (alt. 'first'/'last')",
-      ", or an integer value between 1 and ", (nc + 1)
-    )
-  }
-
-  # Prepare the summary and align variables
-  if (missing(align)) {
-    if (graph.pos == 1) {
-      align <- rep("l", nc)
-    } else if (graph.pos == nc + 1) {
-      align <- c("l", rep("r", nc - 1))
-    } else {
-      align <- c(
-        "l",
-        rep("c", nc - 1)
-      )
-    }
-  } else {
-    align <- rep(align, length.out = nc)
-  }
-
-  is.summary <- rep(is.summary, length = nr)
+  # Prep basics
+  labels <- prepLabelText(labeltext = labeltext,
+                          nr = NROW(org_mean))
+  graph.pos <- prepGraphPositions(graph.pos, nc = attr(labels, "no_cols"))
+  align <- prepAlign(align, graph.pos = graph.pos, nc = attr(labels, "no_cols"))
+  is.summary <- rep(is.summary, length.out = attr(labels, "no_rows"))
 
   if (is.matrix(mean)) {
     missing_rows <- apply(mean, 2, function(row) all(is.na(row)))
@@ -360,65 +258,6 @@ forestplot.default <- function(labeltext,
     no_cols = NCOL(org_mean)
   )
 
-
-  hrzl_lines <- prFpGetLines(
-    hrzl_lines = hrzl_lines,
-    is.summary = is.summary,
-    total_columns = nc + 1,
-    col = col,
-    shapes_gp = shapes_gp
-  )
-
-  labels <- prFpGetLabels(
-    label_type = label_type,
-    labeltext = labeltext,
-    align = align,
-    nc = nc,
-    nr = nr,
-    is.summary = is.summary,
-    txt_gp = txt_gp,
-    col = col
-  )
-
-  # There is always at least one column so grab the widest one
-  # and have that as the base for the column widths
-  colwidths <- unit.c(prFpFindWidestGrob(labels[[1]]))
-
-  # If multiple row label columns, add the other column widths
-  if (nc > 1) {
-    for (i in 2:nc) {
-      colwidths <- unit.c(
-        colwidths,
-        colgap,
-        prFpFindWidestGrob(labels[[i]])
-      )
-    }
-  }
-
-  axisList <- prFpGetGraphTicksAndClips(
-    xticks = xticks,
-    xticks.digits = xticks.digits,
-    grid = grid,
-    xlog = xlog,
-    xlab = xlab,
-    lwd.xaxis = lwd.xaxis,
-    txt_gp = txt_gp,
-    col = col,
-    clip = clip,
-    zero = zero,
-    x_range = prFpXrange(
-      upper = upper,
-      lower = lower,
-      clip = clip,
-      zero = zero,
-      xticks = xticks,
-      xlog = xlog
-    ),
-    mean = org_mean,
-    graph.pos = graph.pos,
-    shapes_gp = shapes_gp
-  )
-
   handleMissing <- function(x, default = NA) {
     if (missing(x)) {
       return(default)
@@ -426,45 +265,45 @@ forestplot.default <- function(labeltext,
     x
   }
 
-  structure(list(
-    labels = labels,
-    mean = mean,
-    upper = upper,
-    lower = lower,
-    mar = mar,
-    title = handleMissing(title),
-    legend = handleMissing(legend),
-    legend_args = legend_args,
-    txt_gp = txt_gp,
-    colgap = colgap,
-    lineheight = lineheight,
-    nc = nc,
-    nr = nr,
-    col = col,
-    graphwidth = graphwidth,
-    colwidths = colwidths,
-    graph.pos = graph.pos,
-    axisList = axisList,
-    boxsize = handleMissing(boxsize),
-    is.summary = is.summary,
-    org_mean = org_mean,
-    hrzl_lines = hrzl_lines,
-    shapes_gp = shapes_gp,
-    org_lower = org_lower,
-    org_upper = org_upper,
-    line.margin = handleMissing(line.margin),
-    fn.legend = handleMissing(fn.legend),
-    fn.ci_sum = fn.ci_sum,
-    fn.ci_norm = fn.ci_norm,
-    lty.ci = lty.ci,
-    ci.vertices.height = ci.vertices.height,
-    ci.vertices = handleMissing(ci.vertices),
-    lwd.zero = handleMissing(lwd.zero, default = 1),
-    lwd.ci = handleMissing(lwd.ci),
-    extra_arguments = list(...)
-  ),
-  class = "gforge_forestplot"
-  )
+  list(labels = labels,
+       mean = mean,
+       upper = upper,
+       lower = lower,
+       mar = mar,
+       align = align,
+       title = handleMissing(title),
+       legend = handleMissing(legend),
+       legend_args = legend_args,
+       txt_gp = txt_gp,
+       colgap = colgap,
+       lineheight = lineheight,
+       col = col,
+       graphwidth = graphwidth,
+       graph.pos = graph.pos,
+       boxsize = handleMissing(boxsize),
+       is.summary = is.summary,
+       org_mean = org_mean,
+       shapes_gp = shapes_gp,
+       hrzl_lines = handleMissing(hrzl_lines, default = NULL),
+       org_lower = org_lower,
+       org_upper = org_upper,
+       line.margin = handleMissing(line.margin),
+       fn.legend = fn.legend,
+       fn.ci_sum = fn.ci_sum,
+       fn.ci_norm = fn.ci_norm,
+       lty.ci = lty.ci,
+       ci.vertices.height = ci.vertices.height,
+       ci.vertices = handleMissing(ci.vertices),
+       lwd.zero = handleMissing(lwd.zero, default = 1),
+       lwd.ci = handleMissing(lwd.ci),
+       xticks = xticks,
+       xticks.digits = xticks.digits,
+       xlog = xlog,
+       clip = clip,
+       zero = zero,
+       lwd.xaxis = handleMissing(lwd.xaxis),
+       extra_arguments = list(...)) |>
+    structure(class = "gforge_forestplot")
 }
 
 #' @rdname forestplot

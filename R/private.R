@@ -404,68 +404,6 @@ prListRep <- function(x, length.out) {
   )
 }
 
-#' Gets the forestplot legend grobs
-#'
-#' @return \code{list} A "Legend" class that derives from a
-#'  list with all the different legends. The list also contains
-#'  attributes such as height, width, max_height,
-#'  max_width, line_height_and_spacing. The title of the
-#'  legend is saved inside \code{attr("title")}
-#'
-#' @inheritParams forestplot
-#' @inheritParams fpLegend
-#' @keywords internal
-prFpGetLegendGrobs <- function(legend,
-                               txt_gp,
-                               title) {
-  lGrobs <- list()
-  max_width <- 0
-  max_height <- 0
-  gp <- prListRep(txt_gp$legend, length.out = length(legend))
-  for (n in 1:length(legend)) {
-    lGrobs[[n]] <- textGrob(legend[n],
-      x = 0, just = "left",
-      gp = do.call(gpar, gp[[n]])
-    )
-
-    gw <- convertUnit(grobWidth(lGrobs[[n]]), "mm", valueOnly = TRUE)
-    gh <- convertUnit(grobHeight(lGrobs[[n]]), "mm", valueOnly = TRUE)
-    if (gw > max_width) {
-      max_width <- gw
-    }
-    if (gh > max_height) {
-      max_height <- gh
-    }
-
-    attr(lGrobs[[n]], "width") <- unit(gw, "mm")
-    attr(lGrobs[[n]], "height") <- unit(gh, "mm")
-  }
-  attr(lGrobs, "max_height") <- unit(max_height, "mm")
-  attr(lGrobs, "max_width") <- unit(max_width, "mm")
-  attr(lGrobs, "line_height_and_spacing") <- unit.c(
-    attr(lGrobs, "max_height"),
-    unit(.5, "lines")
-  )
-
-  # Do title stuff if present
-  if (is.character(title)) {
-    title <- textGrob(title,
-      x = 0, just = "left",
-      gp = do.call(gpar, txt_gp$legend.title)
-    )
-    attr(lGrobs, "title") <- title
-
-    attr(lGrobs, "titleHeight") <- grobHeight(title)
-    attr(lGrobs, "titleWidth") <- grobHeight(title)
-    if (convertUnit(attr(lGrobs, "titleWidth"), unitTo = "npc", valueOnly = TRUE) >
-      convertUnit(attr(lGrobs, "max_width"), unitTo = "npc", valueOnly = TRUE)) {
-      attr(lGrobs, "max_width") <- attr(lGrobs, "titleWidth")
-    }
-  }
-  class(lGrobs) <- c("Legend", class(lGrobs))
-  return(lGrobs)
-}
-
 #' Gets the x-axis range
 #'
 #' If the borders are smaller than the upper/lower limits
@@ -487,7 +425,7 @@ prFpXrange <- function(upper, lower, clip, zero, xticks, xlog) {
   # endpoints unless there are pre-specified
   # ticks indicating that the end-points aren't
   # included in the x-axis
-  if (missing(xticks)) {
+  if (is.null(xticks)) {
     ret <- c(
       min(
         zero,
@@ -518,159 +456,6 @@ prFpXrange <- function(upper, lower, clip, zero, xticks, xlog) {
   } else {
     return(ret)
   }
-}
-
-#' Gets the forestplot labels
-#'
-#' A function that gets all the labels
-#'
-#' @param label_type The type of text labels
-#' @param align Alignment, should be equal to \code{length(nc}
-#' @param nc Number of columns
-#' @param nr Number of rows
-#' @return \code{list} A list with \code{length(nc)} where each element contains
-#'  a list of \code{length(nr)} elements with attributes width/height for each
-#'  element and max_width/max_height for the total
-#'
-#' @inheritParams forestplot
-#' @keywords internal
-prFpGetLabels <- function(label_type, labeltext, align,
-                          nc, nr,
-                          is.summary,
-                          txt_gp,
-                          col) {
-  labels <- vector("list", nc)
-
-  if (attr(txt_gp$label, "txt_dim") %in% 0:1) {
-    txt_gp$label <- prListRep(list(prListRep(txt_gp$label, nc)), sum(!is.summary))
-  } else {
-    ncols <- sapply(txt_gp$label, length)
-    if (all(ncols != ncols[1])) {
-      stop(
-        "Your fpTxtGp$label list has invalid number of columns",
-        ", they should all be of equal length - yours have ",
-        "'", paste(ncols, collapse = "', '"), "'"
-      )
-    }
-    if (length(txt_gp$label) != sum(!is.summary)) {
-      stop(
-        "Your fpTxtGp$label list has invalid number of rows",
-        ", the should be equal the of the number rows that aren't summaries.",
-        " you have '", length(txt_gp$label), "' rows in the fpTxtGp$label",
-        ", while the labeltext argument has '", nr, "' rows",
-        " where '", sum(!is.summary), "' are not summaries."
-      )
-    }
-  }
-
-  if (attr(txt_gp$summary, "txt_dim") %in% 0:1) {
-    txt_gp$summary <-
-      prListRep(list(prListRep(txt_gp$summary, nc)), sum(is.summary))
-  } else {
-    ncols <- sapply(txt_gp$summary, length)
-    if (all(ncols != ncols[1])) {
-      stop(
-        "Your fpTxtGp$summary list has invalid number of columns",
-        ", they should all be of equal length - yours have ",
-        "'", paste(ncols, collapse = "', '"), "'"
-      )
-    }
-    if (length(txt_gp$summary) != sum(is.summary)) {
-      stop(
-        "Your fpTxtGp$summary list has invalid number of rows",
-        ", the should be equal the of the number rows that aren't summaries.",
-        " you have '", length(txt_gp$summary), "' rows in the fpTxtGp$summary",
-        ", while the labeltext argument has '", nr, "' rows",
-        " where '", sum(is.summary), "' are not summaries."
-      )
-    }
-  }
-
-  max_height <- NULL
-  max_width <- NULL
-  # Walk through the labeltext
-  # Creates a list matrix with
-  # The column part
-  for (j in 1:nc) {
-    labels[[j]] <- vector("list", nr)
-
-    # The row part
-    for (i in 1:nr) {
-      txt_out <- prFpFetchRowLabel(label_type, labeltext, i, j)
-      # If it's a call created by bquote or similar it
-      # needs evaluating
-      if (is.call(txt_out)) {
-        txt_out <- eval(txt_out)
-      }
-
-      if (is.expression(txt_out) || is.character(txt_out) || is.numeric(txt_out) || is.factor(txt_out)) {
-        x <- switch(align[j],
-          l = 0,
-          r = 1,
-          c = 0.5
-        )
-
-        just <- switch(align[j],
-          l = "left",
-          r = "right",
-          c = "center"
-        )
-
-        # Bold the text if this is a summary
-        if (is.summary[i]) {
-          x <- switch(align[j],
-            l = 0,
-            r = 1,
-            c = 0.5
-          )
-
-          gp_list <- txt_gp$summary[[sum(is.summary[1:i])]][[j]]
-          gp_list[["col"]] <- rep(col$text, length = nr)[i]
-
-          # Create a textGrob for the summary
-          # The row/column order is in this order
-          # in order to make the following possible:
-          # list(rownames(x), list(expression(1 >= a), "b", "c"))
-          labels[[j]][[i]] <-
-            textGrob(txt_out,
-              x = x,
-              just = just,
-              gp = do.call(gpar, gp_list)
-            )
-        } else {
-          gp_list <- txt_gp$label[[sum(!is.summary[1:i])]][[j]]
-          if (is.null(gp_list$col)) {
-            gp_list[["col"]] <- rep(col$text, length = nr)[i]
-          }
-
-          # Create a textGrob with the current row-cell for the label
-          labels[[j]][[i]] <-
-            textGrob(txt_out,
-              x = x,
-              just = just,
-              gp = do.call(gpar, gp_list)
-            )
-        }
-
-        attr(labels[[j]][[i]], "height") <- grobHeight(labels[[j]][[i]])
-        attr(labels[[j]][[i]], "width") <- grobWidth(labels[[j]][[i]])
-        if (is.null(max_height)) {
-          max_height <- attr(labels[[j]][[i]], "height")
-          max_width <- attr(labels[[j]][[i]], "width")
-        } else {
-          max_height <- max(max_height, attr(labels[[j]][[i]], "height"))
-          max_width <- max(max_width, attr(labels[[j]][[i]], "width"))
-        }
-      }
-    }
-  }
-  attr(labels, "max_height") <- max_height
-  attr(labels, "max_width") <- max_width
-  attr(labels, "cex") <- ifelse(any(is.summary),
-    txt_gp$summary[[1]][[1]]$cex,
-    txt_gp$label[[1]][[1]]$cex
-  )
-  return(labels)
 }
 
 #' Get the label
@@ -715,29 +500,25 @@ prFpFetchRowLabel <- function(label_type, labeltext, i, j) {
 #' The layout makes space for a legend if needed
 #'
 #' @param labels The labels
-#' @param nr Number of rows
 #' @param legend_layout A legend layout object if applicable
 #' @return \code{viewport} Returns the `viewport` needed
 #'
 #' @inheritParams forestplot
 #' @keywords internal
-prFpGetLayoutVP <- function(lineheight, labels, nr, legend_layout = NULL) {
+prFpGetLayoutVP <- function(lineheight, labels, legend_layout = NULL) {
   if (!is.unit(lineheight)) {
     if (lineheight == "auto") {
       lvp_height <- unit(1, "npc")
     } else if (lineheight == "lines") {
-      lvp_height <- unit(nr * attr(labels, "cex") * 1.5, "lines")
+      lvp_height <- unit(attr(labels, "no_rows") * attr(labels, "cex") * 1.5, "lines")
     } else {
       stop("The lineheight option '", lineheight, "'is yet not implemented")
     }
   } else {
-    lvp_height <- unit(
-      convertY(lineheight,
-        unitTo = "lines",
-        valueOnly = TRUE
-      ) * nr,
-      "lines"
-    )
+    lvp_height <- (convertY(lineheight,
+                            unitTo = "lines",
+                            valueOnly = TRUE) * attr(labels, "no_rows")) |>
+      unit("lines")
   }
 
   # If there is a legend on top then the size should be adjusted
@@ -1173,17 +954,17 @@ prGetTextGrobCex <- function(x) {
 #' @inheritParams forestplot
 #' @keywords internal
 #' @importFrom utils tail
-prFpGetLines <- function(hrzl_lines,
+prFpGetLines <- function(hrzl_lines = NULL,
                          is.summary,
                          total_columns,
                          col,
                          shapes_gp = fpShapesGp()) {
   ret_lines <- lapply(1:(length(is.summary) + 1), function(x) NULL)
-  if (missing(hrzl_lines) ||
-    (is.logical(hrzl_lines) &&
-      all(hrzl_lines == FALSE)) ||
-    (is.list(hrzl_lines) &&
-      all(sapply(hrzl_lines, is.null)))) {
+  if (is.null(hrzl_lines) ||
+      (is.logical(hrzl_lines) &&
+       all(hrzl_lines == FALSE)) ||
+      (is.list(hrzl_lines) &&
+       all(sapply(hrzl_lines, is.null)))) {
     return(ret_lines)
   }
 

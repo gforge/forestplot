@@ -1,190 +1,72 @@
+#' @noRd
 drawForestplotObject <- function(obj) {
   ##################
   # Build the plot #
   ##################
+  hrzl_lines <- prFpGetLines(hrzl_lines = obj$hrzl_lines,
+                             is.summary = obj$is.summary,
+                             total_columns = obj$nc + 1,
+                             col = obj$col,
+                             shapes_gp = obj$shapes_gp)
+
+  labels <- prGetLabelsList(labels = obj$labels,
+                            align = obj$align,
+                            is.summary = obj$is.summary,
+                            txt_gp = obj$txt_gp,
+                            col = obj$col)
+  obj$labels <- NULL
+
+
+  xRange <- prFpXrange(upper = obj$upper,
+                        lower = obj$lower,
+                        clip = obj$clip,
+                        zero = obj$zero,
+                        xticks = obj$xticks,
+                        xlog = obj$xlog)
+
+  axisList <- prFpGetGraphTicksAndClips(xticks = obj$xticks,
+                                        xticks.digits = obj$xticks.digits,
+                                        grid = obj$grid,
+                                        xlog = obj$xlog,
+                                        xlab = obj$xlab,
+                                        lwd.xaxis = obj$lwd.xaxis,
+                                        txt_gp = obj$txt_gp,
+                                        col = obj$col,
+                                        clip = obj$clip,
+                                        zero = obj$zero,
+                                        x_range = xRange,
+                                        mean = obj$org_mean,
+                                        graph.pos = obj$graph.pos,
+                                        shapes_gp = obj$shapes_gp)
+
+  marList <- prepGridMargins(mar = obj$mar)
+  prPushMarginViewport(bottom = marList$bottom,
+                       left = marList$left,
+                       top = marList$top,
+                       right = marList$right,
+                       name = "forestplot_margins")
+
+  if (!all(is.na(obj$title))) {
+    prGridPlotTitle(title = obj$title, gp = obj$txt_gp$title)
+  }
+
+  legend <- buildLegend(obj$legend,
+                        obj$txt_gp,
+                        obj$legend_args,
+                        obj$colgap,
+                        shapes_gp = obj$shapes_gp,
+                        lineheight = obj$lineheight,
+                        fn.legend = obj$fn.legend)
+
+  plot(legend, margin = TRUE, col = obj$col)
+
+  colwidths <- getColWidths(labels = labels,
+                            graphwidth = obj$graphwidth,
+                            colgap = obj$colgap,
+                            graph.pos = obj$graph.pos)
+
   with(obj, {
-    # Adjust for the margins and the x-axis + label
-    marList <- list()
 
-    # This breaks without separate variables
-    marList$bottom <- convertY(mar[1], "npc")
-    marList$left <- convertX(mar[2], "npc")
-    marList$top <- convertY(mar[3], "npc")
-    marList$right <- convertX(mar[4], "npc")
-
-    prPushMarginViewport(
-      bottom = marList$bottom,
-      left = marList$left,
-      top = marList$top,
-      right = marList$right,
-      name = "forestplot_margins"
-    )
-
-    if (!all(is.na(title))) {
-      prGridPlotTitle(title = title, gp = txt_gp$title)
-    }
-
-    # Initiate the legend
-    if (!all(is.na(legend))) {
-      lGrobs <- prFpGetLegendGrobs(
-        legend = legend,
-        txt_gp = txt_gp,
-        title = legend_args$title
-      )
-      legend_colgap <- colgap
-      if (convertUnit(legend_colgap, unitTo = "mm", valueOnly = TRUE) >
-        convertUnit(attr(lGrobs, "max_height"), unitTo = "mm", valueOnly = TRUE)) {
-        legend_colgap <- attr(lGrobs, "max_height")
-      }
-
-      legend_horizontal_height <-
-        sum(
-          legend_args$padding,
-          attr(lGrobs, "max_height"),
-          legend_args$padding
-        )
-      if (!is.null(attr(lGrobs, "title"))) {
-        legend_horizontal_height <-
-          sum(
-            attr(lGrobs, "titleHeight"),
-            attr(lGrobs, "line_height_and_spacing")[2],
-            legend_horizontal_height
-          )
-      }
-      legend_vertical_width <-
-        sum(unit.c(
-          legend_args$padding,
-          attr(lGrobs, "max_height"),
-          legend_colgap,
-          attr(lGrobs, "max_width"),
-          legend_args$padding
-        ))
-
-
-
-      # Prepare the viewports if the legend is not
-      # positioned inside the forestplot, i.e. on the top or right side
-      if ((!is.list(legend_args$pos) && legend_args$pos == "top") ||
-        ("align" %in% names(legend_args$pos) && legend_args$pos[["align"]] == "horizontal")) {
-        legend_layout <- grid.layout(
-          nrow = 3, ncol = 1,
-          heights = unit.c(
-            legend_horizontal_height,
-            legend_colgap + legend_colgap,
-            unit(1, "npc") -
-              legend_horizontal_height -
-              legend_colgap -
-              legend_colgap
-          )
-        )
-
-        legend_pos <- list(
-          row = 1,
-          col = 1
-        )
-        main_pos <- list(
-          row = 3,
-          col = 1
-        )
-      } else {
-        legend_layout <- grid.layout(
-          nrow = 1, ncol = 3,
-          widths = unit.c(
-            unit(1, "npc") -
-              legend_colgap -
-              legend_vertical_width,
-            legend_colgap,
-            legend_vertical_width
-          )
-        )
-        legend_pos <- list(
-          row = 1,
-          col = 3
-        )
-        main_pos <- list(
-          row = 1,
-          col = 1
-        )
-      }
-    }
-
-    # If the legend should be positioned within the plot then wait
-    # until after the plot has been drawn
-    if (!all(is.na(legend)) > 0 && !is.list(legend_args$pos)) {
-      pushViewport(prFpGetLayoutVP(
-        lineheight = lineheight,
-        labels = labels,
-        nr = nr,
-        legend_layout = legend_layout
-      ))
-      vp <- viewport(
-        layout.pos.row = legend_pos$row,
-        layout.pos.col = legend_pos$col,
-        name = "legend"
-      )
-      pushViewport(vp)
-
-      # Draw the legend
-      prFpDrawLegend(
-        lGrobs = lGrobs,
-        col = col,
-        shapes_gp = shapes_gp,
-        colgap = convertUnit(legend_colgap, unitTo = "mm"),
-        pos = legend_args$pos,
-        gp = legend_args$gp,
-        r = legend_args$r,
-        padding = legend_args$padding,
-        fn.legend = fn.legend
-      )
-      upViewport()
-
-      # Reset to the main plot
-      vp <- viewport(
-        layout.pos.row = main_pos$row,
-        layout.pos.col = main_pos$col,
-        name = "main"
-      )
-      pushViewport(vp)
-    } else {
-      pushViewport(prFpGetLayoutVP(
-        lineheight = lineheight,
-        labels = labels, nr = nr
-      ))
-    }
-
-    ###########################################
-    # Normalize the widths to cover the whole #
-    # width of the graph space.               #
-    ###########################################
-    if (!is.unit(graphwidth) &&
-      graphwidth == "auto") {
-      # If graph width is not provided as a unit the autosize it to the
-      # rest of the space available
-      npc_colwidths <- convertUnit(unit.c(colwidths, colgap), "npc", valueOnly = TRUE)
-      graphwidth <- unit(max(.05, 1 - sum(npc_colwidths)), "npc")
-    } else if (!is.unit(graphwidth)) {
-      stop(
-        "You have to provide graph width either as a unit() object or as 'auto'.",
-        " Auto sizes the graph to maximally use the available space.",
-        " If you want to have exact mm width then use graphwidth = unit(34, 'mm')."
-      )
-    }
-
-    # Add the base grapwh width to the total column width
-    # default is 2 inches
-    if (graph.pos == 1) {
-      colwidths <- unit.c(graphwidth, colgap, colwidths)
-    } else if (graph.pos == nc + 1) {
-      colwidths <- unit.c(colwidths, colgap, graphwidth)
-    } else {
-      spl_position <- ((graph.pos - 1) * 2 - 1)
-      colwidths <- unit.c(
-        colwidths[1:spl_position],
-        colgap,
-        graphwidth,
-        colwidths[(spl_position + 1):length(colwidths)]
-      )
-    }
 
     # Add space for the axis and the label
     axis_height <- unit(0, "npc")
@@ -215,13 +97,12 @@ drawForestplotObject <- function(obj) {
 
     # The base viewport, set the increase.line_height paremeter if it seems a little
     # crowded between the lines that might happen when having multiple comparisons
-    main_grid_layout <- grid.layout(
-      nrow = nr,
-      ncol = length(colwidths),
-      widths = colwidths,
-      heights = unit(rep(1 / nr, nr), "npc"),
-      respect = TRUE
-    )
+    main_grid_layout <- grid.layout(nrow = attr(labels, "no_rows"),
+                                    ncol = length(colwidths),
+                                    widths = colwidths,
+                                    heights = unit(rep(1 / attr(labels, "no_rows"), attr(labels, "no_rows")), "npc"),
+                                    respect = TRUE)
+
     pushViewport(viewport(
       layout = main_grid_layout,
       name = "BaseGrid"
@@ -259,26 +140,23 @@ drawForestplotObject <- function(obj) {
 
     prFpPrintLabels(
       labels = labels,
-      nc = nc,
-      nr = nr,
+      nc = attr(labels, "no_cols"),
+      nr = attr(labels, "no_rows"),
       graph.pos = graph.pos
     )
 
-    prFpDrawLines(
-      hrzl_lines = hrzl_lines, nr = nr, colwidths = colwidths,
-      graph.pos = graph.pos
-    )
+    prFpDrawLines(hrzl_lines = hrzl_lines,
+                  nr = attr(labels, "no_rows"),
+                  colwidths = colwidths,
+                  graph.pos = graph.pos)
 
-
-    prFpPrintXaxis(
-      axisList = axisList,
-      col = col,
-      lwd.zero = lwd.zero,
-      shapes_gp = shapes_gp
-    )
+    prFpPrintXaxis(axisList = axisList,
+                   col = col,
+                   lwd.zero = lwd.zero,
+                   shapes_gp = shapes_gp)
 
     # Output the different confidence intervals
-    for (i in 1:nr) {
+    for (i in 1:attr(labels, "no_rows")) {
       if (is.matrix(org_mean)) {
         low_values <- org_lower[i, ]
         mean_values <- org_mean[i, ]
@@ -329,7 +207,7 @@ drawForestplotObject <- function(obj) {
           }
 
           shape_coordinates <- c(i, j)
-          attr(shape_coordinates, "max.coords") <- c(nr, length(low_values))
+          attr(shape_coordinates, "max.coords") <- c(attr(labels, "no_rows"), length(low_values))
 
           if (is.summary[i]) {
             call_list <-
