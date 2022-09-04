@@ -52,9 +52,9 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
                   lower = {{ lower }},
                   upper = {{ upper }}) |>
     dplyr::bind_cols(x |>
-                       tidyr::unite(".fp_groups", dplyr::all_of(groups), sep = " > ") |>
+                       tidyr::unite(".fp_groups", dplyr::all_of(groups), sep = " > ", remove = FALSE) |>
                        tidyr::unite(".fp_labels", {{lblid}}, sep = " > ") |>
-                       dplyr::select(dplyr::starts_with(".fp"))) |>
+                       dplyr::select(dplyr::starts_with(".fp"), dplyr::all_of(groups))) |>
     dplyr::group_by(.fp_groups)
 
   if (length(is.summary) %in% c(1, nrow(core_data))) {
@@ -118,8 +118,13 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
   }
 
   if (missing(legend)) {
-    legend <- attr(fixed_data, "groups") |>
+    grouped_columns <- attr(x, "groups") |>
       dplyr::select(-.rows) |>
+      colnames()
+    legend <- fixed_data |>
+      dplyr::ungroup() |>
+      dplyr::select({{grouped_columns}}) |>
+      dplyr::distinct() |>
       tidyr::unite(col = "legend", dplyr::everything(), sep = " > ") |>
       purrr::pluck("legend")
   }
@@ -140,14 +145,15 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
 
   # Convert estimates to two-dimensional matrices
   estimates <- sapply(c("mean", "lower", "upper"),
-                      \(n) fixed_data[[n]] |>
-                        (\(raw_data)
-                         lapply(attr(fixed_data, "groups")$.rows,
-                                \(row_numbers) raw_data[row_numbers]))() |>
-                        (\(cols) {
-                          names(cols) <- attr(fixed_data, "groups")$.fp_groups
-                          suppressMessages(dplyr::bind_cols(cols))
-                        })() |>
+                      \(value_col) fixed_data |>
+                        dplyr::select(.fp_labels,
+                                      .fp_groups,
+                                      {{value_col}}) |>
+                        tidyr::pivot_wider(names_from = .fp_groups, values_from = {{value_col}}, names_prefix = "@estimates@") |>
+                        dplyr::select(starts_with("@estimates@")) |>
+                        dplyr::rename_with(\(x) sub(pattern = "^@estimates@",
+                                                    replacement = "",
+                                                    x = x)) |>
                         as.matrix(),
                       simplify = FALSE)
 
