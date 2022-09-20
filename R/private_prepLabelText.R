@@ -101,10 +101,11 @@ prepLabelText <- function(labeltext, nr) {
     #    return(FALSE)
     row_column_text <- x[[j]][[i]]
   } else {
-    if (is.na(x[i, j])) {
+    ret <- NextMethod()
+    if (is.na(ret)) {
       return(FALSE)
     }
-    row_column_text <- x[i, j]
+    row_column_text <- ret
   }
 
   if (!is.expression(row_column_text) &&

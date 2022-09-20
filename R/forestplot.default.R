@@ -4,41 +4,41 @@
 #' @importFrom checkmate assert_class assert_vector assert_matrix check_matrix check_array assert check_integer
 forestplot.default <- function(labeltext,
                                mean, lower, upper,
-                               align,
+                               align = NULL,
                                is.summary = FALSE,
                                graph.pos = "right",
-                               hrzl_lines,
+                               hrzl_lines = NULL,
                                clip = c(-Inf, Inf),
                                xlab = "",
                                zero = ifelse(xlog, 1, 0),
                                graphwidth = "auto",
-                               colgap,
+                               colgap = NULL,
                                lineheight = "auto",
-                               line.margin,
+                               line.margin = NULL,
                                col = fpColors(),
                                txt_gp = fpTxtGp(),
                                xlog = FALSE,
-                               xticks,
+                               xticks = NULL,
                                xticks.digits = 2,
                                grid = FALSE,
-                               lwd.xaxis,
-                               lwd.zero,
-                               lwd.ci,
+                               lwd.xaxis = NULL,
+                               lwd.zero = 1,
+                               lwd.ci = NULL,
                                lty.ci = 1,
-                               ci.vertices,
+                               ci.vertices = NULL,
                                ci.vertices.height = .1,
-                               boxsize,
+                               boxsize = NULL,
                                mar = unit(rep(5, times = 4), "mm"),
-                               title,
-                               legend,
+                               title = NULL,
+                               legend = NULL,
                                legend_args = fpLegend(),
                                new_page = getOption("forestplot_new_page", TRUE),
                                fn.ci_norm = fpDrawNormalCI,
                                fn.ci_sum = fpDrawSummaryCI,
-                               fn.legend,
+                               fn.legend = NULL,
                                shapes_gp = fpShapesGp(),
                                ...) {
-  if (missing(colgap)) {
+  if (is.null(colgap)) {
     colgap <- convertUnit(unit(6, "mm"), "npc", valueOnly = TRUE)
     if (colgap < .1) {
       colgap <- unit(.05, "npc")
@@ -57,8 +57,8 @@ forestplot.default <- function(labeltext,
   assert_class(col, "fpColors")
 
   if (missing(lower) &&
-    missing(upper) &&
-    missing(mean)) {
+      missing(upper) &&
+      missing(mean)) {
     if (missing(labeltext)) {
       stop(
         "You need to provide the labeltext or",
@@ -71,7 +71,7 @@ forestplot.default <- function(labeltext,
   }
 
   if (missing(lower) &&
-    missing(upper)) {
+      missing(upper)) {
     assert(
       check_matrix(mean, ncols = 3),
       check_array(mean, d = 3),
@@ -94,7 +94,7 @@ forestplot.default <- function(labeltext,
   # Assume that lower and upper are contained within
   # the mean variable
   if (missing(lower) &&
-    missing(upper)) {
+      missing(upper)) {
     if (NCOL(mean) != 3) {
       stop("If you do not provide lower/upper arguments your mean needs to have 3 columns")
     }
@@ -110,8 +110,8 @@ forestplot.default <- function(labeltext,
   }
 
   if (NCOL(mean) != NCOL(lower) ||
-    NCOL(lower) != NCOL(upper) ||
-    NCOL(mean) == 0) {
+      NCOL(lower) != NCOL(upper) ||
+      NCOL(mean) == 0) {
     stop(
       "Mean, lower and upper contain invalid number of columns",
       " Mean columns:", ncol(mean),
@@ -126,7 +126,7 @@ forestplot.default <- function(labeltext,
   }
 
   # Prepare the legend marker
-  if (!missing(legend)) {
+  if (!is.null(legend)) {
     fn.legend <- prFpPrepareLegendMarker(
       fn.legend = fn.legend,
       col_no = NCOL(mean),
@@ -142,7 +142,7 @@ forestplot.default <- function(labeltext,
     )
   }
 
-  if (!missing(legend)) {
+  if (!is.null(legend)) {
     if (length(legend) != ncol(mean)) {
       stop(
         "If you want a legend you need to provide the same number of",
@@ -191,17 +191,15 @@ forestplot.default <- function(labeltext,
   # from the original forestplot needs some changing to the parameters
   if (xlog) {
     if (any(mean < 0, na.rm = TRUE) ||
-      any(lower < 0, na.rm = TRUE) ||
-      any(upper < 0, na.rm = TRUE) ||
-      (!is.na(zero) && zero <= 0) ||
-      (!missing(clip) && any(clip <= 0, na.rm = TRUE)) ||
-      (!missing(grid) && any(grid <= 0, na.rm = TRUE))) {
-      stop(
-        "All argument values (mean, lower, upper, zero, grid and clip)",
-        " should be provided in exponential form when using the log scale.",
-        " This is an intentional break with the original forestplot function in order",
-        " to simplify other arguments such as ticks, clips, and more."
-      )
+        any(lower < 0, na.rm = TRUE) ||
+        any(upper < 0, na.rm = TRUE) ||
+        (!is.na(zero) && zero <= 0) ||
+        (!is.null(clip) && any(clip <= 0, na.rm = TRUE)) ||
+        (!is.null(grid) && !isFALSE(grid) && any(grid <= 0, na.rm = TRUE))) {
+      stop("All argument values (mean, lower, upper, zero, grid and clip)",
+           " should be provided in exponential form when using the log scale.",
+           " This is an intentional break with the original forestplot function in order",
+           " to simplify other arguments such as ticks, clips, and more.")
     }
 
     # Change all the values along the log scale
@@ -258,21 +256,14 @@ forestplot.default <- function(labeltext,
     no_cols = NCOL(org_mean)
   )
 
-  handleMissing <- function(x, default = NA) {
-    if (missing(x)) {
-      return(default)
-    }
-    x
-  }
-
   list(labels = labels,
        mean = mean,
        upper = upper,
        lower = lower,
        mar = mar,
        align = align,
-       title = handleMissing(title),
-       legend = handleMissing(legend),
+       title = title,
+       legend = legend,
        legend_args = legend_args,
        txt_gp = txt_gp,
        colgap = colgap,
@@ -280,28 +271,28 @@ forestplot.default <- function(labeltext,
        col = col,
        graphwidth = graphwidth,
        graph.pos = graph.pos,
-       boxsize = handleMissing(boxsize),
+       boxsize = boxsize,
        is.summary = is.summary,
        org_mean = org_mean,
        shapes_gp = shapes_gp,
-       hrzl_lines = handleMissing(hrzl_lines, default = NULL),
+       hrzl_lines = hrzl_lines,
        org_lower = org_lower,
        org_upper = org_upper,
-       line.margin = handleMissing(line.margin),
+       line.margin = line.margin,
        fn.legend = fn.legend,
        fn.ci_sum = fn.ci_sum,
        fn.ci_norm = fn.ci_norm,
        lty.ci = lty.ci,
        ci.vertices.height = ci.vertices.height,
-       ci.vertices = handleMissing(ci.vertices),
-       lwd.zero = handleMissing(lwd.zero, default = 1),
-       lwd.ci = handleMissing(lwd.ci),
+       ci.vertices = ci.vertices,
+       lwd.zero = lwd.zero,
+       lwd.ci = lwd.ci,
        xticks = xticks,
        xticks.digits = xticks.digits,
        xlog = xlog,
        clip = clip,
        zero = zero,
-       lwd.xaxis = handleMissing(lwd.xaxis),
+       lwd.xaxis = lwd.xaxis,
        extra_arguments = list(...)) |>
     structure(class = "gforge_forestplot")
 }

@@ -9,7 +9,7 @@
 #' @return Returns vector of `"l", "c", "r"` values
 prepAlign <- function(align, graph.pos, nc) {
   # Prepare the summary and align variables
-  if (missing(align)) {
+  if (is.null(align)) {
     if (graph.pos == 1) {
       return(rep("l", nc))
     }

@@ -685,7 +685,7 @@ prFpGetLegendBoxPosition <- function(pos) {
 #'
 #' @keywords internal
 prFpPrepareLegendMarker <- function(fn.legend, col_no, row_no, fn.ci_norm) {
-  if (!missing(fn.legend)) {
+  if (!is.null(fn.legend)) {
     if (is.function(fn.legend)) {
       return(lapply(1:col_no, function(x) fn.legend))
     }

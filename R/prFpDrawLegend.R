@@ -16,6 +16,8 @@
 prFpDrawLegend <- function(lGrobs,
                            col,
                            fn.legend,
+                           r,
+                           padding,
                            ...) {
   if (!inherits(lGrobs, "forestplot_legend")) {
     stop("The lGrobs object should be created by the internal Gmisc:::buildLegend and be of class 'forestplot_legend'.")
@@ -63,7 +65,6 @@ prFpDrawLegend <- function(lGrobs,
            y.offset = .5,
            clr.marker = col$box[i],
            clr.line = col$lines[i],
-           shapes_gp = attr(lGrobs, "shapes_gp"),
            shape_coordinates = shape_coordinates,
            lwd = 1,
            ... = ...

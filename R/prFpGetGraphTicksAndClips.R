@@ -162,7 +162,7 @@ prFpGetGraphTicksAndClips <- function(xticks,
   if (length(ticks) != 1 || ticks != 0) {
     gp_list <- txt_gp$ticks
     gp_list$col <- col$axes
-    if (!is.na(lwd.xaxis)) {
+    if (!is.null(lwd.xaxis)) {
       gp_list$lwd <- lwd.xaxis
     }
     gp_axis <- prGetShapeGp(shapes_gp, NULL, "axes", default = do.call(grid::gpar, gp_list))

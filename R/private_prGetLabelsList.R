@@ -128,14 +128,14 @@ prGetLabelsList <- function(labels,
             )
         }
 
-        attr(fixed_labels[[j]][[i]], "height") <- grobHeight(labels[[j]][[i]])
-        attr(fixed_labels[[j]][[i]], "width") <- grobWidth(labels[[j]][[i]])
+        attr(fixed_labels[[j]][[i]], "height") <- grobHeight(fixed_labels[[j]][[i]])
+        attr(fixed_labels[[j]][[i]], "width") <- grobWidth(fixed_labels[[j]][[i]])
         if (is.null(max_height)) {
-          max_height <- attr(labels[[j]][[i]], "height")
-          max_width <- attr(labels[[j]][[i]], "width")
+          max_height <- attr(fixed_labels[[j]][[i]], "height")
+          max_width <- attr(fixed_labels[[j]][[i]], "width")
         } else {
-          max_height <- max(max_height, attr(labels[[j]][[i]], "height"))
-          max_width <- max(max_width, attr(labels[[j]][[i]], "width"))
+          max_height <- max(max_height, attr(fixed_labels[[j]][[i]], "height"))
+          max_width <- max(max_width, attr(fixed_labels[[j]][[i]], "width"))
         }
       }
     }

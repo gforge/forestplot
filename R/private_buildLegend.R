@@ -16,7 +16,7 @@ buildLegend <- function(legend,
                         shapes_gp,
                         lineheight,
                         fn.legend) {
-  if (all(is.na(legend))) {
+  if (is.null(legend)) {
     return(structure(list(),
       pos = NULL,
       main = NULL,
@@ -162,5 +162,6 @@ buildLegend <- function(legend,
               colgap = legend_colgap,
               lineheight = lineheight,
               fn.legend = fn.legend,
+              legend_vertical_width = legend_vertical_width,
               class = c("forestplot_legend", class(lGrobs)))
 }
