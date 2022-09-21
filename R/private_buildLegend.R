@@ -163,5 +163,6 @@ buildLegend <- function(legend,
               lineheight = lineheight,
               fn.legend = fn.legend,
               legend_vertical_width = legend_vertical_width,
+              legend_horizontal_height = legend_horizontal_height,
               class = c("forestplot_legend", class(lGrobs)))
 }

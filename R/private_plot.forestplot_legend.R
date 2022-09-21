@@ -61,7 +61,7 @@ pr_plot_forestplot_legend_inside_plot <- function(x, col, graph.pos, shapes_gp, 
 
   if ("align" %in% names(legend_args$pos) && legend_args$pos[["align"]] == "horizontal") {
     # Calculated with padding above
-    height <- legend_horizontal_height
+    height <- attr(x, "legend_horizontal_height")
     # Calculate the horizontal width by iterating througha all elements
     # as each element may have a different width
     width <- 0
@@ -69,7 +69,7 @@ pr_plot_forestplot_legend_inside_plot <- function(x, col, graph.pos, shapes_gp, 
       if (width > 0) {
         width <- width + convertUnit(legend_colgap, unitTo = "npc", valueOnly = TRUE)
       }
-      width <- width + convertUnit(attr(x, "max_height") + legend_colgap + attr(lGrobs[[i]], "width"), unitTo = "npc", valueOnly = TRUE)
+      width <- width + convertUnit(attr(x, "max_height") + legend_colgap + attr(x[[i]], "width"), unitTo = "npc", valueOnly = TRUE)
     }
     # Add the padding
     width <- unit(width + convertUnit(legend_args$padding, unitTo = "npc", valueOnly = TRUE) * 2, "npc")

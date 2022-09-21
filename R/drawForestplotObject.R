@@ -5,7 +5,7 @@ drawForestplotObject <- function(obj) {
   ##################
   hrzl_lines <- prFpGetLines(hrzl_lines = obj$hrzl_lines,
                              is.summary = obj$is.summary,
-                             total_columns = ncol(obj$labels) + 1,
+                             total_columns = attr(obj$labels, "no_cols") + 1,
                              col = obj$col,
                              shapes_gp = obj$shapes_gp)
 
@@ -147,7 +147,7 @@ drawForestplotObject <- function(obj) {
   prFpDrawLines(hrzl_lines = hrzl_lines,
                 nr = attr(labels, "no_rows"),
                 colwidths = colwidths,
-                graph.pos = graph.pos)
+                graph.pos = obj$graph.pos)
 
   prFpPrintXaxis(axisList = axisList,
                  col = obj$col,

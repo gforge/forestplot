@@ -270,7 +270,7 @@ prPopulateList <- function(elmnt, no_rows, no_cols, missing_rows, is.summary, su
 #' @return void
 #'
 #' @inheritParams forestplot
-#' @keywords internal
+#' @noRd
 prFpPrintXaxis <- function(axisList,
                            col,
                            lwd.zero,

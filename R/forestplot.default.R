@@ -194,7 +194,7 @@ forestplot.default <- function(labeltext,
         any(lower < 0, na.rm = TRUE) ||
         any(upper < 0, na.rm = TRUE) ||
         (!is.na(zero) && zero <= 0) ||
-        (!is.null(clip) && any(clip <= 0, na.rm = TRUE)) ||
+        (!is.null(clip) && any(Filter(Negate(is.infinite), clip) <= 0, na.rm = TRUE)) ||
         (!is.null(grid) && !isFALSE(grid) && any(grid <= 0, na.rm = TRUE))) {
       stop("All argument values (mean, lower, upper, zero, grid and clip)",
            " should be provided in exponential form when using the log scale.",
