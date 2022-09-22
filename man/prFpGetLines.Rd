@@ -5,7 +5,7 @@
 \title{Prepares the hrzl_lines for the plot}
 \usage{
 prFpGetLines(
-  hrzl_lines,
+  hrzl_lines = NULL,
   is.summary,
   total_columns,
   col,

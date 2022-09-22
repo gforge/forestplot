@@ -5,7 +5,6 @@
 #'
 #' @param lGrobs A list with all the grobs, see \code{\link{prFpGetLegendGrobs}}
 #' @param col The colors of the legends.
-#' @param colgap The gap between the box and the text
 #' @param fn.legend The function for drawing the marker
 #' @param ... Passed to the legend \code{fn.legend}
 #' @return \code{void}
@@ -13,34 +12,33 @@
 #' @inheritParams forestplot
 #' @inheritParams fpLegend
 #'
-#' @keywords internal
+#' @noRd
 prFpDrawLegend <- function(lGrobs,
-                           col,
-                           shapes_gp,
-                           colgap,
-                           pos,
-                           gp,
+                           fn.legend,
                            r,
                            padding,
-                           fn.legend,
                            ...) {
-  if (!inherits(lGrobs, "Legend")) {
-    stop("The lGrobs object should be created by the internal Gmisc:::prFpGetLegendGrobs and be of class 'Legend'.")
+  if (!inherits(lGrobs, "forestplot_legend")) {
+    stop("The lGrobs object should be created by the internal Gmisc:::buildLegend and be of class 'forestplot_legend'.")
   }
 
   # Draw the rounded rectangle at first
   # if there is a gpar specified.
-  if (length(gp) > 0) {
-    grid.roundrect(gp = gp, r = r)
-    inner_vp <- viewport(
+  decorateWithRoundRect <- length(attr(lGrobs, "gp")) > 0
+  if (decorateWithRoundRect) {
+    grid.roundrect(gp = attr(lGrobs, "gp"), r = r)
+    viewport(
       width = unit(1, "npc") - padding - padding,
       height = unit(1, "npc") - padding - padding
-    )
-    pushViewport(inner_vp)
+    ) |>
+      pushViewport()
   }
 
-  if ((!is.list(pos) && pos == "top") ||
-    (is.list(pos) && "align" %in% names(pos) && pos[["align"]] == "horizontal")) {
+  pos <- attr(lGrobs, "pos")
+  if (inherits(pos, "forestplot_legend_position")) {
+    orientation <- pos$orientation
+  } else if ((!is.list(pos) && pos == "top") ||
+             (is.list(pos) && "align" %in% names(pos) && pos[["align"]] == "horizontal")) {
     orientation <- "horizontal"
   } else {
     orientation <- "vertical"
@@ -48,25 +46,29 @@ prFpDrawLegend <- function(lGrobs,
 
   boxSize <- attr(lGrobs, "max_height")
 
-  drawBox <- function(vp, i, col, lGrobs) {
+  drawBox <- function(vp, i, lGrobs) {
     pushViewport(vp)
 
     shape_coordinates <- c(1, i)
     attr(shape_coordinates, "max.coords") <- c(1, length(lGrobs))
 
+    col <- attr(lGrobs, "col")
+    clr.marker <- rep(col$box, length.out = length(lGrobs))[i]
+    clr.line <- rep(col$lines, length.out = length(lGrobs))[i]
+
     call_list <-
       list(fn.legend[[i]],
-        lower_limit = 0,
-        estimate = .5,
-        upper_limit = 1,
-        size = attr(lGrobs, "max_height"),
-        y.offset = .5,
-        clr.marker = col$box[i],
-        clr.line = col$lines[i],
-        shapes_gp = shapes_gp,
-        shape_coordinates = shape_coordinates,
-        lwd = 1,
-        ... = ...
+           lower_limit = 0,
+           estimate = .5,
+           upper_limit = 1,
+           size = attr(lGrobs, "max_height"),
+           y.offset = .5,
+           clr.marker = clr.marker,
+           clr.line = clr.line,
+           shape_coordinates = shape_coordinates,
+           lwd = 1,
+           shapes_gp = attr(lGrobs, "shapes_gp"),
+           ... = ...
       )
 
     # Do the actual drawing of the object
@@ -75,6 +77,7 @@ prFpDrawLegend <- function(lGrobs,
     upViewport()
   }
 
+  colgap <- attr(lGrobs, "colgap")
   if (orientation == "horizontal") {
     # Output the horizontal boxes and texts
     widths <- NULL
@@ -123,7 +126,7 @@ prFpDrawLegend <- function(lGrobs,
         layout.pos.col = 1 + offset,
         xscale = c(0, 1)
       )
-      drawBox(vp, i, col, lGrobs)
+      drawBox(vp, i, lGrobs)
       vp <- viewport(
         layout.pos.row = row,
         layout.pos.col = 3 + offset
@@ -177,7 +180,7 @@ prFpDrawLegend <- function(lGrobs,
         layout.pos.col = 1,
         xscale = c(0, 1)
       )
-      drawBox(vp, i, col, lGrobs)
+      drawBox(vp, i, lGrobs)
 
       vp <- viewport(
         layout.pos.row = row_start + (i - 1) * 2,
@@ -190,7 +193,7 @@ prFpDrawLegend <- function(lGrobs,
     upViewport()
   }
 
-  if (length(gp) > 0) {
+  if (decorateWithRoundRect) {
     upViewport()
   }
 }

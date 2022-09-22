@@ -37,13 +37,12 @@ tabletext <- cbind(
 
 # Test summary
 forestplot(tabletext,
-  cochrane_from_rmeta,
-  new_page = TRUE,
-  is.summary = c(TRUE, TRUE, rep(FALSE, 8), TRUE),
-  clip = c(0.1, 2.5),
-  xlog = TRUE,
-  col = fpColors(box = "royalblue", line = "darkblue", summary = "royalblue")
-)
+           cochrane_from_rmeta,
+           new_page = TRUE,
+           is.summary = c(TRUE, TRUE, rep(FALSE, 8), TRUE),
+           clip = c(0.1, 2.5),
+           xlog = TRUE,
+           col = fpColors(box = "royalblue", line = "darkblue", summary = "royalblue"))
 
 # Test lines
 forestplot(tabletext,
@@ -297,3 +296,4 @@ forestplot(tabletext,
 #            structure(c(-.1, -.05, .05),
 #                      gp = gpar(lty = 2, col = "#CCCCFF")))
 #  # Returns TRUE
+

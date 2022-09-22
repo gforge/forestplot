@@ -10,7 +10,7 @@
 #'
 #'
 #' @inheritParams forestplot
-#' @keywords internal
+#' @noRd
 prFpGetGraphTicksAndClips <- function(xticks,
                                       xticks.digits,
                                       grid,
@@ -47,22 +47,22 @@ prFpGetGraphTicksAndClips <- function(xticks,
     clip <- log(clip)
     zero <- log(zero)
 
-    if (missing(xticks)) {
+    if (is.null(xticks)) {
       ticks <- getTicks(exp(x_range),
-        clip = clip,
-        exp = xlog,
-        digits = xticks.digits
+                        clip = clip,
+                        exp = xlog,
+                        digits = xticks.digits
       )
 
       # Add the endpoint ticks to the tick list if
       # it's not already there
       if (is.infinite(clip[1]) == FALSE &&
-        min(ticks, na.rm = TRUE) < clip[1]) {
+          min(ticks, na.rm = TRUE) < clip[1]) {
         ticks <- unique(c(exp(clip[1]), ticks))
       }
 
       if (is.infinite(clip[2]) == FALSE &&
-        max(ticks, na.rm = TRUE) > clip[2]) {
+          max(ticks, na.rm = TRUE) > clip[2]) {
         ticks <- unique(c(ticks, exp(clip[2])))
       }
 
@@ -92,8 +92,8 @@ prFpGetGraphTicksAndClips <- function(xticks,
       # Decide on the number of digits, if below zero then there should
       # be by default one more digit
       ticklabels <- ifelse(ticks < 1 | abs(floor(ticks * 10) - ticks * 10) > 0,
-        format(ticks, digits = 2, nsmall = 2),
-        format(ticks, digits = 1, nsmall = 1)
+                           format(ticks, digits = 2, nsmall = 2),
+                           format(ticks, digits = 1, nsmall = 1)
       )
       ticks <- log(ticks)
     } else {
@@ -101,22 +101,22 @@ prFpGetGraphTicksAndClips <- function(xticks,
       ticklabels <- FALSE
     }
   } else {
-    if (missing(xticks)) {
+    if (is.null(xticks)) {
       ticks <- getTicks(x_range,
-        clip = clip,
-        exp = xlog,
-        digits = xticks.digits
+                        clip = clip,
+                        exp = xlog,
+                        digits = xticks.digits
       )
 
       # Add the endpoint ticks to the tick list if
       # it's not already there
       if (is.infinite(clip[1]) == FALSE &&
-        min(ticks, na.rm = TRUE) < clip[1]) {
+          min(ticks, na.rm = TRUE) < clip[1]) {
         ticks <- unique(c(clip[1], ticks))
       }
 
       if (is.infinite(clip[2]) == FALSE &&
-        max(ticks, na.rm = TRUE) > clip[2]) {
+          max(ticks, na.rm = TRUE) > clip[2]) {
         ticks <- unique(c(ticks, clip[2]))
       }
 
@@ -144,9 +144,9 @@ prFpGetGraphTicksAndClips <- function(xticks,
 
   # Clean
   if (any(ticks < .Machine$double.eps &
-    ticks > -.Machine$double.eps)) {
+          ticks > -.Machine$double.eps)) {
     ticks[ticks < .Machine$double.eps &
-      ticks > -.Machine$double.eps] <- 0
+            ticks > -.Machine$double.eps] <- 0
   }
 
 
@@ -162,13 +162,13 @@ prFpGetGraphTicksAndClips <- function(xticks,
   if (length(ticks) != 1 || ticks != 0) {
     gp_list <- txt_gp$ticks
     gp_list$col <- col$axes
-    if (!missing(lwd.xaxis)) {
+    if (!is.null(lwd.xaxis)) {
       gp_list$lwd <- lwd.xaxis
     }
     gp_axis <- prGetShapeGp(shapes_gp, NULL, "axes", default = do.call(grid::gpar, gp_list))
 
-    if (!missing(xticks) &&
-      !is.null(attr(xticks, "labels"))) {
+    if (!is.null(xticks) &&
+        !is.null(attr(xticks, "labels"))) {
       labattr <- attr(xticks, "labels")
       if (length(labattr) != length(ticks)) {
         stop(
@@ -194,7 +194,7 @@ prFpGetGraphTicksAndClips <- function(xticks,
     )
     if (length(grid) == 1) {
       if (is.logical(grid) &&
-        grid == TRUE) {
+          grid == TRUE) {
         grid <- ticks
       }
     }
@@ -236,7 +236,7 @@ prFpGetGraphTicksAndClips <- function(xticks,
     gp_list$col <- col$axes
     # Write the label for the x-axis
     labGrob <- textGrob(xlab,
-      gp = do.call(gpar, gp_list)
+                        gp = do.call(gpar, gp_list)
     )
   } else {
     labGrob <- FALSE

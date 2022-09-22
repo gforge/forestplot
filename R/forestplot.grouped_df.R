@@ -150,7 +150,7 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
                                       .fp_groups,
                                       {{value_col}}) |>
                         tidyr::pivot_wider(names_from = .fp_groups, values_from = {{value_col}}, names_prefix = "@estimates@") |>
-                        dplyr::select(starts_with("@estimates@")) |>
+                        dplyr::select(dplyr::starts_with("@estimates@")) |>
                         dplyr::rename_with(\(x) sub(pattern = "^@estimates@",
                                                     replacement = "",
                                                     x = x)) |>

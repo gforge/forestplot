@@ -110,17 +110,17 @@ sum.arg <- c(
 )
 
 forestplot(tabletext,
-  mean = cochrane_from_rmeta[, c("mean", "mean2")],
-  lower = cochrane_from_rmeta[, c("lower", "lower2")],
-  upper = cochrane_from_rmeta[, c("upper", "upper2")],
-  is.summary = c(TRUE, TRUE, rep(FALSE, 8), TRUE, TRUE),
-  fn.ci_norm = norm.arg,
-  fn.ci_sum = sum.arg,
-  col = fpColors(
-    box = c("black", "grey45"),
-    lines = c("black", "grey45"),
-    summary = "grey30"
-  ),
-  xlog = TRUE,
-  boxsize = c(rep(0.25, 11), 0.125)
+           mean = cochrane_from_rmeta[, c("mean", "mean2")],
+           lower = cochrane_from_rmeta[, c("lower", "lower2")],
+           upper = cochrane_from_rmeta[, c("upper", "upper2")],
+           is.summary = c(TRUE, TRUE, rep(FALSE, 8), TRUE, TRUE),
+           fn.ci_norm = norm.arg,
+           fn.ci_sum = sum.arg,
+           col = fpColors(
+             box = c("black", "grey45"),
+             lines = c("black", "grey45"),
+             summary = "grey30"
+           ),
+           xlog = TRUE,
+           boxsize = c(rep(0.25, 11), 0.125)
 )
