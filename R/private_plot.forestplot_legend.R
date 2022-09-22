@@ -1,17 +1,17 @@
-plot.forestplot_legend <- function(x, margin, col, legend_args, graph.pos, shapes_gp, legend_colgap, ...) {
+plot.forestplot_legend <- function(x, margin, legend_args, graph.pos, legend_colgap, ...) {
   # No forestplot to output
   if (length(x) == 0) {
     return()
   }
 
   if (margin) {
-    return(pr_plot_forestplot_legend_at_margin(x, col = col))
+    return(pr_plot_forestplot_legend_at_margin(x))
   }
 
-  return(pr_plot_forestplot_legend_inside_plot(x, col, legend_args = legend_args, graph.pos = graph.pos, shapes_gp = shapes_gp, legend_colgap = legend_colgap))
+  return(pr_plot_forestplot_legend_inside_plot(x, legend_args = legend_args, graph.pos = graph.pos, legend_colgap = legend_colgap))
 }
 
-pr_plot_forestplot_legend_at_margin <- function(x, col) {
+pr_plot_forestplot_legend_at_margin <- function(x) {
   # If the legend should be positioned within the plot then wait
   # until after the plot has been drawn
   if (!inherits(attr(x, "pos"), "forestplot_legend_position")) {
@@ -38,7 +38,6 @@ pr_plot_forestplot_legend_at_margin <- function(x, col) {
   # Draw the legend
   prFpDrawLegend(
     lGrobs = x,
-    col = col,
     fn.legend = attr(x, "fn.legend")
   )
   upViewport()
@@ -52,7 +51,7 @@ pr_plot_forestplot_legend_at_margin <- function(x, col) {
   pushViewport())
 }
 
-pr_plot_forestplot_legend_inside_plot <- function(x, col, graph.pos, shapes_gp, legend_args, legend_colgap) {
+pr_plot_forestplot_legend_inside_plot <- function(x, graph.pos, shapes_gp, legend_args, legend_colgap) {
   plot_vp <- viewport(
     layout.pos.col = 2 * graph.pos - 1,
     name = "main_plot_area"
@@ -95,8 +94,6 @@ pr_plot_forestplot_legend_inside_plot <- function(x, col, graph.pos, shapes_gp, 
   # Draw the legend
   prFpDrawLegend(
     lGrobs = x,
-    col = col,
-    shapes_gp = shapes_gp,
     colgap = legend_colgap,
     pos = legend_args$pos,
     gp = legend_args$gp,

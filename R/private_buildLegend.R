@@ -4,15 +4,17 @@
 #' @param txt_gp The text styling
 #' @param legend_args Legend arguments
 #' @param colgap The column gap
-#' @param shapes_gp The shapes for the legend
 #' @param lineheight The line height
 #' @param fn.legend The function for plotting the legend
+#'
+#' @inheritParams forestplot.default
 #' @returns `forestplot_legend` object with attributes `main` and `pos`
 #' @noRd
 buildLegend <- function(legend,
                         txt_gp,
                         legend_args,
                         colgap,
+                        col,
                         shapes_gp,
                         lineheight,
                         fn.legend) {
@@ -112,7 +114,8 @@ buildLegend <- function(legend,
 
     legend_pos <- list(
       row = 1,
-      col = 1
+      col = 1,
+      orientation = "horizontal"
     )
     main_pos <- list(
       row = 3,
@@ -131,7 +134,8 @@ buildLegend <- function(legend,
     )
     legend_pos <- list(
       row = 1,
-      col = 3
+      col = 3,
+      orientation = "vertical"
     )
     main_pos <- list(
       row = 1,
@@ -152,6 +156,7 @@ buildLegend <- function(legend,
               gp = legend_args$gp,
               r = legend_args$r,
               padding = legend_args$padding,
+              col = col,
               shapes_gp = shapes_gp,
               max_height = max_height,
               max_width = max_width,

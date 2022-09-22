@@ -54,11 +54,12 @@ drawForestplotObject <- function(obj) {
                         obj$txt_gp,
                         obj$legend_args,
                         obj$colgap,
+                        col = obj$col,
                         shapes_gp = obj$shapes_gp,
                         lineheight = obj$lineheight,
                         fn.legend = obj$fn.legend)
 
-  plot(legend, margin = TRUE, col = obj$col)
+  plot(legend, margin = TRUE)
 
   colwidths <- getColWidths(labels = labels,
                             graphwidth = obj$graphwidth,

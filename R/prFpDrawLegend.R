@@ -14,7 +14,6 @@
 #'
 #' @noRd
 prFpDrawLegend <- function(lGrobs,
-                           col,
                            fn.legend,
                            r,
                            padding,
@@ -36,13 +35,10 @@ prFpDrawLegend <- function(lGrobs,
   }
 
   pos <- attr(lGrobs, "pos")
-  if ((!inherits(pos, "forestplot_legend_position") &&
-       !is.list(pos) &&
-       pos == "top") ||
-      (!inherits(pos, "forestplot_legend_position") &&
-       is.list(pos) &&
-       "align" %in% names(pos) &&
-       pos[["align"]] == "horizontal")) {
+  if (inherits(pos, "forestplot_legend_position")) {
+    orientation <- pos$orientation
+  } else if ((!is.list(pos) && pos == "top") ||
+             (is.list(pos) && "align" %in% names(pos) && pos[["align"]] == "horizontal")) {
     orientation <- "horizontal"
   } else {
     orientation <- "vertical"
@@ -50,11 +46,15 @@ prFpDrawLegend <- function(lGrobs,
 
   boxSize <- attr(lGrobs, "max_height")
 
-  drawBox <- function(vp, i, col, lGrobs) {
+  drawBox <- function(vp, i, lGrobs) {
     pushViewport(vp)
 
     shape_coordinates <- c(1, i)
     attr(shape_coordinates, "max.coords") <- c(1, length(lGrobs))
+
+    col <- attr(lGrobs, "col")
+    clr.marker <- rep(col$box, length.out = length(lGrobs))[i]
+    clr.line <- rep(col$lines, length.out = length(lGrobs))[i]
 
     call_list <-
       list(fn.legend[[i]],
@@ -63,10 +63,11 @@ prFpDrawLegend <- function(lGrobs,
            upper_limit = 1,
            size = attr(lGrobs, "max_height"),
            y.offset = .5,
-           clr.marker = col$box[i],
-           clr.line = col$lines[i],
+           clr.marker = clr.marker,
+           clr.line = clr.line,
            shape_coordinates = shape_coordinates,
            lwd = 1,
+           shapes_gp = attr(lGrobs, "shapes_gp"),
            ... = ...
       )
 
@@ -125,7 +126,7 @@ prFpDrawLegend <- function(lGrobs,
         layout.pos.col = 1 + offset,
         xscale = c(0, 1)
       )
-      drawBox(vp, i, col, lGrobs)
+      drawBox(vp, i, lGrobs)
       vp <- viewport(
         layout.pos.row = row,
         layout.pos.col = 3 + offset
@@ -179,7 +180,7 @@ prFpDrawLegend <- function(lGrobs,
         layout.pos.col = 1,
         xscale = c(0, 1)
       )
-      drawBox(vp, i, col, lGrobs)
+      drawBox(vp, i, lGrobs)
 
       vp <- viewport(
         layout.pos.row = row_start + (i - 1) * 2,
