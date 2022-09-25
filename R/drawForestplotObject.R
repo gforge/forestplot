@@ -17,12 +17,12 @@ drawForestplotObject <- function(obj) {
   obj$labels <- NULL
 
 
-  xRange <- prFpXrange(upper = obj$upper,
-                        lower = obj$lower,
-                        clip = obj$clip,
-                        zero = obj$zero,
-                        xticks = obj$xticks,
-                        xlog = obj$xlog)
+  xRange <- prFpXrange(upper = obj$estimates[,3,],
+                       lower = obj$estimates[,2,],
+                       clip = obj$clip,
+                       zero = obj$zero,
+                       xticks = obj$xticks,
+                       xlog = obj$xlog)
 
   axisList <- prFpGetGraphTicksAndClips(xticks = obj$xticks,
                                         xticks.digits = obj$xticks.digits,
@@ -36,7 +36,7 @@ drawForestplotObject <- function(obj) {
                                         clip = obj$clip,
                                         zero = obj$zero,
                                         x_range = xRange,
-                                        mean = obj$org_mean,
+                                        estimates = obj$estimates,
                                         graph.pos = obj$graph.pos,
                                         shapes_gp = obj$shapes_gp)
 
@@ -109,35 +109,10 @@ drawForestplotObject <- function(obj) {
     name = "BaseGrid"
   ))
 
-  # Create the fourth argument 4 the fpDrawNormalCI() function
-  if (!is.null(obj$boxsize)) {
-    # If matrix is provided this will convert it
-    # to a vector but it doesn't matter in this case
-    info <- rep(obj$boxsize, length = length(obj$mean))
-  } else {
-    # Get width of the lines
-    cwidth <- (obj$upper - obj$lower)
-    # Set cwidth to min value if the value is invalid
-    # this can be the case for reference points
-    cwidth[cwidth <= 0 | is.na(cwidth)] <- min(cwidth[cwidth > 0])
-    textHeight <- convertUnit(grobHeight(textGrob("A", gp = do.call(gpar, obj$txt_gp$label))),
-                              unitTo = "npc",
-                              valueOnly = TRUE
-    )
-
-    info <- 1 / cwidth * 0.75
-    if (!all(obj$is.summary)) {
-      info <- info / max(info[!obj$is.summary], na.rm = TRUE)
-
-      # Adjust the dots as it gets ridiculous with small text and huge dots
-      if (any(textHeight * (attr(labels, "no_rows") + .5) * 1.5 < info)) {
-        info <- textHeight * (attr(labels, "no_rows") + .5) * 1.5 * info / max(info, na.rm = TRUE) + textHeight * (attr(labels, "no_rows") + .5) * 1.5 / 4
-      }
-    }
-
-    # Set summary to maximum size
-    info[obj$is.summary] <- 1 / NCOL(obj$org_mean)
-  }
+  info <- prepBoxSize(boxsize = obj$boxsize,
+                      estimates = obj$estimates,
+                      is.summary = obj$is.summary,
+                      txt_gp = obj$txt_gp)
 
   prFpPrintLabels(
     labels = labels,
@@ -154,23 +129,11 @@ drawForestplotObject <- function(obj) {
   plot(axisList)
 
   # Output the different confidence intervals
-  for (i in 1:attr(labels, "no_rows")) {
-    if (is.matrix(obj$org_mean)) {
-      low_values <- obj$org_lower[i, ]
-      mean_values <- obj$org_mean[i, ]
-      up_values <- obj$org_upper[i, ]
-      info_values <- matrix(info, ncol = length(low_values))[i, ]
-    } else {
-      low_values <- obj$org_lower[i]
-      mean_values <- obj$org_mean[i]
-      up_values <- obj$org_upper[i]
-      info_values <- info[i]
-    }
-
+  for (i in 1:nrow(obj$estimates)) {
     # The line and box colors may vary
-    clr.line <- rep(obj$col$line, length.out = length(low_values))
-    clr.marker <- rep(obj$col$box, length.out = length(low_values))
-    clr.summary <- rep(obj$col$summary, length.out = length(low_values))
+    clr.line <- rep(obj$col$line, length.out = dim(obj$estimates)[3])
+    clr.marker <- rep(obj$col$box, length.out = dim(obj$estimates)[3])
+    clr.summary <- rep(obj$col$summary, length.out = dim(obj$estimates)[3])
 
     line_vp <- viewport(
       layout.pos.row = i,
@@ -181,39 +144,39 @@ drawForestplotObject <- function(obj) {
     pushViewport(line_vp)
 
     # Draw multiple confidence intervals
-    if (length(low_values) > 1) {
-      b_height <- max(info_values)
+    if (dim(obj$estimates)[3] > 1) {
+      b_height <- max(info[i,])
       if (is.unit(b_height)) {
         b_height <- convertUnit(b_height, unitTo = "npc", valueOnly = TRUE)
       }
 
       if (is.null(obj$line.margin)) {
-        obj$line.margin <- .1 + .2 / (length(low_values) - 1)
+        obj$line.margin <- .1 + .2 / (dim(obj$estimates)[3] - 1)
       } else if (is.unit(obj$line.margin)) {
         obj$line.margin <- convertUnit(obj$line.margin, unitTo = "npc", valueOnly = TRUE)
       }
       y.offset_base <- b_height / 2 + obj$line.margin
-      y.offset_increase <- (1 - obj$line.margin * 2 - b_height) / (length(low_values) - 1)
+      y.offset_increase <- (1 - obj$line.margin * 2 - b_height) / (dim(obj$estimates)[3] - 1)
 
-      for (j in length(low_values):1) {
+      for (j in dim(obj$estimates)[3]:1) {
         # Start from the bottom and plot up
         # the one on top should always be
         # above the one below
-        current_y.offset <- y.offset_base + (length(low_values) - j) * y.offset_increase
-        if (is.na(mean_values[j])) {
+        current_y.offset <- y.offset_base + (dim(obj$estimates)[3] - j) * y.offset_increase
+        if (is.na(obj$estimates[i, 1, j])) {
           next
         }
 
         shape_coordinates <- c(i, j)
-        attr(shape_coordinates, "max.coords") <- c(attr(labels, "no_rows"), length(low_values))
+        attr(shape_coordinates, "max.coords") <- c(attr(labels, "no_rows"), dim(obj$estimates)[3])
 
         if (obj$is.summary[i]) {
           call_list <-
             list(obj$fn.ci_sum[[i]][[j]],
-                 lower_limit = low_values[j],
-                 estimate = mean_values[j],
-                 upper_limit = up_values[j],
-                 size = info_values[j],
+                 estimate = obj$estimates[i, 1, j],
+                 lower_limit = obj$estimates[i, 2, j],
+                 upper_limit = obj$estimates[i, 3, j],
+                 size = info[i, j],
                  y.offset = current_y.offset,
                  col = clr.summary[j],
                  shapes_gp = obj$shapes_gp,
@@ -222,10 +185,10 @@ drawForestplotObject <- function(obj) {
         } else {
           call_list <-
             list(obj$fn.ci_norm[[i]][[j]],
-                 lower_limit = low_values[j],
-                 estimate = mean_values[j],
-                 upper_limit = up_values[j],
-                 size = info_values[j],
+                 estimate = obj$estimates[i, 1, j],
+                 lower_limit = obj$estimates[i, 2, j],
+                 upper_limit = obj$estimates[i, 3, j],
+                 size = info[i, j],
                  y.offset = current_y.offset,
                  clr.line = clr.line[j],
                  clr.marker = clr.marker[j],
@@ -264,25 +227,25 @@ drawForestplotObject <- function(obj) {
 
       if (obj$is.summary[i]) {
         call_list <-
-          list(obj$fn.ci_sum[[i]],
-               lower_limit = low_values,
-               estimate = mean_values,
-               upper_limit = up_values,
-               size = info_values,
+          list(obj$fn.ci_sum[[i]][[1]],
+               estimate = obj$estimates[i, 1, 1],
+               lower_limit = obj$estimates[i, 2, 1],
+               upper_limit = obj$estimates[i, 3, 1],
+               size = info[i, 1],
                col = clr.summary,
                shapes_gp = obj$shapes_gp,
                shape_coordinates = shape_coordinates
           )
       } else {
         call_list <-
-          list(obj$fn.ci_norm[[i]],
-               lower_limit = low_values,
-               estimate = mean_values,
-               upper_limit = up_values,
-               size = info_values,
+          list(obj$fn.ci_norm[[i]][[1]],
+               estimate = obj$estimates[i, 1, 1],
+               lower_limit = obj$estimates[i, 2, 1],
+               upper_limit = obj$estimates[i, 3, 1],
+               size = info[i, 1],
                clr.line = clr.line,
                clr.marker = clr.marker,
-               lty = obj$lty.ci[[i]],
+               lty = obj$lty.ci[[i]][[1]],
                vertices.height = obj$ci.vertices.height,
                shapes_gp = obj$shapes_gp,
                shape_coordinates = shape_coordinates
@@ -304,7 +267,7 @@ drawForestplotObject <- function(obj) {
       }
 
       # Do the actual drawing of the object
-      if (!all(is.na(mean_values))) {
+      if (!all(is.na(obj$estimates[i, 1, 1]))) {
         tryCatch(eval(as.call(call_list)),
                  error = function(e) {
                    stop("On row ", i, " the print of the estimate failed: ", e$message)

@@ -55,82 +55,25 @@ forestplot.default <- function(labeltext,
 
   assert_class(txt_gp, "fpTxtGp")
   assert_class(col, "fpColors")
-
-  if (missing(lower) &&
-      missing(upper) &&
-      missing(mean)) {
-    if (missing(labeltext)) {
-      stop(
-        "You need to provide the labeltext or",
-        " the mean/lower/upper arguments"
-      )
-    }
-
-    mean <- labeltext
-    labeltext <- rownames(mean)
-  }
-
-  if (missing(lower) &&
-      missing(upper)) {
-    assert(
-      check_matrix(mean, ncols = 3),
-      check_array(mean, d = 3),
-      check_integer(dim(mean)[2], lower = 3, upper = 3)
-    )
-  }
-
   assert_vector(zero, max.len = 2)
 
-  if (missing(labeltext)) {
-    labeltext <- rownames(mean)
+  coreData <- buildEstimateArray(labeltext, lower, upper, mean)
+  rm(labeltext)
+  if (!missing(mean)) {
+    rm(lower, upper, mean)
   }
 
-  if (is.null(labeltext)) {
-    stop(
-      "You must provide labeltext either in the direct form as an argument",
-      " or as rownames for the mean argument."
-    )
-  }
-  # Assume that lower and upper are contained within
-  # the mean variable
-  if (missing(lower) &&
-      missing(upper)) {
-    if (NCOL(mean) != 3) {
-      stop("If you do not provide lower/upper arguments your mean needs to have 3 columns")
-    }
-
-    # If the mean can in this case be eithe 2D-matrix
-    # that generates a regular forest plot or
-    # it can be a 3D-array where the 3:rd level
-    # constitutes the different bands
-    all <- prFpConvertMultidimArray(mean)
-    mean <- all$mean
-    lower <- all$lower
-    upper <- all$upper
-  }
-
-  if (NCOL(mean) != NCOL(lower) ||
-      NCOL(lower) != NCOL(upper) ||
-      NCOL(mean) == 0) {
-    stop(
-      "Mean, lower and upper contain invalid number of columns",
-      " Mean columns:", ncol(mean),
-      " Lower bound columns:", ncol(lower),
-      " Upper bound columns:", ncol(upper)
-    )
-  }
-
-  if (NCOL(mean) != length(col$box)) {
-    col$box <- rep(col$box, length.out = NCOL(mean))
-    col$line <- rep(col$lines, length.out = NCOL(mean))
+  if (dim(coreData$estimates)[3] != length(col$box)) {
+    col$box <- rep(col$box, length.out = dim(coreData$estimates)[3])
+    col$line <- rep(col$lines, length.out = dim(coreData$estimates)[3])
   }
 
   # Prepare the legend marker
   if (!is.null(legend)) {
     fn.legend <- prFpPrepareLegendMarker(
       fn.legend = fn.legend,
-      col_no = NCOL(mean),
-      row_no = NROW(mean),
+      col_no = dim(coreData$estimates)[3],
+      row_no = nrow(coreData$estimates),
       fn.ci_norm = fn.ci_norm
     )
   }
@@ -143,11 +86,11 @@ forestplot.default <- function(labeltext,
   }
 
   if (!is.null(legend)) {
-    if (length(legend) != ncol(mean)) {
+    if (length(legend) != dim(coreData$estimates)[3]) {
       stop(
         "If you want a legend you need to provide the same number of",
         " legend descriptors as you have boxes per line, currently you have ",
-        ncol(mean), " boxes and ",
+        dim(coreData$estimates)[3], " boxes and ",
         length(legend), " legends."
       )
     }
@@ -173,27 +116,13 @@ forestplot.default <- function(labeltext,
     }
   }
 
-  # Fix if data.frames were provided in the arguments
-  if (is.data.frame(mean)) {
-    mean <- as.matrix(mean)
-  }
-  if (is.data.frame(lower)) {
-    lower <- as.matrix(lower)
-  }
-  if (is.data.frame(upper)) {
-    upper <- as.matrix(upper)
-  }
-
   # Instantiate a new page - forced if no device exists
   if (new_page || dev.cur() == 1) grid.newpage()
 
   # Save the original values since the function due to it's inheritance
   # from the original forestplot needs some changing to the parameters
   if (xlog) {
-    if (any(mean < 0, na.rm = TRUE) ||
-        any(lower < 0, na.rm = TRUE) ||
-        any(upper < 0, na.rm = TRUE) ||
-        (!is.na(zero) && zero <= 0) ||
+    if (any(coreData$estimates < 0, na.rm = TRUE) ||
         (!is.null(clip) && any(Filter(Negate(is.infinite), clip) <= 0, na.rm = TRUE)) ||
         (!is.null(grid) && !isFALSE(grid) && any(grid <= 0, na.rm = TRUE))) {
       stop("All argument values (mean, lower, upper, zero, grid and clip)",
@@ -203,63 +132,36 @@ forestplot.default <- function(labeltext,
     }
 
     # Change all the values along the log scale
-    org_mean <- log(mean)
-    org_lower <- log(lower)
-    org_upper <- log(upper)
-  } else {
-    org_mean <- mean
-    org_lower <- lower
-    org_upper <- upper
-  }
-
-  # For border calculations etc it's
-  # convenient to have the matrix as a
-  # vector
-  if (NCOL(mean) > 1) {
-    mean <- as.vector(mean)
-    lower <- as.vector(lower)
-    upper <- as.vector(upper)
+    coreData$estimates <- log(coreData$estimates)
   }
 
   # Prep basics
-  labels <- prepLabelText(labeltext = labeltext,
-                          nr = NROW(org_mean))
+  labels <- prepLabelText(labeltext = coreData$labeltext,
+                          nr = nrow(coreData$estimates))
   graph.pos <- prepGraphPositions(graph.pos, nc = attr(labels, "no_cols"))
   align <- prepAlign(align, graph.pos = graph.pos, nc = attr(labels, "no_cols"))
-  is.summary <- rep(is.summary, length.out = attr(labels, "no_rows"))
 
-  if (is.matrix(mean)) {
-    missing_rows <- apply(mean, 2, function(row) all(is.na(row)))
-  } else {
-    missing_rows <- sapply(mean, is.na)
-  }
+  is.summary <- rep(is.summary, length.out = nrow(coreData$estimates))
+  missing_rows <- apply(coreData$estimates, 2, \(row) all(is.na(row)))
 
-  fn.ci_norm <- prFpGetConfintFnList(
-    fn = fn.ci_norm,
-    no_rows = NROW(org_mean),
-    no_cols = NCOL(org_mean),
-    missing_rows = missing_rows,
-    is.summary = is.summary,
-    summary = FALSE
-  )
-  fn.ci_sum <- prFpGetConfintFnList(
-    fn = fn.ci_sum,
-    no_rows = NROW(org_mean),
-    no_cols = NCOL(org_mean),
-    missing_rows = missing_rows,
-    is.summary = is.summary,
-    summary = TRUE
-  )
-
+  fn.ci_norm <- prFpGetConfintFnList(fn = fn.ci_norm,
+                                     no_rows = nrow(coreData$estimates),
+                                     no_cols = ncol(coreData$estimates),
+                                     missing_rows = missing_rows,
+                                     is.summary = is.summary,
+                                     summary = FALSE)
+  fn.ci_sum <- prFpGetConfintFnList(fn = fn.ci_sum,
+                                    no_rows = nrow(coreData$estimates),
+                                    no_cols = ncol(coreData$estimates),
+                                    missing_rows = missing_rows,
+                                    is.summary = is.summary,
+                                    summary = TRUE)
   lty.ci <- prPopulateList(lty.ci,
-    no_rows = NROW(org_mean),
-    no_cols = NCOL(org_mean)
-  )
+                           no_rows = nrow(coreData$estimates),
+                           no_cols = ncol(coreData$estimates))
 
   list(labels = labels,
-       mean = mean,
-       upper = upper,
-       lower = lower,
+       estimates = coreData$estimates,
        mar = mar,
        align = align,
        title = title,
@@ -273,11 +175,8 @@ forestplot.default <- function(labeltext,
        graph.pos = graph.pos,
        boxsize = boxsize,
        is.summary = is.summary,
-       org_mean = org_mean,
        shapes_gp = shapes_gp,
        hrzl_lines = hrzl_lines,
-       org_lower = org_lower,
-       org_upper = org_upper,
        line.margin = line.margin,
        fn.legend = fn.legend,
        fn.ci_sum = fn.ci_sum,
