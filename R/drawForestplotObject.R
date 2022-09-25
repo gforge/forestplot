@@ -30,6 +30,7 @@ drawForestplotObject <- function(obj) {
                                         xlog = obj$xlog,
                                         xlab = obj$xlab,
                                         lwd.xaxis = obj$lwd.xaxis,
+                                        lwd.zero = obj$lwd.zero,
                                         txt_gp = obj$txt_gp,
                                         col = obj$col,
                                         clip = obj$clip,
@@ -150,10 +151,7 @@ drawForestplotObject <- function(obj) {
                 colwidths = colwidths,
                 graph.pos = obj$graph.pos)
 
-  prFpPrintXaxis(axisList = axisList,
-                 col = obj$col,
-                 lwd.zero = obj$lwd.zero,
-                 shapes_gp = obj$shapes_gp)
+  plot(axisList)
 
   # Output the different confidence intervals
   for (i in 1:attr(labels, "no_rows")) {

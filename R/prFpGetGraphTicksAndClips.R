@@ -17,6 +17,7 @@ prFpGetGraphTicksAndClips <- function(xticks,
                                       xlog,
                                       xlab,
                                       lwd.xaxis,
+                                      lwd.zero,
                                       col,
                                       txt_gp,
                                       clip,
@@ -107,6 +108,7 @@ prFpGetGraphTicksAndClips <- function(xticks,
                         exp = xlog,
                         digits = xticks.digits
       )
+      ticks <- c(min(x_range), ticks)
 
       # Add the endpoint ticks to the tick list if
       # it's not already there
@@ -187,11 +189,9 @@ prFpGetGraphTicksAndClips <- function(xticks,
         ticklabels <- labattr
       }
     }
-    dg <- xaxisGrob(
-      at = ticks,
-      label = ticklabels,
-      gp = gp_axis
-    )
+    dg <- xaxisGrob(at = ticks,
+                    label = FALSE,
+                    gp = gp_axis)
     if (length(grid) == 1) {
       if (is.logical(grid) &&
           grid == TRUE) {
@@ -231,7 +231,7 @@ prFpGetGraphTicksAndClips <- function(xticks,
     }
   }
 
-  if (length(xlab) == 1 && nchar(xlab) > 0) {
+  if (!is.null(xlab) && nchar(xlab) > 0) {
     gp_list <- txt_gp$xlab
     gp_list$col <- col$axes
     # Write the label for the x-axis
@@ -242,14 +242,15 @@ prFpGetGraphTicksAndClips <- function(xticks,
     labGrob <- FALSE
   }
 
-  ret <- list(
-    axis_vp = axis_vp,
-    axisGrob = dg,
-    gridList = gridList,
-    labGrob = labGrob,
-    zero = zero,
-    clip = clip,
-    x_range = x_range
-  )
-  return(ret)
+  list(axis_vp = axis_vp,
+       axisGrob = dg,
+       gridList = gridList,
+       labGrob = labGrob,
+       zero = zero,
+       clip = clip,
+       x_range = x_range,
+       col = col,
+       shapes_gp = shapes_gp,
+       lwd.zero = lwd.zero) |>
+    structure(class = "forestplot_xaxis")
 }

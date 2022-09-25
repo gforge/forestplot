@@ -154,13 +154,12 @@ forestplot(tabletext,
 # test two lines
 tabletext <- tabletext[, 1]
 forestplot(tabletext,
-  mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
-  lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
-  upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
-  clip = c(-.1, 0.075),
-  col = fpColors(box = c("blue", "darkred")),
-  xlab = "EQ-5D index"
-)
+           mean = cbind(HRQoL$Sweden[, "coef"], HRQoL$Denmark[, "coef"]),
+           lower = cbind(HRQoL$Sweden[, "lower"], HRQoL$Denmark[, "lower"]),
+           upper = cbind(HRQoL$Sweden[, "upper"], HRQoL$Denmark[, "upper"]),
+           clip = c(-.1, 0.075),
+           col = fpColors(box = c("blue", "darkred")),
+           xlab = "EQ-5D index")
 
 
 ## ------------------------------------------------------------------------

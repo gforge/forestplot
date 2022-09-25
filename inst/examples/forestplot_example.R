@@ -23,35 +23,38 @@ test_data |>
 
 # Print two plots side by side using the grid
 # package's layout option for viewports
+fp1 <- test_data |>
+  forestplot(labeltext = row_names,
+             mean = coef,
+             lower = low,
+             upper = high,
+             zero = 1,
+             cex  = 2,
+             lineheight = "auto",
+             title = "Plot 1",
+             xlab = "Lab axis txt")
+fp2 <- test_data |>
+  forestplot(labeltext = row_names,
+             mean = coef,
+             lower = low,
+             upper = high,
+             zero = 1,
+             cex  = 2,
+             lineheight = "auto",
+             xlab = "Lab axis txt",
+             title = "Plot 2",
+             new_page = FALSE)
+
 grid.newpage()
 pushViewport(viewport(layout = grid.layout(1, 2)))
 pushViewport(viewport(layout.pos.col = 1))
-test_data |>
-  forestplot(labeltext = row_names,
-             mean = coef,
-             lower = low,
-             upper = high,
-             zero = 1,
-             cex  = 2,
-             lineheight = "auto",
-             xlab = "Lab axis txt",
-             new_page = FALSE)
+plot(fp1)
 popViewport()
 pushViewport(viewport(layout.pos.col = 2))
-test_data |>
-  forestplot(labeltext = row_names,
-             mean = coef,
-             lower = low,
-             upper = high,
-             zero = 1,
-             cex  = 2,
-             lineheight = "auto",
-             xlab = "Lab axis txt",
-             new_page = FALSE)
+plot(fp2)
 popViewport(2)
 
-
-# An advanced test
+# An advanced example
 library(dplyr)
 library(tidyr)
 test_data <- data.frame(id = 1:4,
