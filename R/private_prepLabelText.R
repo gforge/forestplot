@@ -19,12 +19,19 @@ prepLabelText <- function(labeltext, nr) {
     widthcolumn <- c(TRUE)
     # Can't figure out multiple levels of expressions
     nc <- 1
-    label_type <- "expression"
     label_nr <- length(labeltext)
+    labeltext <- as.list(labeltext)
   } else if (is.list(labeltext)) {
     if (sapply(labeltext, \(x)  length(x) == 1 && !is.list(x)) |> all()) {
       labeltext <- list(labeltext)
     }
+    labeltext <- lapply(labeltext, function(x) {
+      if (is.list(x)) {
+        return(x)
+      }
+
+      return(as.list(x))
+    })
 
     if (!prFpValidateLabelList(labeltext)) {
       stop("Invalid labellist, it has to be formed as a matrix m x n elements")
@@ -35,7 +42,7 @@ prepLabelText <- function(labeltext, nr) {
 
     widthcolumn <- c()
     # Should mark the columns that don't contain
-    # epressions, text or numbers as widthcolumns
+    # expressions, text or numbers as width columns
     for (col.no in seq(along = labeltext)) {
       empty_row <- TRUE
       for (row.no in seq(along = labeltext[[col.no]])) {
@@ -48,21 +55,19 @@ prepLabelText <- function(labeltext, nr) {
       widthcolumn <- append(widthcolumn, empty_row)
     }
 
-    label_type <- "list"
     label_nr <- length(labeltext[[1]])
   } else if (is.vector(labeltext)) {
     widthcolumn <- c(FALSE)
     nc <- 1
+    label_nr <- length(labeltext)
 
-    labeltext <- matrix(labeltext, ncol = 1)
-    label_type <- "matrix"
-    label_nr <- NROW(labeltext)
+    labeltext <- list(as.list(labeltext))
   } else {
     # Original code for matrixes
     widthcolumn <- !apply(is.na(labeltext), 1, any)
     nc <- NCOL(labeltext)
-    label_type <- "matrix"
     label_nr <- NROW(labeltext)
+    labeltext <- (\(x) lapply(seq(NCOL(labeltext)), function(i) as.list(x[,i])))(labeltext)
   }
 
   if (nr != label_nr) {
@@ -76,7 +81,6 @@ prepLabelText <- function(labeltext, nr) {
             no_cols = nc,
             no_rows = label_nr,
             widthcolumn = widthcolumn,
-            label_type = label_type,
             class = "forestplot_labeltext")
 }
 
@@ -90,23 +94,10 @@ prepLabelText <- function(labeltext, nr) {
 #' @keywords internal
 `[.forestplot_labeltext` <- function(x, i, j, ...)
 {
-  label_type <- attr(x, "label_type")
-  if (label_type == "expression") {
-    # Haven't figured out it this is possible with
-    # a multilevel expression
-    row_column_text <- x[[i]]
-  } else if (label_type == "list") {
-    # I get annoying warnings with this
-    # if (!is.expression(x[[j]][[i]]) && is.na(x[[j]][[i]]))
-    #    return(FALSE)
-    row_column_text <- x[[j]][[i]]
-  } else {
-    ret <- NextMethod()
-    if (is.na(ret)) {
-      return(FALSE)
-    }
-    row_column_text <- ret
-  }
+  # I get annoying warnings with this
+  # if (!is.expression(x[[j]][[i]]) && is.na(x[[j]][[i]]))
+  #    return(FALSE)
+  row_column_text <- x[[j]][[i]]
 
   if (!is.expression(row_column_text) &&
       !is.call(row_column_text) &&
