@@ -335,15 +335,14 @@ test_data <- data.frame(
 )
 
 forestplot(row_names,
-  test_data$coef,
-  test_data$low,
-  test_data$high,
-  zero = 1,
-  cex = 1,
-  lineheight = "auto",
-  xlab = "Odds",
-  xlog = TRUE
-)
+           test_data$coef,
+           test_data$low,
+           test_data$high,
+           zero = 1,
+           cex = 1,
+           lineheight = "auto",
+           xlab = "Odds",
+           xlog = TRUE)
 
 #####################
 # Check square data #

@@ -29,16 +29,11 @@ prFpGetGraphTicksAndClips <- function(xticks,
   layoutRowSpan <- getActiveRowSpan(estimates)
 
   if (xlog) {
-    clip[clip < 0] <- 0
-    clip <- log(clip)
-    zero <- log(zero)
-
     if (is.null(xticks)) {
       ticks <- getTicks(exp(x_range),
                         clip = clip,
                         exp = xlog,
-                        digits = xticks.digits
-      )
+                        digits = xticks.digits)
 
       # Add the endpoint ticks to the tick list if
       # it's not already there
@@ -63,12 +58,10 @@ prFpGetGraphTicksAndClips <- function(xticks,
       ticks <- xticks
     }
 
-    axis_vp <- viewport(
-      layout.pos.col = graph.pos * 2 - 1,
-      layout.pos.row = layoutRowSpan,
-      xscale = x_range,
-      name = "axis"
-    )
+    axis_vp <- viewport(layout.pos.col = graph.pos * 2 - 1,
+                        layout.pos.row = layoutRowSpan,
+                        xscale = x_range,
+                        name = "axis")
 
 
 
@@ -92,7 +85,6 @@ prFpGetGraphTicksAndClips <- function(xticks,
                         exp = xlog,
                         digits = xticks.digits
       )
-      ticks <- c(min(x_range), ticks)
 
       # Add the endpoint ticks to the tick list if
       # it's not already there
@@ -120,12 +112,10 @@ prFpGetGraphTicksAndClips <- function(xticks,
       ticklabels <- TRUE
     }
 
-    axis_vp <- viewport(
-      layout.pos.col = 2 * graph.pos - 1,
-      layout.pos.row = layoutRowSpan,
-      xscale = x_range,
-      name = "axis"
-    )
+    axis_vp <- viewport(layout.pos.col = 2 * graph.pos - 1,
+                        layout.pos.row = layoutRowSpan,
+                        xscale = x_range,
+                        name = "axis")
   }
 
   # Clean
@@ -191,7 +181,7 @@ prFpGetGraphTicksAndClips <- function(xticks,
     # Actually identical to the ticks viewport
     grid_vp <- viewport(
       layout.pos.col = 2 * graph.pos - 1,
-      layout.pos.row = from:to,
+      layout.pos.row = layoutRowSpan,
       xscale = x_range,
       name = "grid_vp"
     )

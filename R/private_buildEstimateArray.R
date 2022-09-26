@@ -62,7 +62,8 @@ buildEstimateArray <- function(labeltext, lower, upper, mean) {
   }
 
   if (NCOL(mean) == 1) {
-    estimates <- array(cbind(mean, lower, upper), dim = c(NROW(mean), 3, 1))
+    estimates <- array(NA, dim = c(NROW(mean), 3, 1))
+    estimates[,,1] <- cbind(mean, lower, upper) |> as.matrix()
   } else {
     estimates <- array(dim = c(NROW(mean), 3, NCOL(mean)))
     for (i in 1:NCOL(mean)) {

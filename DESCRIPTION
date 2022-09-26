@@ -23,9 +23,9 @@ Biarch: yes
 Depends:
     R (>= 3.5.0),
     grid,
-    checkmate
+    checkmate,
+    abind
 Suggests:
-    abind,
     dplyr,
     knitr,
     purrr,

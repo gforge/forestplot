@@ -1,3 +1,4 @@
+#' @importFrom abind adrop
 prepBoxSize <- function(boxsize, estimates, is.summary, txt_gp) {
   # Create the fourth argument 4 the fpDrawNormalCI() function
   if (!is.null(boxsize)) {
@@ -34,5 +35,5 @@ prepBoxSize <- function(boxsize, estimates, is.summary, txt_gp) {
 
   # Set summary to maximum size
   boxsize[is.summary,,] <- 1 / dim(estimates)[3]
-  return(as.matrix(boxsize))
+  return(abind::adrop(boxsize, drop = 2))
 }

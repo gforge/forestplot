@@ -133,6 +133,9 @@ forestplot.default <- function(labeltext,
 
     # Change all the values along the log scale
     coreData$estimates <- log(coreData$estimates)
+    clip[clip < 0] <- 0
+    clip <- log(clip)
+    zero <- log(zero)
   }
 
   # Prep basics

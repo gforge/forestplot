@@ -370,11 +370,7 @@ prFpXrange <- function(upper, lower, clip, zero, xticks, xlog) {
     )
   }
 
-  if (xlog) {
-    return(log(ret))
-  } else {
-    return(ret)
-  }
+  return(ret)
 }
 
 #' Get the label
