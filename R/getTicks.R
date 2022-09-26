@@ -25,7 +25,7 @@ getTicks <- function(low,
   # Get the right ticks
   lowest <- max(min(low, na.rm = TRUE), clip[1])
   bottom <- floor(lowest * 2) / 2
-  if (bottom == 0 & exp) {
+  if (bottom == 0 && exp) {
     bottom <- 2^(round(log2(lowest) * 2) / 2)
   }
 

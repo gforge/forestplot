@@ -5,7 +5,7 @@
 #'
 #' @param x_range The range that the values from the different confidence
 #'  interval span
-#' @param mean The original means, either matrix or vector
+#' @param estimates The estimates as a 3D array
 #' @return \code{list} Returns a list with axis_vp, axisGrob, labGrob, zero and clip
 #'
 #'
@@ -23,37 +23,17 @@ prFpGetGraphTicksAndClips <- function(xticks,
                                       clip,
                                       zero,
                                       x_range,
-                                      mean,
+                                      estimates,
                                       graph.pos,
                                       shapes_gp = fpShapesGp()) {
-  # Active rows are all excluding the top ones with NA in the mean value
-  if (is.matrix(mean)) {
-    for (from in 1:nrow(mean)) {
-      if (!all(is.na(mean[from, ]))) {
-        break
-      }
-    }
-    to <- nrow(mean)
-  } else {
-    for (from in 1:length(mean)) {
-      if (!is.na(mean[from])) {
-        break
-      }
-    }
-    to <- length(mean)
-  }
+  layoutRowSpan <- getActiveRowSpan(estimates)
 
   if (xlog) {
-    clip[clip < 0] <- 0
-    clip <- log(clip)
-    zero <- log(zero)
-
     if (is.null(xticks)) {
       ticks <- getTicks(exp(x_range),
                         clip = clip,
                         exp = xlog,
-                        digits = xticks.digits
-      )
+                        digits = xticks.digits)
 
       # Add the endpoint ticks to the tick list if
       # it's not already there
@@ -78,12 +58,10 @@ prFpGetGraphTicksAndClips <- function(xticks,
       ticks <- xticks
     }
 
-    axis_vp <- viewport(
-      layout.pos.col = graph.pos * 2 - 1,
-      layout.pos.row = from:to,
-      xscale = x_range,
-      name = "axis"
-    )
+    axis_vp <- viewport(layout.pos.col = graph.pos * 2 - 1,
+                        layout.pos.row = layoutRowSpan,
+                        xscale = x_range,
+                        name = "axis")
 
 
 
@@ -94,8 +72,7 @@ prFpGetGraphTicksAndClips <- function(xticks,
       # be by default one more digit
       ticklabels <- ifelse(ticks < 1 | abs(floor(ticks * 10) - ticks * 10) > 0,
                            format(ticks, digits = 2, nsmall = 2),
-                           format(ticks, digits = 1, nsmall = 1)
-      )
+                           format(ticks, digits = 1, nsmall = 1))
       ticks <- log(ticks)
     } else {
       ticks <- NULL
@@ -108,7 +85,6 @@ prFpGetGraphTicksAndClips <- function(xticks,
                         exp = xlog,
                         digits = xticks.digits
       )
-      ticks <- c(min(x_range), ticks)
 
       # Add the endpoint ticks to the tick list if
       # it's not already there
@@ -136,12 +112,10 @@ prFpGetGraphTicksAndClips <- function(xticks,
       ticklabels <- TRUE
     }
 
-    axis_vp <- viewport(
-      layout.pos.col = 2 * graph.pos - 1,
-      layout.pos.row = from:to,
-      xscale = x_range,
-      name = "axis"
-    )
+    axis_vp <- viewport(layout.pos.col = 2 * graph.pos - 1,
+                        layout.pos.row = layoutRowSpan,
+                        xscale = x_range,
+                        name = "axis")
   }
 
   # Clean
@@ -190,7 +164,7 @@ prFpGetGraphTicksAndClips <- function(xticks,
       }
     }
     dg <- xaxisGrob(at = ticks,
-                    label = FALSE,
+                    label = ticklabels,
                     gp = gp_axis)
     if (length(grid) == 1) {
       if (is.logical(grid) &&
@@ -207,7 +181,7 @@ prFpGetGraphTicksAndClips <- function(xticks,
     # Actually identical to the ticks viewport
     grid_vp <- viewport(
       layout.pos.col = 2 * graph.pos - 1,
-      layout.pos.row = from:to,
+      layout.pos.row = layoutRowSpan,
       xscale = x_range,
       name = "grid_vp"
     )
@@ -253,4 +227,23 @@ prFpGetGraphTicksAndClips <- function(xticks,
        shapes_gp = shapes_gp,
        lwd.zero = lwd.zero) |>
     structure(class = "forestplot_xaxis")
+}
+
+#' Retrieve rows with actual data, i.e. not headers
+#'
+#' Active rows are all excluding the top ones with NA in the mean value
+#'
+#' @inheritParams prFpGetGraphTicksAndClips
+#' @return vector with all active rows (i.e. `from:to`)
+#'
+#' @noRd
+getActiveRowSpan <- function(estimates) {
+  mean <- estimates[,1,,drop = FALSE]
+  to <- nrow(estimates)
+  for (from in 1:to) {
+    if (!all(is.na(mean[from,,]))) {
+      return(from:to)
+    }
+  }
+  stop("Could not identify rows with actual data")
 }
