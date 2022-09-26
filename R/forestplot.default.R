@@ -146,19 +146,19 @@ forestplot.default <- function(labeltext,
 
   fn.ci_norm <- prFpGetConfintFnList(fn = fn.ci_norm,
                                      no_rows = nrow(coreData$estimates),
-                                     no_cols = ncol(coreData$estimates),
+                                     no_depth = dim(coreData$estimates)[3],
                                      missing_rows = missing_rows,
                                      is.summary = is.summary,
                                      summary = FALSE)
   fn.ci_sum <- prFpGetConfintFnList(fn = fn.ci_sum,
                                     no_rows = nrow(coreData$estimates),
-                                    no_cols = ncol(coreData$estimates),
+                                    no_depth = dim(coreData$estimates)[3],
                                     missing_rows = missing_rows,
                                     is.summary = is.summary,
                                     summary = TRUE)
   lty.ci <- prPopulateList(lty.ci,
                            no_rows = nrow(coreData$estimates),
-                           no_cols = ncol(coreData$estimates))
+                           no_depth = dim(coreData$estimates)[3])
 
   list(labels = labels,
        estimates = coreData$estimates,

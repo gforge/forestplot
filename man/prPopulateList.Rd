@@ -4,7 +4,7 @@
 \alias{prPopulateList}
 \title{Populate a list corresponding to matrix specs}
 \usage{
-prPopulateList(elmnt, no_rows, no_cols, missing_rows, is.summary, summary)
+prPopulateList(elmnt, no_rows, no_depth, missing_rows, is.summary, summary)
 }
 \arguments{
 \item{elmnt}{The element item/list/matrix. If a list it
@@ -15,7 +15,7 @@ and what is a row.}
 
 \item{no_rows}{Number of rows}
 
-\item{no_cols}{Number of columns}
+\item{no_depth}{Number of outcomes per row, i.e. depth}
 
 \item{missing_rows}{The rows that don't have data}
 

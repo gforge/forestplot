@@ -21,8 +21,8 @@ test_that("Basic", {
                xlab = "EQ-5D index"
     )
 
-  expect_equivalent(out$mean,
-                    lapply(HRQoL, \(x) x[,"coef"]) |> unlist())
+  expect_equivalent(out$estimates[,1,],
+                    lapply(HRQoL, \(x) x[,"coef"]) |> do.call(cbind, args = _))
 })
 
 
@@ -46,9 +46,9 @@ test_that("How to handle missing rows when group_by have different names", {
                xticks = c(-.1, -0.05, 0, .05),
                xlab = "EQ-5D index"
     )
-  expect_equivalent(out$mean[1:4],
+  expect_equivalent(out$estimates[,1,1],
                     HRQoL[[1]][,"coef"])
-  expect_scalar_na(out$mean[5])
-  expect_equivalent(out$mean[6:8],
+  expect_scalar_na(out$estimates[1,1,2])
+  expect_equivalent(out$estimates[2:4,1,2],
                     HRQoL[[2]][2:4,"coef"])
 })

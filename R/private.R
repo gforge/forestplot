@@ -10,7 +10,7 @@
 #'  and rows are the same it will not know what is a column
 #'  and what is a row.
 #' @param no_rows Number of rows
-#' @param no_cols Number of columns
+#' @param no_depth Number of columns
 #' @param missing_rows The rows that don't have a CI
 #' @return \code{list} The function returns a list that has
 #' the format [[row]][[col]] where each element contains the
@@ -19,12 +19,13 @@
 #'
 #' @inheritParams forestplot
 #' @keywords internal
-prFpGetConfintFnList <- function(fn, no_rows, no_cols, missing_rows, is.summary, summary) {
+prFpGetConfintFnList <- function(fn, no_rows, no_depth, missing_rows, is.summary, summary) {
   ret <- prPopulateList(fn,
-    no_rows = no_rows, no_cols = no_cols,
-    missing_rows = missing_rows,
-    is.summary = is.summary, summary = summary
-  )
+                        no_rows = no_rows,
+                        no_depth = no_depth,
+                        missing_rows = missing_rows,
+                        is.summary = is.summary,
+                        summary = summary)
 
   makeCalleable <- function(value) {
     if (is.function(value)) {
@@ -61,7 +62,7 @@ prFpGetConfintFnList <- function(fn, no_rows, no_cols, missing_rows, is.summary,
 #'  and rows are the same it will not know what is a column
 #'  and what is a row.
 #' @param no_rows Number of rows
-#' @param no_cols Number of columns
+#' @param no_depth Number of outcomes per row, i.e. depth
 #' @param missing_rows The rows that don't have data
 #' @return \code{list} The function returns a list that has
 #'  the format [[row]][[col]] where each element contains the
@@ -69,7 +70,7 @@ prFpGetConfintFnList <- function(fn, no_rows, no_cols, missing_rows, is.summary,
 #'
 #' @inheritParams forestplot
 #' @keywords internal
-prPopulateList <- function(elmnt, no_rows, no_cols, missing_rows, is.summary, summary) {
+prPopulateList <- function(elmnt, no_rows, no_depth, missing_rows, is.summary, summary) {
   # Return a list that has
   # a two dim structure of [[row]][[col]]
   # if you have a matrix provided but if you
@@ -78,14 +79,14 @@ prPopulateList <- function(elmnt, no_rows, no_cols, missing_rows, is.summary, su
   # If the fn is a character or a matrix then
   ret <- list()
   if (is.function(elmnt)) {
-    if (no_cols == 1) {
+    if (no_depth == 1) {
       for (i in 1:no_rows) {
         ret[[i]] <- elmnt
       }
     } else {
       for (i in 1:no_rows) {
         ret[[i]] <- list()
-        for (ii in 1:no_cols) {
+        for (ii in 1:no_depth) {
           ret[[i]][[ii]] <- elmnt
         }
       }
@@ -93,11 +94,11 @@ prPopulateList <- function(elmnt, no_rows, no_cols, missing_rows, is.summary, su
   } else if (is.character(elmnt) ||
     is.numeric(elmnt)) {
     if (is.matrix(elmnt)) {
-      if (ncol(elmnt) != no_cols) {
+      if (ncol(elmnt) != no_depth) {
         stop(
           "Your columns do not add upp for your",
           " confidence interval funcitons, ",
-          ncol(elmnt), " != ", no_cols
+          ncol(elmnt), " != ", no_depth
         )
       }
       if (nrow(elmnt) != no_rows) {
@@ -107,32 +108,32 @@ prPopulateList <- function(elmnt, no_rows, no_cols, missing_rows, is.summary, su
           nrow(elmnt), " != ", no_rows
         )
       }
-    } else if (length(elmnt) == no_cols) {
-      elmnt <- matrix(elmnt, nrow = no_rows, ncol = no_cols, byrow = TRUE)
+    } else if (length(elmnt) == no_depth) {
+      elmnt <- matrix(elmnt, nrow = no_rows, ncol = no_depth, byrow = TRUE)
     } else if (length(elmnt) %in% c(1, no_rows)) {
-      elmnt <- matrix(elmnt, nrow = no_rows, ncol = no_cols)
+      elmnt <- matrix(elmnt, nrow = no_rows, ncol = no_depth)
     } else {
       stop(
         "You have not provided the expected",
         " number of elements: ",
-        length(elmnt), " is not 1, ", no_cols, " (columns), or ", no_rows, " (rows)"
+        length(elmnt), " is not 1, ", no_depth, " (columns), or ", no_rows, " (rows)"
       )
     }
 
     # Convert into function format
     for (i in 1:no_rows) {
-      if (no_cols == 1) {
+      if (no_depth == 1) {
         ret[[i]] <- elmnt[i, 1]
       } else {
         ret[[i]] <- list()
-        for (ii in 1:no_cols) {
+        for (ii in 1:no_depth) {
           ## Go by row for the elmnt
           ret[[i]][[ii]] <- elmnt[i, ii]
         }
       }
     }
   } else if (is.list(elmnt)) {
-    if (no_cols == 1) {
+    if (no_depth == 1) {
       # Actually correct if the lengths add up
       if (length(elmnt) != no_rows) {
         if (length(elmnt) == sum(is.summary == summary)) {
@@ -180,7 +181,7 @@ prPopulateList <- function(elmnt, no_rows, no_cols, missing_rows, is.summary, su
         if (!is.list(elmnt[[1]])) {
           for (i in 1:no_rows) {
             ret[[i]] <- list()
-            for (ii in 1:no_cols) {
+            for (ii in 1:no_depth) {
               ## Go by row for the elmnt
               ret[[i]][[ii]] <- elmnt[[i]]
             }
@@ -190,7 +191,7 @@ prPopulateList <- function(elmnt, no_rows, no_cols, missing_rows, is.summary, su
           # is provided as a valid matrix
           # with the correct size
           n <- sapply(elmnt, length)
-          if (any(n != no_cols)) {
+          if (any(n != no_depth)) {
             stop(
               "You need to provide a 'square' list (of dim. n x m)",
               " of the same dimension as the number of lines",
@@ -198,19 +199,19 @@ prPopulateList <- function(elmnt, no_rows, no_cols, missing_rows, is.summary, su
               " confidence interval function has the format",
               " ", no_rows, " x ", paste(n, collapse = "/"),
               " where you want all of the second argument to be",
-              " equal to ", no_cols
+              " equal to ", no_depth
             )
           }
 
           ret <- elmnt
         }
-      } else if (length(elmnt) == no_cols) {
+      } else if (length(elmnt) == no_depth) {
         # One dim-list provided
         # now generate a two-dim list
         if (!is.list(elmnt[[1]])) {
           for (i in 1:no_rows) {
             ret[[i]] <- list()
-            for (ii in 1:no_cols) {
+            for (ii in 1:no_depth) {
               ## Go by row for the elmnt
               ret[[i]][[ii]] <- elmnt[[ii]]
             }
@@ -227,14 +228,14 @@ prPopulateList <- function(elmnt, no_rows, no_cols, missing_rows, is.summary, su
               " confidence interval function has the format",
               " ", no_rows, " x ", paste(n, collapse = "/"),
               " where you want all of the second argument to be",
-              " equal to ", no_cols
+              " equal to ", no_depth
             )
           }
 
           # Change to the [[row]][[col]] format
           for (i in 1:no_rows) {
             ret[[i]] <- list()
-            for (ii in 1:no_cols) {
+            for (ii in 1:no_depth) {
               ## Go by row for the elmnt
               ret[[i]][[ii]] <- elmnt[[ii]][[i]]
             }
@@ -246,7 +247,7 @@ prPopulateList <- function(elmnt, no_rows, no_cols, missing_rows, is.summary, su
           " functions, ", length(elmnt), ", ",
           " does not seem to match up with either",
           " number of rows, ", no_rows,
-          " or number of cols, ", no_cols
+          " or number of cols, ", no_depth
         )
       }
     }
@@ -645,11 +646,9 @@ prFpPrepareLegendMarker <- function(fn.legend, col_no, row_no, fn.ci_norm) {
   }
 
   if (length(fn.ci_norm) == col_no) {
-    return(prFpGetConfintFnList(
-      fn = fn.ci_norm,
-      no_rows = row_no,
-      no_cols = col_no
-    )[[1]])
+    return(prFpGetConfintFnList(fn = fn.ci_norm,
+                                no_rows = row_no,
+                                no_depth = col_no)[[1]])
   }
 
   # Not sure what to do if the number don't match the number of legends

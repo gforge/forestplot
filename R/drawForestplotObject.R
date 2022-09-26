@@ -227,7 +227,7 @@ drawForestplotObject <- function(obj) {
 
       if (obj$is.summary[i]) {
         call_list <-
-          list(obj$fn.ci_sum[[i]][[1]],
+          list(obj$fn.ci_sum[[i]],
                estimate = obj$estimates[i, 1, 1],
                lower_limit = obj$estimates[i, 2, 1],
                upper_limit = obj$estimates[i, 3, 1],
@@ -238,7 +238,7 @@ drawForestplotObject <- function(obj) {
           )
       } else {
         call_list <-
-          list(obj$fn.ci_norm[[i]][[1]],
+          list(obj$fn.ci_norm[[i]],
                estimate = obj$estimates[i, 1, 1],
                lower_limit = obj$estimates[i, 2, 1],
                upper_limit = obj$estimates[i, 3, 1],

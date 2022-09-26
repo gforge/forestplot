@@ -4,7 +4,7 @@
 \alias{prFpGetConfintFnList}
 \title{Get a function list}
 \usage{
-prFpGetConfintFnList(fn, no_rows, no_cols, missing_rows, is.summary, summary)
+prFpGetConfintFnList(fn, no_rows, no_depth, missing_rows, is.summary, summary)
 }
 \arguments{
 \item{fn}{The function list/matrix. If a list it
@@ -15,7 +15,7 @@ and what is a row.}
 
 \item{no_rows}{Number of rows}
 
-\item{no_cols}{Number of columns}
+\item{no_depth}{Number of columns}
 
 \item{missing_rows}{The rows that don't have a CI}
 

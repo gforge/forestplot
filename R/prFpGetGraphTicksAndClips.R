@@ -174,7 +174,7 @@ prFpGetGraphTicksAndClips <- function(xticks,
       }
     }
     dg <- xaxisGrob(at = ticks,
-                    label = FALSE,
+                    label = ticklabels,
                     gp = gp_axis)
     if (length(grid) == 1) {
       if (is.logical(grid) &&
