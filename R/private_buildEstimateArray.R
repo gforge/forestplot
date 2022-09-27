@@ -71,6 +71,9 @@ buildEstimateArray <- function(labeltext, lower, upper, mean) {
     }
   }
 
+  d <- dimnames(estimates)
+  d[[2]] <- c("mean", "lower", "upper")
+  dimnames(estimates) <- d
   list(labeltext = labeltext,
        estimates = estimates)
 }

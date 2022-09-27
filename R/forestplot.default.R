@@ -145,23 +145,6 @@ forestplot.default <- function(labeltext,
   align <- prepAlign(align, graph.pos = graph.pos, nc = attr(labels, "no_cols"))
 
   is.summary <- rep(is.summary, length.out = nrow(coreData$estimates))
-  missing_rows <- apply(coreData$estimates, 2, \(row) all(is.na(row)))
-
-  fn.ci_norm <- prFpGetConfintFnList(fn = fn.ci_norm,
-                                     no_rows = nrow(coreData$estimates),
-                                     no_depth = dim(coreData$estimates)[3],
-                                     missing_rows = missing_rows,
-                                     is.summary = is.summary,
-                                     summary = FALSE)
-  fn.ci_sum <- prFpGetConfintFnList(fn = fn.ci_sum,
-                                    no_rows = nrow(coreData$estimates),
-                                    no_depth = dim(coreData$estimates)[3],
-                                    missing_rows = missing_rows,
-                                    is.summary = is.summary,
-                                    summary = TRUE)
-  lty.ci <- prPopulateList(lty.ci,
-                           no_rows = nrow(coreData$estimates),
-                           no_depth = dim(coreData$estimates)[3])
 
   list(labels = labels,
        estimates = coreData$estimates,

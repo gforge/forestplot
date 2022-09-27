@@ -16,6 +16,26 @@ drawForestplotObject <- function(obj) {
                             col = obj$col)
   obj$labels <- NULL
 
+  missing_rows <- apply(obj$estimates, 2, \(row) all(is.na(row)))
+
+  fn.ci_norm <- prFpGetConfintFnList(fn = obj$fn.ci_norm,
+                                     no_rows = nrow(obj$estimates),
+                                     no_depth = dim(obj$estimates)[3],
+                                     missing_rows = missing_rows,
+                                     is.summary = obj$is.summary,
+                                     summary = FALSE)
+  obj$fn.ci_norm <- NULL
+  fn.ci_sum <- prFpGetConfintFnList(fn = obj$fn.ci_sum,
+                                    no_rows = nrow(obj$estimates),
+                                    no_depth = dim(obj$estimates)[3],
+                                    missing_rows = missing_rows,
+                                    is.summary = obj$is.summary,
+                                    summary = TRUE)
+  obj$fn.ci_sum <- NULL
+  lty.ci <- prPopulateList(obj$lty.ci,
+                           no_rows = nrow(obj$estimates),
+                           no_depth = dim(obj$estimates)[3])
+  obj$lty.ci <- NULL
 
   xRange <- prFpXrange(upper = obj$estimates[,3,],
                        lower = obj$estimates[,2,],
@@ -172,7 +192,7 @@ drawForestplotObject <- function(obj) {
 
         if (obj$is.summary[i]) {
           call_list <-
-            list(obj$fn.ci_sum[[i]][[j]],
+            list(fn.ci_sum[[i]][[j]],
                  estimate = obj$estimates[i, 1, j],
                  lower_limit = obj$estimates[i, 2, j],
                  upper_limit = obj$estimates[i, 3, j],
@@ -184,7 +204,7 @@ drawForestplotObject <- function(obj) {
             )
         } else {
           call_list <-
-            list(obj$fn.ci_norm[[i]][[j]],
+            list(fn.ci_norm[[i]][[j]],
                  estimate = obj$estimates[i, 1, j],
                  lower_limit = obj$estimates[i, 2, j],
                  upper_limit = obj$estimates[i, 3, j],
@@ -192,7 +212,7 @@ drawForestplotObject <- function(obj) {
                  y.offset = current_y.offset,
                  clr.line = clr.line[j],
                  clr.marker = clr.marker[j],
-                 lty = obj$lty.ci[[i]][[j]],
+                 lty = lty.ci[[i]][[j]],
                  vertices.height = obj$ci.vertices.height,
                  shapes_gp = obj$shapes_gp,
                  shape_coordinates = shape_coordinates
@@ -227,7 +247,7 @@ drawForestplotObject <- function(obj) {
 
       if (obj$is.summary[i]) {
         call_list <-
-          list(obj$fn.ci_sum[[i]],
+          list(fn.ci_sum[[i]],
                estimate = obj$estimates[i, 1, 1],
                lower_limit = obj$estimates[i, 2, 1],
                upper_limit = obj$estimates[i, 3, 1],
@@ -238,14 +258,14 @@ drawForestplotObject <- function(obj) {
           )
       } else {
         call_list <-
-          list(obj$fn.ci_norm[[i]],
+          list(fn.ci_norm[[i]],
                estimate = obj$estimates[i, 1, 1],
                lower_limit = obj$estimates[i, 2, 1],
                upper_limit = obj$estimates[i, 3, 1],
                size = info[i, 1],
                clr.line = clr.line,
                clr.marker = clr.marker,
-               lty = obj$lty.ci[[i]][[1]],
+               lty = lty.ci[[i]][[1]],
                vertices.height = obj$ci.vertices.height,
                shapes_gp = obj$shapes_gp,
                shape_coordinates = shape_coordinates

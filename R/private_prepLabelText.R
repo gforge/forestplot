@@ -20,18 +20,22 @@ prepLabelText <- function(labeltext, nr) {
     # Can't figure out multiple levels of expressions
     nc <- 1
     label_nr <- length(labeltext)
+    # Names are retained
     labeltext <- as.list(labeltext)
   } else if (is.list(labeltext)) {
     if (sapply(labeltext, \(x)  length(x) == 1 && !is.list(x)) |> all()) {
       labeltext <- list(labeltext)
     }
-    labeltext <- lapply(labeltext, function(x) {
-      if (is.list(x)) {
-        return(x)
-      }
+    labeltext <- sapply(labeltext,
+                        function(x) {
+                          if (is.list(x)) {
+                            return(x)
+                          }
 
-      return(as.list(x))
-    })
+                          return(as.list(x))
+                        },
+                        simplify = FALSE,
+                        USE.NAMES = TRUE)
 
     if (!prFpValidateLabelList(labeltext)) {
       stop("Invalid labellist, it has to be formed as a matrix m x n elements")
@@ -67,7 +71,9 @@ prepLabelText <- function(labeltext, nr) {
     widthcolumn <- !apply(is.na(labeltext), 1, any)
     nc <- NCOL(labeltext)
     label_nr <- NROW(labeltext)
+    label_colnames <- colnames(labeltext)
     labeltext <- (\(x) lapply(seq(NCOL(labeltext)), function(i) as.list(x[,i])))(labeltext)
+    names(labeltext) <- label_colnames
   }
 
   if (nr != label_nr) {
