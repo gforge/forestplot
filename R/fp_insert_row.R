@@ -24,10 +24,15 @@ fp_insert_row <- function(x,
                           mean = NULL, lower = NULL, upper = NULL,
                           position = 1,
                           is.summary = FALSE){
-  labels <- sapply(list(...),
-                   function(var) {
+  args <- list(...)
+  labels <- sapply(args,
+                   FUN = function(var) {
                      if (is.list(var)) {
                        return(var)
+                     }
+
+                     if (is.expression(var)) {
+                       return(lapply(1:length(var), \(i) var[i]))
                      }
 
                      return(as.list(var))
@@ -70,7 +75,7 @@ fp_insert_row <- function(x,
 
 
   for (i  in 1:attr(x$labels, "no_cols")) {
-    if (i > length(labels)) {
+    if (is.null(names(labels)) && i > length(labels)) {
       val <- as.list(rep(NA, length.out = nrow(estimates)))
     } else {
       if (is.null(names(labels))) {

@@ -198,6 +198,10 @@ print.gforge_forestplot <- function(x, ...) {
 #' @rdname forestplot
 #' @param y Ignored
 #' @export
-plot.gforge_forestplot <- function(x, y, ...) {
+plot.gforge_forestplot <- function(x, y, ..., new_page = FALSE) {
+  if (new_page) {
+    grid.newpage()
+  }
+
   print(x, ...)
 }

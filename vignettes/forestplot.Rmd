@@ -62,69 +62,34 @@ Below is a basic example from the original `forestplot` function that shows how 
 
 ```{r, fig.height=4, fig.width=8, message=FALSE}
 # Cochrane data from the 'rmeta'-package
-cochrane_from_rmeta <- data.frame(mean = c(NA, NA, 0.578, 0.165, 0.246, 0.7, 0.348, 0.139, 1.017, NA, 0.531),
-                                  lower = c(NA, NA, 0.372, 0.018, 0.072, 0.333, 0.083, 0.016, 0.365, NA, 0.386),
-                                  upper = c(NA, NA, 0.898, 1.517, 0.833, 1.474, 1.455, 1.209, 2.831, NA, 0.731))
+base_data <- tibble::tibble(mean  = c(0.578, 0.165, 0.246, 0.700, 0.348, 0.139, 1.017),
+                            lower = c(0.372, 0.018, 0.072, 0.333, 0.083, 0.016, 0.365),
+                            upper = c(0.898, 1.517, 0.833, 1.474, 1.455, 1.209, 2.831),
+                            study = c("Auckland", "Block", "Doran", "Gamsu",
+                                      "Morrison", "Papageorgiou", "Tauesch"),
+                            deaths_steroid = c("36", "1", "4", "14", "3", "1", "8"),
+                            deaths_placebo = c("60", "5", "11", "20", "7", "7", "10"),
+                            OR = c("0.58", "0.16", "0.25", "0.70", "0.35", "0.14", "1.02"))
 
-tabletext <- cbind(c("", "Study", "Auckland", "Block", "Doran", "Gamsu", "Morrison", "Papageorgiou", "Tauesch", NA, "Summary"),
-                   c("Deaths", "(steroid)", "36", "1", "4", "14", "3", "1", "8", NA, NA),
-                   c("Deaths", "(placebo)", "60", "5", "11", "20", "7", "7", "10", NA, NA),
-                   c("", "OR", "0.58", "0.16", "0.25", "0.70", "0.35", "0.14", "1.02", NA, "0.53"))
-
-cochrane_from_rmeta |> 
-  forestplot(labeltext = tabletext, 
-             is.summary = c(rep(TRUE, 2), rep(FALSE, 8), TRUE),
-             clip = c(0.1, 2.5), 
-             xlog = TRUE, 
-             col = fpColors(box = "royalblue",
-                            line = "darkblue",
-                            summary = "royalblue"))
-```
-
-The `dplyr` syntax
-------------------
-
-As of version *2.0* the forestplot package is compatible with standard `dplyr` syntax. Above is a minor adaptation for the old code using this syntax. If you provide a `data.frame` it will assume that the names are `mean`, `lower`, `upper` and `labeltext` unless you specify otherwise. Below is perhaps a more natural way of achieving the same as above that most likely better corresponds to a modern work flow.
-
-```{r}
-# Cochrane data from the 'rmeta'-package
-base_data <- tibble(mean  = c(0.578, 0.165, 0.246, 0.700, 0.348, 0.139, 1.017), 
-                    lower = c(0.372, 0.018, 0.072, 0.333, 0.083, 0.016, 0.365),
-                    upper = c(0.898, 1.517, 0.833, 1.474, 1.455, 1.209, 2.831),
-                    study = c("Auckland", "Block", "Doran", "Gamsu", "Morrison", "Papageorgiou", "Tauesch"),
-                    deaths_steroid = c("36", "1", "4", "14", "3", "1", "8"),
-                    deaths_placebo = c("60", "5", "11", "20", "7", "7", "10"),
-                    OR = c("0.58", "0.16", "0.25", "0.70", "0.35", "0.14", "1.02"))
-
-summary <- tibble(mean  = 0.531, 
-                  lower = 0.386,
-                  upper = 0.731,
-                  study = "Summary",
-                  OR = "0.53",
-                  summary = TRUE)
-
-header <- tibble(study = c("", "Study"),
-                 deaths_steroid = c("Deaths", "(steroid)"),
-                 deaths_placebo = c("Deaths", "(placebo)"),
-                 OR = c("", "OR"),
-                 summary = TRUE)
-
-empty_row <- tibble(mean = NA_real_)
-
-cochrane_output_df <- bind_rows(header,
-                                base_data,
-                                empty_row,
-                                summary)
-
-cochrane_output_df |> 
-  forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR), 
-             is.summary = summary,
-             clip = c(0.1, 2.5), 
-             xlog = TRUE, 
-             col = fpColors(box = "royalblue",
-                            line = "darkblue",
-                            summary = "royalblue"))
-
+base_data |>
+  forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR),
+             clip = c(0.1, 2.5),
+             xlog = TRUE,
+             shapes_gp = fpShapesGp(box = gpar(fill = "royalblue", 
+                                               col = "royalblue"),
+                                    line = gpar(col = "darkblue"),
+                                    summary = gpar(fill = "royalblue",
+                                                   col = "royalblue"))) |>
+  fp_add_header(study = c("", "Study"),
+                deaths_steroid = c("Deaths", "(steroid)"),
+                deaths_placebo = c("Deaths", "(placebo)"),
+                OR = c("", "OR")) |>
+  fp_append_row(mean  = 0.531,
+                lower = 0.386,
+                upper = 0.731,
+                study = "Summary",
+                OR = "0.53",
+                is.summary = TRUE)
 ```
 
 Summary lines
@@ -133,7 +98,7 @@ Summary lines
 The same as above but with lines based on the summary elements and also using a direct call with matrix input instead of relying on dplyr.
 
 ```{r, fig.height=4, fig.width=8, message=FALSE}
-cochrane_output_df |> 
+base_data |> 
   forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR), 
              is.summary = summary,
              clip = c(0.1, 2.5), 

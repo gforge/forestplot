@@ -57,7 +57,7 @@ forestplot(...)
 
 \method{print}{gforge_forestplot}(x, ...)
 
-\method{plot}{gforge_forestplot}(x, y, ...)
+\method{plot}{gforge_forestplot}(x, y, ..., new_page = FALSE)
 
 \method{forestplot}{grouped_df}(x, labeltext, mean, lower, upper, legend, is.summary, ...)
 }
