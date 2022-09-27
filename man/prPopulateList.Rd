@@ -8,7 +8,7 @@ prPopulateList(elmnt, no_rows, no_depth, missing_rows, is.summary, summary)
 }
 \arguments{
 \item{elmnt}{The element item/list/matrix. If a list it
-should be in the format [[row]][[col]], the function
+should be in the format [\link{row}][\link{col}], the function
 tries to handle this but in cases where the columns
 and rows are the same it will not know what is a column
 and what is a row.}
@@ -25,8 +25,8 @@ font-style}
 }
 \value{
 \code{list} The function returns a list that has
- the format [[row]][[col]] where each element contains the
- corresponding element
+the format [\link{row}][\link{col}] where each element contains the
+corresponding element
 }
 \description{
 This function helps the \code{\link{forestplot}}

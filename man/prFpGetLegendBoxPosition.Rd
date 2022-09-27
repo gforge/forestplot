@@ -20,7 +20,7 @@ you want them to be in a line then you can specify the "align" option, e.g.
 }
 \value{
 \code{list} Returns the \code{pos} list with
- the correct x/y/adjust values
+the correct x/y/adjust values
 }
 \description{
 Used for the forestplot legend box.

@@ -12,6 +12,7 @@
 #' @param upper A vector or matrix with the upper confidence interval
 #' @param position The row position to input at. Either a row number or "last".
 #' @param is.summary Whether the row is a summary.
+#' @param boxsize The box size for the drawn estimate line
 #'
 #' @return The foresplot object with the added rows
 #' @export
@@ -23,7 +24,8 @@ fp_insert_row <- function(x,
                           ...,
                           mean = NULL, lower = NULL, upper = NULL,
                           position = 1,
-                          is.summary = FALSE){
+                          is.summary = FALSE,
+                          boxsize = NA){
   args <- list(...)
   labels <- sapply(args,
                    FUN = function(var) {
@@ -31,7 +33,7 @@ fp_insert_row <- function(x,
                        return(var)
                      }
 
-                     if (is.expression(var)) {
+                     if (is.expression(var) || is.character(var)) {
                        return(lapply(1:length(var), \(i) var[i]))
                      }
 
@@ -43,7 +45,8 @@ fp_insert_row <- function(x,
                                            lower = lower,
                                            upper = upper,
                                            label_length = length(labels[[1]]),
-                                           xlog = x$xlog)
+                                           xlog = x$xlog,
+                                           depth = dim(x$estimates)[3])
   stopifnot(all(nrow(estimates) == sapply(labels, length)))
 
   if (position == "last") {
@@ -109,6 +112,18 @@ fp_insert_row <- function(x,
                       x$is.summary[position:length(x$is.summary)])
   }
 
+  if (!is.null(x$boxsize)) {
+    boxsize <- rep(boxsize, length.out = nrow(estimates))
+    if (position == "last") {
+      x$boxsize <- c(x$boxsize, boxsize)
+    } else {
+      x$boxsize <- c(x$boxsize[0:(position - 1)],
+                     boxsize,
+                     x$boxsize[position:length(x$boxsize)])
+    }
+  }
+
+
   return(x)
 }
 
@@ -124,10 +139,10 @@ fp_append_row <- function(x, ..., position = "last", is.summary = FALSE) {
   fp_insert_row(x, ..., position = position, is.summary = is.summary)
 }
 
-pr_convert_insert_estimates <- function(mean, lower, upper, label_length, xlog) {
+pr_convert_insert_estimates <- function(mean, lower, upper, label_length, xlog, depth) {
   stopifnot(is.null(lower) == is.null(upper))
   if (is.null(mean)) {
-    return(array(NA, dim = c(label_length,3,1), dimnames = list(NULL, c("mean", "lower", "upper"), NULL)))
+    return(array(NA, dim = c(label_length, 3, depth), dimnames = list(NULL, c("mean", "lower", "upper"), NULL)))
   }
 
   if (is.null(lower)) {
@@ -156,6 +171,9 @@ pr_convert_insert_estimates <- function(mean, lower, upper, label_length, xlog) 
   }
 
   estimates <- abind::abind(mean, lower, upper, along = 2, new.names = list(NULL, c("mean", "lower", "upper"), NULL))
+  if (depth != dim(estimates)[3]) {
+    stop("Expected the dimension of the estimates to be of ", depth, " and not ", dim(estimates)[3])
+  }
   if (xlog) {
     estimates <- log(estimates)
   }

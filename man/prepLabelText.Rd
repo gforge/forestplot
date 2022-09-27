@@ -10,12 +10,12 @@ prepLabelText(labeltext, nr)
 \method{[}{forestplot_labeltext}(x, i, j, ...)
 }
 \arguments{
-\item{labeltext}{The label text input, either `expression`, `list`
-`vector` or `matrix`}
+\item{labeltext}{The label text input, either \code{expression}, \code{list}
+\code{vector} or \code{matrix}}
 
 \item{nr}{The number of rows}
 
-\item{x}{A `forestplot_labeltext` object}
+\item{x}{A \code{forestplot_labeltext} object}
 
 \item{i}{The row}
 
@@ -25,11 +25,13 @@ prepLabelText(labeltext, nr)
 \code{fn.ci_sum} arguments}
 }
 \value{
-Returns a `forestplot_labeltext` object with attributes:
- - no_cols
- - no_rows
- - widthcolumn
- - label_type
+Returns a \code{forestplot_labeltext} object with attributes:
+\itemize{
+\item no_cols
+\item no_rows
+\item widthcolumn
+\item label_type
+}
 }
 \description{
 Prepares an object that contains the number of columns and rows
@@ -37,7 +39,7 @@ Prepares an object that contains the number of columns and rows
 \section{Functions}{
 \itemize{
 \item \code{[}: Pick the value that corresponds to the row and column.
-Returns `expression`, `call`, or `text`.
+Returns \code{expression}, \code{call}, or \code{text}.
 
 }}
 \keyword{internal}

@@ -34,13 +34,7 @@ it's set to the par("fg") color}
 \item{hrz_lines}{The color of the horizontal lines}
 }
 \value{
-list A list with the elements:
-\item{box}{the color of the box/marker}
-\item{lines}{the color of the lines}
-\item{summary}{the color of the summary}
-\item{zero}{the color of the zero vertical line}
-\item{text}{the color of the text}
-\item{axes}{the color of the axes}
+A list with key elements
 }
 \description{
 This function encapsulates all the colors that are used in the

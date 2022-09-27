@@ -10,6 +10,8 @@ Changes for 3.0.0
   adaptation.
 * New additive syntax with:
   * Row manipulation: `fp_insert_row`, `fp_add_header`, `fp_append_row`
+  * Style functions: `fp_set_style` and txt styling `fp_txt_bold`, `fp_txt_italic`, ...
+  * Align functions: `fp_align_left`, `fp_align_center`, `fp_align_right`
 * Fixed bug with how grouped data frames are processed and presented.
 * Expressions are now allowed in data.frame tidyverse input.
 * Moved to native R-pipe operator (|> instead of %>%)

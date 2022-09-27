@@ -26,6 +26,31 @@ test_that("Basic", {
 })
 
 
+test_that("Basic add header", {
+  out <- HRQoL |>
+    sapply(\(x) data.frame(x) |> tibble::rownames_to_column(),
+           simplify = FALSE) |>
+    dplyr::bind_rows(.id = "Country") |>
+    dplyr::group_by(Country) |>
+    forestplot(mean = coef,
+               lower = lower,
+               upper = upper,
+               labeltext = rowname,
+               fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+               boxsize = .25, # We set the box size to better visualize the type
+               line.margin = .1, # We need to add this to avoid crowding
+               clip = c(-.125, 0.075),
+               col = fpColors(box = c("blue", "darkred")),
+               xticks = c(-.1, -0.05, 0, .05),
+               xlab = "EQ-5D index"
+    ) |>
+    fp_add_header("A header")
+
+  expect_equivalent(out$labels[[1]][[1]],
+                    "A header")
+})
+
+
 test_that("How to handle missing rows when group_by have different names", {
   out <- HRQoL |>
     sapply(\(x) data.frame(x) |> tibble::rownames_to_column(),

@@ -14,7 +14,7 @@ prepAlign(align, graph.pos, nc)
 \item{nc}{The number of columns}
 }
 \value{
-Returns vector of `"l", "c", "r"` values
+Returns vector of \verb{"l", "c", "r"} values
 }
 \description{
 Prepares the graph position so that it matches the label size

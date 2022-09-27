@@ -1,5 +1,5 @@
 Package: forestplot
-Version: 2.1.0
+Version: 3.0.0
 Title: Advanced Forest Plot Using 'grid' Graphics
 Authors@R: c(person(given = "Max",
                     family = "Gordon",
@@ -39,5 +39,5 @@ Suggests:
 Encoding: UTF-8
 NeedsCompilation: no
 VignetteBuilder: knitr
-Roxygen: list()
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1

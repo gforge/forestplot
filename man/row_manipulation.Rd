@@ -13,7 +13,8 @@ fp_insert_row(
   lower = NULL,
   upper = NULL,
   position = 1,
-  is.summary = FALSE
+  is.summary = FALSE,
+  boxsize = NA
 )
 
 fp_add_header(x, ..., position = 1, is.summary = TRUE)
@@ -35,6 +36,8 @@ names or unnamed arguments that will map in appearing order.}
 \item{position}{The row position to input at. Either a row number or "last".}
 
 \item{is.summary}{Whether the row is a summary.}
+
+\item{boxsize}{The box size for the drawn estimate line}
 }
 \value{
 The foresplot object with the added rows
@@ -57,10 +60,7 @@ base_data <- tibble::tibble(mean  = c(0.578, 0.165, 0.246, 0.700, 0.348, 0.139, 
 base_data |>
   forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR),
              clip = c(0.1, 2.5),
-             xlog = TRUE,
-             col = fpColors(box = "royalblue",
-                            line = "darkblue",
-                            summary = "royalblue")) |>
+             xlog = TRUE) |>
   fp_add_header(study = c("", "Study"),
                 deaths_steroid = c("Deaths", "(steroid)"),
                 deaths_placebo = c("Deaths", "(placebo)"),

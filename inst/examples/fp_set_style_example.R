@@ -15,9 +15,7 @@ base_data |>
                 deaths_steroid = c("Deaths", "(steroid)"),
                 deaths_placebo = c("Deaths", "(placebo)"),
                 OR = c("", "OR")) |>
-  fp_append_row(mean  = 0.531,
-                lower = 0.386,
-                upper = 0.731,
-                study = "Summary",
-                OR = "0.53",
-                is.summary = TRUE)
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = gpar(fill = "royalblue", clr = "black"),
+               txt_gp = fpTxtGp(label = gpar(fontfamily = "mono")))

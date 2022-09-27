@@ -2,7 +2,7 @@
 % Please edit documentation in R/assertAndRetrieveTidyValue.R
 \name{assertAndRetrieveTidyValue}
 \alias{assertAndRetrieveTidyValue}
-\title{Retriever of `tidyselect`}
+\title{Retriever of \code{tidyselect}}
 \usage{
 assertAndRetrieveTidyValue(
   x,
@@ -24,6 +24,6 @@ assertAndRetrieveTidyValue(
 value with attribute
 }
 \description{
-As forestpot has evolved we now primarily use `tidyverse` select style. This
+As forestpot has evolved we now primarily use \code{tidyverse} select style. This
 function helps with backward compatibility
 }

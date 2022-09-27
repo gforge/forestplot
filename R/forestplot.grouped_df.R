@@ -1,7 +1,7 @@
 #' @rdname forestplot
 #' @method forestplot grouped_df
 #' @export
-forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.summary, ...) {
+forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.summary, boxsize, ...) {
   safeLoadPackage("dplyr")
   safeLoadPackage("tidyr")
   safeLoadPackage("rlang")
@@ -36,8 +36,19 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
     sumid <- substitute(is.summary)
     is.summary <- tryCatch(x |> dplyr::pull({{ sumid }}) |> sapply(function(x) ifelse(is.na(x), FALSE, x)),
                            error = function(e) is.summary)
+    if (is.function(is.summary)) {
+      stop("Invalid summary input, does column, '", sumid, "', actually exist?")
+    }
   } else {
     is.summary <- FALSE
+  }
+
+  if (!missing(boxsize)) {
+    boxid <- substitute(boxsize)
+    boxsize <- tryCatch(x |> dplyr::pull({{ boxid }}) |> sapply(function(x) ifelse(is.na(x), NA, x)),
+                        error = function(e) boxsize)
+  } else {
+    boxsize <- NULL
   }
 
   groups <- attr(x, "groups") |>
@@ -164,6 +175,7 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
     upper = estimates$upper,
     legend = legend,
     is.summary = is.summary,
+    boxsize = boxsize,
     ...
   )
 }

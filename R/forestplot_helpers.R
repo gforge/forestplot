@@ -36,7 +36,7 @@
 #'  any other line type than 1 since there is a risk of a dash occurring
 #'  at the very end, i.e. showing incorrectly narrow confidence interval.
 #' @param vertices.height The height hoft the vertices. Defaults to npc units
-#'  corresponding to 10\% of the row height.
+#'  corresponding to 10% of the row height.
 #' @param ... Allows additional parameters for sibling functions
 #' @return \code{void} The function outputs the line using grid compatible
 #'  functions and does not return anything.
@@ -554,13 +554,7 @@ fpDrawBarCI <- function(lower_limit, estimate, upper_limit, size, col, y.offset 
 #' @param text The color of the text
 #' @param axes The color of the x-axis at the bottom
 #' @param hrz_lines The color of the horizontal lines
-#' @return list A list with the elements:
-#' \item{box}{the color of the box/marker}
-#' \item{lines}{the color of the lines}
-#' \item{summary}{the color of the summary}
-#' \item{zero}{the color of the zero vertical line}
-#' \item{text}{the color of the text}
-#' \item{axes}{the color of the axes}
+#' @return A list with key elements
 #'
 #' @author Max Gordon, Thomas Lumley
 #' @importFrom grDevices colorRampPalette
@@ -633,66 +627,73 @@ fpColors <- function(all.elements,
   ))
 }
 
-#' A function for graphical parameters of the shapes used in forestplot()
+#' A function for graphical parameters of the shapes used in `forestplot()`
 #'
 #' This function encapsulates all the non-text elements that are used in the
-#' \code{\link{forestplot}} function. As there are plenty of shapes
+#' [`forestplot()`] function. As there are plenty of shapes
 #' options this function gathers them all in one place.
 #'
-#' This function obsoletes \code{\link{fpColors}}.
+#' This function obsoletes [`fpColors()`].
 #'
 #' If some, but not all parameters of a shape (e.g. box) are specified in gpar()
 #' such as setting lwd but not line color, the unspecified parameters default
-#' to the ones specified in \code{default}, then, default to legacy parameters
-#' of \code{forestplot} such as \code{col}.
+#' to the ones specified in `default`, then, default to legacy parameters
+#' of `forestplot` such as `col`.
 #'
-#' Parameters \code{box}, \code{lines}, \code{vertices}, \code{summary} may be set as list
+#' Parameters `box`, `lines`, `vertices`, `summary` may be set as list
 #' containing several gpars. The length of the list must either be equal to the number of bands
 #' per label or to the number of bands multiplied by the number of labels, allowing specification
 #' of different styles for different parts of the forest plot.
 #'
-#' The parameter \code{grid} can either be a single gpar or a list of gpars with as many
-#' elements as there are lines in the grid (as set by the \code{xticks} or \code{grid}
+#' The parameter `grid` can either be a single gpar or a list of gpars with as many
+#' elements as there are lines in the grid (as set by the `xticks` or `grid`
 #' arguments of forestplot)
 #'
-#' Parameters \code{zero}, \code{axes}, \code{hrz_lines} must either be NULL or gpar
+#' Parameters `zero`, `axes`, `hrz_lines` must either be NULL or gpar
 #' but cannot be lists of gpars.
 #'
-#' @param default A fallback \code{\link[grid]{gpar}} for all unspecified attributes.
+#' @param default A fallback [grid::gpar] for all unspecified attributes.
 #'  If set to NULL then it defaults to legacy parameters, including
-#'  the \code{col}, \code{lwd.xaxis}, \code{lwd.ci} and \code{lty.ci}
-#'  parameter of \code{fpColors}.
-#' @param box The graphical parameters (\code{gpar}) of the box, circle
+#'  the `col`, `lwd.xaxis`, `lwd.ci` and `lty.ci`
+#'  parameter of `fpColors`.
+#' @param box The graphical parameters (`gpar`, `character`) of the box, circle
 #'  or point indicating the point estimate, i.e. the middle
-#'  of the confidence interval (may be a list of gpars)
-#' @param lines The graphical parameters (\code{gpar}) of the confidence lines
-#'  (may be a list of gpars)
-#' @param vertices The graphical parameters (\code{gpar}) of the vertices
+#'  of the confidence interval (may be a list of gpars). If provided
+#'  a string a `gpar` will be generated with `col`, and `fill` for
+#'  those arguments.
+#' @param lines The graphical parameters (`gpar`, `character`) of the confidence lines
+#'  (may be a list of gpars). If provided a string a `gpar` will be generated
+#'   with `col` as the only arguments.
+#' @param vertices The graphical parameters (`gpar`, `character`) of the vertices
 #'  (may be a list of gpars).
-#'  If \code{ci.vertices} is set to TRUE in \code{forestplot}
-#'  \code{vertices} inherits from \code{lines} all its parameters but lty that is set
+#'  If `ci.vertices` is set to TRUE in `forestplot`
+#'  `vertices` inherits from `lines` all its parameters but lty that is set
 #'  to "solid" by default.
-#' @param summary The graphical parameters (\code{gpar}) of the summary
-#'  (may be a list of gpars)
-#' @param zero The graphical parameters (\code{gpar}) of the zero line
-#'  (may not be a list of gpars)
-#' @param axes The graphical parameters (\code{gpar}) of the x-axis at the bottom
-#'  (may not be a list of gpars)
-#' @param hrz_lines The graphical parameters (\code{gpar}) of the horizontal lines
-#'  (may not be a list of gpars)
-#' @param grid The graphical parameters (\code{gpar}) of the grid (vertical lines)
-#'  (may be a list of gpars)
+#' @param summary The graphical parameters (`gpar`, `character`) of the summary
+#'  (may be a list of gpars). If provided a string a `gpar` will be generated with
+#'  `col`, and `fill` for those arguments.
+#' @param zero The graphical parameters (`gpar`) of the zero line
+#'  (may not be a list of gpars). If provided a string a `gpar` will be generated
+#'   with `col` as the only arguments.
+#' @param axes The graphical parameters (`gpar`) of the x-axis at the bottom
+#'  (may not be a list of gpars).
+#' @param hrz_lines The graphical parameters (`gpar`) of the horizontal lines
+#'  (may not be a list of gpars). If provided a string a `gpar` will be generated
+#'  with `col` as the only arguments.
+#' @param grid The graphical parameters (`gpar`) of the grid (vertical lines)
+#'  (may be a list of gpars). If provided a string a `gpar` will be generated
+#'   with `col` as the only arguments.
 #'
 #' @return list A list with the elements:
-#' \item{default}{the gpar for default attributes}
-#' \item{box}{the gpar or list of gpars of the box/marker}
-#' \item{lines}{the gpar or list of gpars of the lines}
-#' \item{vertices}{the gpar or list of gpars of the vertices}
-#' \item{summary}{the gpar or list of gpars of the summary}
-#' \item{zero}{the gpar of the zero vertical line}
-#' \item{axes}{the gpar of the x-axis}
-#' \item{hrz_lines}{the gpar of the horizontal lines}
-#' \item{grid}{the gpar or list of gpars of the grid lines}
+#' * default: the gpar for default attributes
+#' * box: the gpar or list of gpars of the box/marker
+#' * lines: the gpar or list of gpars of the lines
+#' * vertices: the gpar or list of gpars of the vertices
+#' * summary: the gpar or list of gpars of the summary
+#' * zero: the gpar of the zero vertical line
+#' * axes: the gpar of the x-axis
+#' * hrz_lines: the gpar of the horizontal lines
+#' * grid: the gpar or list of gpars of the grid lines
 #'
 #' @author Andre GILLIBERT
 #' @importFrom grid gpar
@@ -721,6 +722,24 @@ fpShapesGp <- function(default = NULL,
     hrz_lines = hrz_lines,
     grid = grid
   )
+
+  for (clr_grp in c("box", "summary", "lines", "zero", "hrz_lines", "grid", "vertices")) {
+    gpar_generator <- \(clr) gpar(col = clr)
+    if (clr_grp %in% c("box", "summary")) {
+      gpar_generator <- \(clr) gpar(col = clr, fill = clr)
+    }
+
+    if (is.character(ret[[clr_grp]])) {
+      ret[[clr_grp]] <- sapply(ret[[clr_grp]],
+                               FUN = gpar_generator,
+                               USE.NAMES = TRUE,
+                               simplify = FALSE)
+
+      if (length(ret[[clr_grp]]) == 1) {
+        ret[[clr_grp]] <- ret[[clr_grp]][[1]]
+      }
+    }
+  }
 
   # check that objects have the correct type
   for (nm in names(ret)) {

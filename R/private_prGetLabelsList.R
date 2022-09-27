@@ -72,6 +72,10 @@ prGetLabelsList <- function(labels,
     # The row part
     for (i in 1:attr(labels, "no_rows")) {
       txt_out <- labels[i, j]
+      txt_align <- attr(txt_out, "align")
+      if (is.null(txt_align)) {
+        txt_align <- align[j]
+      }
 
       # If it's a call created by bquote or similar it
       # needs evaluating
@@ -80,28 +84,27 @@ prGetLabelsList <- function(labels,
       }
 
       if (is.expression(txt_out) || is.character(txt_out) || is.numeric(txt_out) || is.factor(txt_out)) {
-        x <- switch(align[j],
+        x <- switch(txt_align,
                     l = 0,
                     r = 1,
-                    c = 0.5
-        )
+                    c = 0.5)
 
-        just <- switch(align[j],
+        just <- switch(txt_align,
                        l = "left",
                        r = "right",
-                       c = "center"
-        )
+                       c = "center")
 
         # Bold the text if this is a summary
         if (is.summary[i]) {
-          x <- switch(align[j],
+          x <- switch(txt_align,
                       l = 0,
                       r = 1,
-                      c = 0.5
-          )
+                      c = 0.5)
 
           gp_list <- txt_gp$summary[[sum(is.summary[1:i])]][[j]]
           gp_list[["col"]] <- rep(col$text, length = attr(labels, "no_rows"))[i]
+          gp_list <- merge_with_txt_gp(gp_list = gp_list,
+                                       txt_out = txt_out)
 
           # Create a textGrob for the summary
           # The row/column order is in this order
@@ -118,6 +121,8 @@ prGetLabelsList <- function(labels,
           if (is.null(gp_list$col)) {
             gp_list[["col"]] <- rep(col$text, length = attr(labels, "no_rows"))[i]
           }
+          gp_list <- merge_with_txt_gp(gp_list = gp_list,
+                                       txt_out = txt_out)
 
           # Create a textGrob with the current row-cell for the label
           fixed_labels[[j]][[i]] <-

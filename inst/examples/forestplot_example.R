@@ -19,7 +19,9 @@ test_data |>
              zero = 1,
              cex  = 2,
              lineheight = "auto",
-             xlab = "Lab axis txt")
+             xlab = "Lab axis txt") |>
+  fp_add_header("Group") |>
+  fp_set_style(lines = gpar(col = "darkblue"))
 
 # Print two plots side by side using the grid
 # package's layout option for viewports
@@ -93,11 +95,6 @@ out_data |>
                               gp = gpar(col = "steelblue", lty = 2)
              ),
              boxsize = 0.25,
-             col = fpColors(
-               box = c("royalblue", "gold"),
-               line = c("darkblue", "orange"),
-               summary = c("darkblue", "red")
-             ),
              xlab = "The estimates",
              new_page = TRUE,
              legend = c("Treatment", "Placebo"),
@@ -106,51 +103,46 @@ out_data |>
                title = "Group",
                r = unit(.1, "snpc"),
                gp = gpar(col = "#CCCCCC", lwd = 1.5)
-             ))
+             )) |>
+  fp_set_style(box = c("royalblue", "gold"),
+               line = c("darkblue", "orange"),
+               summary = c("darkblue", "red"))
 
 # An example of how the exponential works
-test_data <- data.frame(coef = c(2.45, 0.43),
-                        low = c(1.5, 0.25),
-                        high = c(4, 0.75),
-                        boxsize = c(0.25, 0.25))
-row_names <- cbind(
-  c("Name", "Variable A", "Variable B"),
-  c("HR", test_data$coef)
-)
-test_data <- rbind(rep(NA, ncol(test_data)), test_data)
+data.frame(coef = c(2.45, 0.43),
+           low = c(1.5, 0.25),
+           high = c(4, 0.75),
+           boxsize = c(0.25, 0.25),
+           variables = c("Variable A", "Variable B")) |>
+  forestplot(labeltext = c(variables, coef),
+             mean = coef,
+             lower = low,
+             upper = high,
+             boxsize = boxsize,
+             zero = 1,
+             xlog = TRUE) |>
+  fp_set_style(lines = "red", box = "darkred") |>
+  fp_add_header(coef = "HR" |> fp_txt_plain() |> fp_align_center(),
+                variables = "Measurements")
 
-forestplot(
-  labeltext = row_names,
-  test_data[, c("coef", "low", "high")],
-  is.summary = c(TRUE, FALSE, FALSE),
-  boxsize = test_data$boxsize,
-  zero = 1,
-  xlog = TRUE,
-  col = fpColors(lines = "red", box = "darkred")
-)
-
-# An example using shapes_gp
-forestplot(
-  labeltext = cbind(Author = c("Smith et al", "Smooth et al", "Al et al")),
-  mean = cbind(1:3, 1.5:3.5),
-  lower = cbind(0:2, 0.5:2.5),
-  upper = cbind(4:6, 5.5:7.5),
-  is.summary = c(FALSE, FALSE, TRUE),
-  shapes_gp = fpShapesGp(
-    default = gpar(lineend = "square", linejoin = "mitre", lwd = 3, col = "pink"),
-    box = gpar(fill = "black", col = "red"), # only one parameter
-    lines = list( # as many parameters as CI
-      gpar(lwd = 10), gpar(lwd = 5),
-      gpar(), gpar(),
-      gpar(lwd = 2), gpar(lwd = 1)
-    ),
-    summary = list( # as many parameters as band per label
-      gpar(fill = "violet", col = "gray", lwd = 10),
-      gpar(fill = "orange", col = "gray", lwd = 10)
-    )
-  ),
-  vertices = TRUE
-)
+# An example using style
+forestplot(labeltext = cbind(Author = c("Smith et al", "Smooth et al", "Al et al")),
+           mean = cbind(1:3, 1.5:3.5),
+           lower = cbind(0:2, 0.5:2.5),
+           upper = cbind(4:6, 5.5:7.5),
+           is.summary = c(FALSE, FALSE, TRUE),
+           vertices = TRUE) |>
+  fp_set_style(default = gpar(lineend = "square", linejoin = "mitre", lwd = 3, col = "pink"),
+               box = gpar(fill = "black", col = "red"), # only one parameter
+               lines = list( # as many parameters as CI
+                 gpar(lwd = 10), gpar(lwd = 5),
+                 gpar(), gpar(),
+                 gpar(lwd = 2), gpar(lwd = 1)
+               ),
+               summary = list( # as many parameters as band per label
+                 gpar(fill = "violet", col = "gray", lwd = 10),
+                 gpar(fill = "orange", col = "gray", lwd = 10)
+               ))
 
 par(ask = ask)
 # See vignette for a more detailed description

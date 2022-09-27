@@ -8,13 +8,15 @@ prepGridMargins(mar)
 }
 \arguments{
 \item{mar}{A vector of margins, at positions:
-- 1 = bottom
-- 2 = left
-- 3 = top
-- 4 = right}
+\itemize{
+\item 1 = bottom
+\item 2 = left
+\item 3 = top
+\item 4 = right
+}}
 }
 \value{
-Returns a list with `bottom`, `left`, `top`, and `right` as `unit("npc")`
+Returns a list with \code{bottom}, \code{left}, \code{top}, and \code{right} as \code{unit("npc")}
 }
 \description{
 Convert margins to viewport npc margins

@@ -12,7 +12,7 @@
 \usage{
 forestplot(...)
 
-\method{forestplot}{data.frame}(x, mean, lower, upper, labeltext, is.summary, ...)
+\method{forestplot}{data.frame}(x, mean, lower, upper, labeltext, is.summary, boxsize, ...)
 
 \method{forestplot}{default}(
   labeltext,
@@ -59,15 +59,15 @@ forestplot(...)
 
 \method{plot}{gforge_forestplot}(x, y, ..., new_page = FALSE)
 
-\method{forestplot}{grouped_df}(x, labeltext, mean, lower, upper, legend, is.summary, ...)
+\method{forestplot}{grouped_df}(x, labeltext, mean, lower, upper, legend, is.summary, boxsize, ...)
 }
 \arguments{
 \item{...}{Passed on to the \code{fn.ci_norm} and
 \code{fn.ci_sum} arguments}
 
-\item{x}{The `gforge_forestplot` object to be printed}
+\item{x}{The \code{gforge_forestplot} object to be printed}
 
-\item{mean}{The name of the column if using the *dplyr* select syntax - defaults to "mean",
+\item{mean}{The name of the column if using the \emph{dplyr} select syntax - defaults to "mean",
 else it should be a vector or a matrix with the averages. You can also provide a 2D/3D
 matrix that is automatically converted to the lower/upper parameters. The values
 should be in exponentiated form if they follow this interpretation, e.g. use
@@ -80,8 +80,8 @@ to be the same format as the mean.}
 to be the same format as the mean.}
 
 \item{labeltext}{A list, matrix, vector or expression with the names of each
-row or the name of the column if using the *dplyr* select syntax - defaults to "labeltext".
-Note that when using `group_by` a separate labeltext is not allowed.
+row or the name of the column if using the \emph{dplyr} select syntax - defaults to "labeltext".
+Note that when using \code{group_by} a separate labeltext is not allowed.
 The list should be wrapped in m x n number to resemble a matrix:
 \code{list(list("rowname 1 col 1", "rowname 2 col 1"), list("r1c2", expression(beta))}.
 You can also provide a matrix although this cannot have expressions by design:
@@ -95,6 +95,8 @@ mean, lower, and upper.}
 \item{is.summary}{A vector indicating by \code{TRUE}/\code{FALSE} if
 the value is a summary value which means that it will have a different
 font-style}
+
+\item{boxsize}{Override the default box size based on precision}
 
 \item{align}{Vector giving alignment (l,r,c) for the table columns}
 
@@ -126,7 +128,7 @@ instance if you have several forestplots you may want to standardize their
 line height, then you set this variable to a certain height, note this should
 be provided as a \code{\link[grid]{unit}} object. A good option
 is to set the line height to \code{unit(2, "cm")}. A third option
-is to set line height to "lines" and then you get 50 \% more than what the
+is to set line height to "lines" and then you get 50\% more than what the
 text height is as your line height}
 
 \item{line.margin}{Set the margin between rows, provided in numeric or \code{\link[grid]{unit}} form.
@@ -180,8 +182,6 @@ at the very end, i.e. showing incorrectly narrow confidence interval.}
 corresponding to 10\% of the row height.
 \emph{Note that the arrows correspond to the vertices heights.}}
 
-\item{boxsize}{Override the default box size based on precision}
-
 \item{mar}{A numerical vector of the form \code{c(bottom, left, top, right)} of
 the type \code{\link[grid]{unit}}}
 
@@ -218,17 +218,17 @@ of all shapes drawn (squares, lines, diamonds, etc.). This overrides \code{col},
 \code{NULL}
 }
 \description{
-The \emph{forestplot} is based on the \pkg{rmeta}-package`s
-\code{forestplot} function. This
-function resolves some limitations of the original
+The \strong{forestplot} is based on the \pkg{rmeta}-package\code{s }forestplot()` function. This function resolves some limitations of the original
 functions such as:
-\itemize{
-  \item{Adding expressions: }{Allows use of expressions, e.g. \code{expression(beta)}}
-  \item{Multiple bands: }{Using multiple confidence bands for the same label}
-  \item{Autosize: }{Adapts to viewport (graph) size}
-}
 }
 \details{
+\itemize{
+\item Adding expressions: Allows use of expressions, e.g. \code{expression(beta)}
+\item Multiple bands: Using multiple confidence bands for the same label
+\item Autosize: Adapts to viewport (graph) size
+\item Convenient dplyr syntax
+}
+
 See \code{vignette("forestplot")} for details.
 }
 \section{Multiple bands}{
@@ -246,19 +246,17 @@ crude and adjusted estimates as separate bands.
 
 The argument \code{hrzl_lines} can be either \code{TRUE} or a \code{list} with \code{\link[grid]{gpar}}
 elements:
-
 \itemize{
- \item{\code{TRUE}}{A line will be added based upon the \code{is.summary} rows. If the first line is a summary it}
- \item{\code{\link[grid]{gpar}}}{The same as above but the lines will be formatted according to the
-                                 \code{\link[grid]{gpar}} element}
- \item{\code{list}}{The list must either be numbered, i.e. \code{list("2" = gpar(lty = 1))}, or have the same length
-                    as the \code{NROW(mean) + 1}. If the list is numbered the numbers should not exceed the \code{NROW(mean) + 1}.
-                    The no. \emph{1 row designates the top}, i.e. the line above the first row, all other correspond  to
-                    \emph{the row below}. Each element in the list needs to be \code{TRUE}, \code{NULL}, or
-                    \code{\link[grid]{gpar}} element. The \code{TRUE} defaults to a standard line, the \code{NULL}
-                    skips a line, while \code{\link[grid]{gpar}} corresponds to the fully customized line. Apart from
-                    allowing standard \code{\link[grid]{gpar}} line descriptions, \code{lty}, \code{lwd}, \code{col}, and more
-                    you can also specify \code{gpar(columns = c(1:3, 5))} if you for instance want the line to skip a column.}
+\item \code{TRUE}: A line will be added based upon the \code{is.summary} rows. If the first line is a summary it
+\item \link[grid:gpar]{grid::gpar}: The same as above but the lines will be formatted according to the \link[grid:gpar]{grid::gpar} element
+\item \code{list}: The list must either be numbered, i.e. \code{list("2" = gpar(lty = 1))}, or have the same length
+as the \code{NROW(mean) + 1}. If the list is numbered the numbers should not exceed the \code{NROW(mean) + 1}.
+The no. \emph{1 row designates the top}, i.e. the line above the first row, all other correspond  to
+\emph{the row below}. Each element in the list needs to be \code{TRUE}, \code{NULL}, or
+\code{\link[grid]{gpar}} element. The \code{TRUE} defaults to a standard line, the \code{NULL}
+skips a line, while \code{\link[grid]{gpar}} corresponds to the fully customized line. Apart from
+allowing standard \code{\link[grid]{gpar}} line descriptions, \code{lty}, \code{lwd}, \code{col}, and more
+you can also specify \code{gpar(columns = c(1:3, 5))} if you for instance want the line to skip a column.
 }
 }
 
@@ -272,8 +270,8 @@ always the best option, try to set these manually as much as possible.
 \section{API-changes from \pkg{rmeta}-package`s \code{forestplot}}{
 
 \itemize{
-  \item{xlog: }{The xlog outputs the axis in log() format but the input data should be in antilog/exp format}
-  \item{col: }{The corresponding function is \code{\link{fpColors}} for this package}
+\item xlog: The xlog outputs the axis in log() format but the input data should be in antilog/exp format
+\item col: The corresponding function is \code{\link{fpColors}} for this package
 }
 }
 
@@ -299,7 +297,9 @@ test_data |>
              zero = 1,
              cex  = 2,
              lineheight = "auto",
-             xlab = "Lab axis txt")
+             xlab = "Lab axis txt") |>
+  fp_add_header("Group") |>
+  fp_set_style(lines = gpar(col = "darkblue"))
 
 # Print two plots side by side using the grid
 # package's layout option for viewports
@@ -373,11 +373,6 @@ out_data |>
                               gp = gpar(col = "steelblue", lty = 2)
              ),
              boxsize = 0.25,
-             col = fpColors(
-               box = c("royalblue", "gold"),
-               line = c("darkblue", "orange"),
-               summary = c("darkblue", "red")
-             ),
              xlab = "The estimates",
              new_page = TRUE,
              legend = c("Treatment", "Placebo"),
@@ -386,51 +381,46 @@ out_data |>
                title = "Group",
                r = unit(.1, "snpc"),
                gp = gpar(col = "#CCCCCC", lwd = 1.5)
-             ))
+             )) |>
+  fp_set_style(box = c("royalblue", "gold"),
+               line = c("darkblue", "orange"),
+               summary = c("darkblue", "red"))
 
 # An example of how the exponential works
-test_data <- data.frame(coef = c(2.45, 0.43),
-                        low = c(1.5, 0.25),
-                        high = c(4, 0.75),
-                        boxsize = c(0.25, 0.25))
-row_names <- cbind(
-  c("Name", "Variable A", "Variable B"),
-  c("HR", test_data$coef)
-)
-test_data <- rbind(rep(NA, ncol(test_data)), test_data)
+data.frame(coef = c(2.45, 0.43),
+           low = c(1.5, 0.25),
+           high = c(4, 0.75),
+           boxsize = c(0.25, 0.25),
+           variables = c("Variable A", "Variable B")) |>
+  forestplot(labeltext = c(variables, coef),
+             mean = coef,
+             lower = low,
+             upper = high,
+             boxsize = boxsize,
+             zero = 1,
+             xlog = TRUE) |>
+  fp_set_style(lines = "red", box = "darkred") |>
+  fp_add_header(coef = "HR" |> fp_txt_plain() |> fp_align_center(),
+                variables = "Measurements")
 
-forestplot(
-  labeltext = row_names,
-  test_data[, c("coef", "low", "high")],
-  is.summary = c(TRUE, FALSE, FALSE),
-  boxsize = test_data$boxsize,
-  zero = 1,
-  xlog = TRUE,
-  col = fpColors(lines = "red", box = "darkred")
-)
-
-# An example using shapes_gp
-forestplot(
-  labeltext = cbind(Author = c("Smith et al", "Smooth et al", "Al et al")),
-  mean = cbind(1:3, 1.5:3.5),
-  lower = cbind(0:2, 0.5:2.5),
-  upper = cbind(4:6, 5.5:7.5),
-  is.summary = c(FALSE, FALSE, TRUE),
-  shapes_gp = fpShapesGp(
-    default = gpar(lineend = "square", linejoin = "mitre", lwd = 3, col = "pink"),
-    box = gpar(fill = "black", col = "red"), # only one parameter
-    lines = list( # as many parameters as CI
-      gpar(lwd = 10), gpar(lwd = 5),
-      gpar(), gpar(),
-      gpar(lwd = 2), gpar(lwd = 1)
-    ),
-    summary = list( # as many parameters as band per label
-      gpar(fill = "violet", col = "gray", lwd = 10),
-      gpar(fill = "orange", col = "gray", lwd = 10)
-    )
-  ),
-  vertices = TRUE
-)
+# An example using style
+forestplot(labeltext = cbind(Author = c("Smith et al", "Smooth et al", "Al et al")),
+           mean = cbind(1:3, 1.5:3.5),
+           lower = cbind(0:2, 0.5:2.5),
+           upper = cbind(4:6, 5.5:7.5),
+           is.summary = c(FALSE, FALSE, TRUE),
+           vertices = TRUE) |>
+  fp_set_style(default = gpar(lineend = "square", linejoin = "mitre", lwd = 3, col = "pink"),
+               box = gpar(fill = "black", col = "red"), # only one parameter
+               lines = list( # as many parameters as CI
+                 gpar(lwd = 10), gpar(lwd = 5),
+                 gpar(), gpar(),
+                 gpar(lwd = 2), gpar(lwd = 1)
+               ),
+               summary = list( # as many parameters as band per label
+                 gpar(fill = "violet", col = "gray", lwd = 10),
+                 gpar(fill = "orange", col = "gray", lwd = 10)
+               ))
 
 par(ask = ask)
 # See vignette for a more detailed description

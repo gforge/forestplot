@@ -7,7 +7,7 @@
 prGetLabelsList(labels, align, is.summary, txt_gp, col)
 }
 \arguments{
-\item{labels}{A `forestplot_labeltext` object}
+\item{labels}{A \code{forestplot_labeltext} object}
 
 \item{align}{Alignment, should be equal to \code{attr(labels, "no_cols")}}
 
@@ -23,8 +23,8 @@ details}
 }
 \value{
 \code{list} A list with \code{attr(labels, "no_cols")} where each element contains
- a list of \code{attr(labels, "no_rows")} elements with attributes width/height for each
- element and max_width/max_height for the total
+a list of \code{attr(labels, "no_rows")} elements with attributes width/height for each
+element and max_width/max_height for the total
 }
 \description{
 A function that gets all the labels
