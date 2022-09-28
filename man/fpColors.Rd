@@ -50,7 +50,7 @@ backwards compatibility.
 If you have several values per row in a forestplot you can set
 a color to a vector where the first value represents the first
 line/box, second the second line/box etc. The vectors are only
-valid for the \code{box} \& \code{lines} options.
+valid for the \code{box} & \code{lines} options.
 
 This function is a copy of the \code{\link[rmeta]{meta.colors}}
 function in the \pkg{rmeta} package.
