@@ -57,6 +57,26 @@ fp_txt_plain <- function(txt)  {
 
 #' @export
 #' @rdname text_styling
+#' @param gp A [grid::gpar()] style to apply
+fp_txt_gp <- function(txt, gp)  {
+  sapply(txt, \(str) {
+    txt_gp <- attr(str, "txt_gp")
+    if (is.null(txt_gp)) {
+      txt_gp <- gpar()
+    }
+    for (n in names(gp)) {
+      txt_gp[[n]] <- gp[[n]]
+    }
+
+    attr(str, "txt_gp")  <- txt_gp
+    return(str)
+  },
+  simplify = FALSE,
+  USE.NAMES = FALSE)
+}
+
+#' @export
+#' @rdname text_styling
 fp_align_left <- function(txt)  {
   sapply(txt, \(str) {
     attr(str, "align")  <- "l"
@@ -87,6 +107,8 @@ fp_align_right <- function(txt)  {
   simplify = FALSE,
   USE.NAMES = FALSE)
 }
+
+
 
 merge_with_txt_gp <- function(gp_list, txt_out) {
   txt_gp <- attr(txt_out, "txt_gp")

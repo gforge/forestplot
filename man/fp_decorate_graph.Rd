@@ -4,7 +4,14 @@
 \alias{fp_decorate_graph}
 \title{Decorate the graph}
 \usage{
-fp_decorate_graph(x, box = NULL)
+fp_decorate_graph(
+  x,
+  box = NULL,
+  right_bottom_txt = NULL,
+  left_bottom_txt = NULL,
+  right_top_txt = NULL,
+  left_top_txt = NULL
+)
 }
 \arguments{
 \item{x}{The forestplot object}
@@ -13,6 +20,18 @@ fp_decorate_graph(x, box = NULL)
 will simply frame the graph in a black box. If you provide a string it is
 assumed to be the color of the graph. Acceptable arguments are also \code{gpar()}
 and a \code{grob} object to draw.}
+
+\item{right_bottom_txt}{Text to appear at the right bottom of the graph. Can
+be decorated fp_txt_* functions.}
+
+\item{right_top_txt}{Text to appear at the right top of the graph. Can
+be decorated fp_txt_* functions.}
+
+\item{leftt_bottom_txt}{Text to appear at the left bottom of the graph. Can
+be decorated fp_txt_* functions.}
+
+\item{leftt_top_txt}{Text to appear at the left top of the graph. Can
+be decorated fp_txt_* functions.}
 }
 \value{
 The forestplot object with the extended decoration
@@ -42,7 +61,11 @@ base_data |>
                line = "darkblue",
                summary = gpar(fill = "royalblue", clr = "black"),
                txt_gp = fpTxtGp(label = gpar(fontfamily = "mono"))) |>
-  fp_decorate_graph(box = "lightgray")
+  fp_decorate_graph(box = "lightgray",
+                    right_bottom_txt = fp_txt_gp("RB", gp = gpar(cex = .5)),
+                    left_bottom_txt = fp_txt_gp("LB", gp = gpar(cex = .5)),
+                    right_top_txt = "RT",
+                    left_top_txt = "LT")
 }
 \seealso{
 Other graph modifiers: 

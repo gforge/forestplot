@@ -19,4 +19,8 @@ base_data |>
                line = "darkblue",
                summary = gpar(fill = "royalblue", clr = "black"),
                txt_gp = fpTxtGp(label = gpar(fontfamily = "mono"))) |>
-  fp_decorate_graph(box = "lightgray")
+  fp_decorate_graph(box = "lightgray",
+                    right_bottom_txt = fp_txt_gp("RB", gp = gpar(cex = .5)),
+                    left_bottom_txt = fp_txt_gp("LB", gp = gpar(cex = .5)),
+                    right_top_txt = "RT",
+                    left_top_txt = "LT")

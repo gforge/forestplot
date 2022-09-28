@@ -151,6 +151,7 @@ drawForestplotObject <- function(obj) {
                graph.pos = obj$graph.pos)
 
   plot(axisList)
+  plotGraphText(obj = obj)
 
   plotConfidenceInterval(obj = obj,
                          axisList = axisList,

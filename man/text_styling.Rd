@@ -4,6 +4,7 @@
 \alias{fp_txt_italic}
 \alias{fp_txt_bold}
 \alias{fp_txt_plain}
+\alias{fp_txt_gp}
 \alias{fp_align_left}
 \alias{fp_align_center}
 \alias{fp_align_right}
@@ -15,6 +16,8 @@ fp_txt_bold(txt)
 
 fp_txt_plain(txt)
 
+fp_txt_gp(txt, gp)
+
 fp_align_left(txt)
 
 fp_align_center(txt)
@@ -23,6 +26,8 @@ fp_align_right(txt)
 }
 \arguments{
 \item{txt}{The text to styl}
+
+\item{gp}{A \code{\link[grid:gpar]{grid::gpar()}} style to apply}
 }
 \value{
 A list of txt with style attributes
