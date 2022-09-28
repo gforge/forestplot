@@ -87,7 +87,8 @@ base_data |>
                 upper = 0.731,
                 study = "Summary",
                 OR = "0.53",
-                is.summary = TRUE)
+                is.summary = TRUE) |> 
+  fp_set_zebra_style("#EFEFEF")
 ```
 
 Summary lines

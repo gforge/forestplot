@@ -36,10 +36,10 @@ Returns a \code{forestplot_labeltext} object with attributes:
 \description{
 Prepares an object that contains the number of columns and rows
 }
-\section{Methods (by generic)}{
+\section{Functions}{
 \itemize{
 \item \code{[}: Pick the value that corresponds to the row and column.
 Returns \code{expression}, \code{call}, or \code{text}.
-}}
 
+}}
 \keyword{internal}

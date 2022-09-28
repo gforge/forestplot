@@ -24,13 +24,13 @@ and a \code{grob} object to draw.}
 \item{right_bottom_txt}{Text to appear at the right bottom of the graph. Can
 be decorated fp_txt_* functions.}
 
+\item{left_bottom_txt}{Text to appear at the left bottom of the graph. Can
+be decorated fp_txt_* functions.}
+
 \item{right_top_txt}{Text to appear at the right top of the graph. Can
 be decorated fp_txt_* functions.}
 
-\item{leftt_bottom_txt}{Text to appear at the left bottom of the graph. Can
-be decorated fp_txt_* functions.}
-
-\item{leftt_top_txt}{Text to appear at the left top of the graph. Can
+\item{left_top_txt}{Text to appear at the left top of the graph. Can
 be decorated fp_txt_* functions.}
 }
 \value{
@@ -70,6 +70,7 @@ base_data |>
 \seealso{
 Other graph modifiers: 
 \code{\link{fp_insert_row}()},
-\code{\link{fp_set_style}()}
+\code{\link{fp_set_style}()},
+\code{\link{fp_set_zebra_style}()}
 }
 \concept{graph modifiers}

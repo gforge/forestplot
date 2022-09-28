@@ -7,11 +7,11 @@
 #'  and a `grob` object to draw.
 #' @param right_bottom_txt Text to appear at the right bottom of the graph. Can
 #'  be decorated fp_txt_* functions.
-#' @param leftt_bottom_txt Text to appear at the left bottom of the graph. Can
+#' @param left_bottom_txt Text to appear at the left bottom of the graph. Can
 #'  be decorated fp_txt_* functions.
 #' @param right_top_txt Text to appear at the right top of the graph. Can
 #'  be decorated fp_txt_* functions.
-#' @param leftt_top_txt Text to appear at the left top of the graph. Can
+#' @param left_top_txt Text to appear at the left top of the graph. Can
 #'  be decorated fp_txt_* functions.
 #'
 #' @return The forestplot object with the extended decoration
@@ -78,7 +78,7 @@ plotGraphText <- function(obj) {
 
   drawBox <- function(name, ...) {
     elmnt <- obj[[name]]
-    if (is.null(elmnt)) return(null)
+    if (is.null(elmnt)) return()
     if (is.list(elmnt)) {
       elmnt <- elmnt[[1]]
     }

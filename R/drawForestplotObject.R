@@ -129,6 +129,8 @@ drawForestplotObject <- function(obj) {
     name = "BaseGrid"
   ))
 
+  plotZebraStyle(obj)
+
   info <- prepBoxSize(boxsize = obj$boxsize,
                       estimates = obj$estimates,
                       is.summary = obj$is.summary,

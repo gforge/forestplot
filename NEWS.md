@@ -9,8 +9,9 @@ Changes for 3.0.0
   feature although most of the old syntax should work without much need for
   adaptation.
 * New additive syntax with:
-  * Row manipulation: `fp_insert_row`, `fp_add_header`, `fp_append_row`
-  * Style functions: `fp_set_style` and txt styling `fp_txt_bold`, `fp_txt_italic`, ...
+  * Row manipulation: `fp_insert_row`, `fp_add_header`, and `fp_append_row`
+  * Style functions: `fp_set_style`, `fp_set_zebra_style`, and `fp_decorate_graph`
+  * Text styling: `fp_txt_bold`, `fp_txt_italic`, ...
   * Align functions: `fp_align_left`, `fp_align_center`, `fp_align_right`
 * Fixed bug with how grouped data frames are processed and presented.
 * Expressions are now allowed in data.frame tidyverse input.

@@ -8,3 +8,4 @@ cran-comments.md
 ^doc$
 ^Meta$
 ^cran-comments\.md$
+^CRAN-SUBMISSION$
