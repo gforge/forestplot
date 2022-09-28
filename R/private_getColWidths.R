@@ -19,8 +19,13 @@ getColWidths <- function(labels, graphwidth, colgap, graph.pos, nc) {
       graphwidth == "auto") {
     # If graph width is not provided as a unit the autosize it to the
     # rest of the space available
-    npc_colwidths <- convertUnit(unit.c(colwidths, colgap), "npc", valueOnly = TRUE)
-    graphwidth <- unit(max(.05, 1 - sum(npc_colwidths)), "npc")
+    graphwidth <- unit(1, "npc") - sum(colwidths)
+    # While the logic makes sense it seems that the auto calculating
+    # function is off and we shouldn't rely on the logic below
+    if (convertWidth(graphwidth, unitTo = "npc", valueOnly = TRUE) < 0.05) {
+      graphwidth <- unit(0.05, "npc")
+    }
+    # graphwidth <- unit(max(.05, graphwidth), "npc")
   } else if (!is.unit(graphwidth)) {
     stop(
       "You have to provide graph width either as a unit() object or as 'auto'.",
