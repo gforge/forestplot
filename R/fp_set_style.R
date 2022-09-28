@@ -12,6 +12,7 @@
 #'
 #' @example inst/examples/fp_set_style_example.R
 #' @rdname style_manipulation
+#' @family graph modifiers
 fp_set_style <- function(x,
                          default = NULL,
                          box = NULL,

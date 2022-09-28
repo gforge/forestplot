@@ -17,6 +17,7 @@ Changes for 3.0.0
 * Moved to native R-pipe operator (|> instead of %>%)
 * Fixed case when all rows are summaries (Thanks Christian Röver)
 * Fixed automated ticks.
+* Fixed bug calculating graph width 
 
 Changes for 2.0.1
 -----------------

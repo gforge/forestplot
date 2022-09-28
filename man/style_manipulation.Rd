@@ -93,3 +93,9 @@ base_data |>
                summary = gpar(fill = "royalblue", clr = "black"),
                txt_gp = fpTxtGp(label = gpar(fontfamily = "mono")))
 }
+\seealso{
+Other graph modifiers: 
+\code{\link{fp_decorate_graph}()},
+\code{\link{fp_insert_row}()}
+}
+\concept{graph modifiers}

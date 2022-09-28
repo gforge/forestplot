@@ -22,8 +22,9 @@ getColWidths <- function(labels, graphwidth, colgap, graph.pos, nc) {
     graphwidth <- unit(1, "npc") - sum(colwidths)
     # While the logic makes sense it seems that the auto calculating
     # function is off and we shouldn't rely on the logic below
+    # as the number is smaller than the graph actually turns out
     if (convertWidth(graphwidth, unitTo = "npc", valueOnly = TRUE) < 0.05) {
-      graphwidth <- unit(0.05, "npc")
+      graphwidth <- unit(0.3, "npc")
     }
     # graphwidth <- unit(max(.05, graphwidth), "npc")
   } else if (!is.unit(graphwidth)) {

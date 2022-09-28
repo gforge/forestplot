@@ -146,6 +146,10 @@ drawForestplotObject <- function(obj) {
                 colwidths = colwidths,
                 graph.pos = obj$graph.pos)
 
+  plotGraphBox(boxGrob = obj$graph_box,
+               estimates = obj$estimates,
+               graph.pos = obj$graph.pos)
+
   plot(axisList)
 
   plotConfidenceInterval(obj = obj,

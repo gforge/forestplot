@@ -17,6 +17,7 @@
 #' @return The foresplot object with the added rows
 #' @export
 #'
+#' @family graph modifiers
 #' @example inst/examples/fp_insert_row_example.R
 
 #' @rdname row_manipulation
