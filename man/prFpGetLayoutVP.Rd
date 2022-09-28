@@ -2,9 +2,9 @@
 % Please edit documentation in R/private.R
 \name{prFpGetLayoutVP}
 \alias{prFpGetLayoutVP}
-\title{Get the main `forestplot`}
+\title{Get the main \code{forestplot}}
 \usage{
-prFpGetLayoutVP(lineheight, labels, nr, legend_layout = NULL)
+prFpGetLayoutVP(lineheight, labels, legend_layout = NULL)
 }
 \arguments{
 \item{lineheight}{Height of the graph. By default this is \code{auto} and adjusts to the
@@ -14,17 +14,15 @@ instance if you have several forestplots you may want to standardize their
 line height, then you set this variable to a certain height, note this should
 be provided as a \code{\link[grid]{unit}} object. A good option
 is to set the line height to \code{unit(2, "cm")}. A third option
-is to set line height to "lines" and then you get 50 \% more than what the
+is to set line height to "lines" and then you get 50\% more than what the
 text height is as your line height}
 
 \item{labels}{The labels}
 
-\item{nr}{Number of rows}
-
 \item{legend_layout}{A legend layout object if applicable}
 }
 \value{
-\code{viewport} Returns the `viewport` needed
+\code{viewport} Returns the \code{viewport} needed
 }
 \description{
 The layout makes space for a legend if needed

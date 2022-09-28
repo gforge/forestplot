@@ -1,22 +1,20 @@
 #' Package description
 #'
-#' The forest plot function, \code{\link{forestplot}}, is a more general
+#' The forest plot function, [`forestplot()`], is a more general
 #' version of the original \pkg{rmeta}-packages \code{forestplot}
 #' implementation. The aim is at using forest plots for more than
 #' just meta-analyses.
 #'
 #' The forestplot:
-#' \enumerate{
-#'   \item Allows for multiple confidence intervals per row
-#'   \item Custom fonts for each text element
-#'   \item Custom confidence intervals
-#'   \item Text mixed with expressions
-#'   \item Legends both on top/left of the plot and within the graph
-#'   \item Custom line height including auto-adapt height
-#'   \item Graph width that auto-adapts
-#'   \item Flexible arguments
-#'   \item and more
-#' }
+#' 1. Allows for multiple confidence intervals per row
+#' 1. Custom fonts for each text element
+#' 1. Custom confidence intervals
+#' 1. Text mixed with expressions
+#' 1. Legends both on top/left of the plot and within the graph
+#' 1. Custom line height including auto-adapt height
+#' 1. Graph width that auto-adapts
+#' 1. Flexible arguments
+#' 1. and more
 #'
 #' @section Additional functions:
 #'

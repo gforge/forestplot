@@ -4,18 +4,18 @@
 \alias{prFpGetConfintFnList}
 \title{Get a function list}
 \usage{
-prFpGetConfintFnList(fn, no_rows, no_cols, missing_rows, is.summary, summary)
+prFpGetConfintFnList(fn, no_rows, no_depth, missing_rows, is.summary, summary)
 }
 \arguments{
 \item{fn}{The function list/matrix. If a list it
-should be in the format [[row]][[col]], the function
+should be in the format [\link{row}][\link{col}], the function
 tries to handle this but in cases where the columns
 and rows are the same it will not know what is a column
 and what is a row.}
 
 \item{no_rows}{Number of rows}
 
-\item{no_cols}{Number of columns}
+\item{no_depth}{Number of columns}
 
 \item{missing_rows}{The rows that don't have a CI}
 
@@ -25,7 +25,7 @@ font-style}
 }
 \value{
 \code{list} The function returns a list that has
-the format [[row]][[col]] where each element contains the
+the format [\link{row}][\link{col}] where each element contains the
 function that you need to call using the \code{\link[base]{as.call}}
 and \code{\link[base]{eval}} functions: \code{eval(as.call(list(fn[[row]][[col]], arg_1 = 1, arg_2 = 2)))}
 }

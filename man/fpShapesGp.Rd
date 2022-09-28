@@ -2,7 +2,7 @@
 % Please edit documentation in R/forestplot_helpers.R
 \name{fpShapesGp}
 \alias{fpShapesGp}
-\title{A function for graphical parameters of the shapes used in forestplot()}
+\title{A function for graphical parameters of the shapes used in \code{forestplot()}}
 \usage{
 fpShapesGp(
   default = NULL,
@@ -17,58 +17,67 @@ fpShapesGp(
 )
 }
 \arguments{
-\item{default}{A fallback \code{\link[grid]{gpar}} for all unspecified attributes.
+\item{default}{A fallback \link[grid:gpar]{grid::gpar} for all unspecified attributes.
 If set to NULL then it defaults to legacy parameters, including
 the \code{col}, \code{lwd.xaxis}, \code{lwd.ci} and \code{lty.ci}
 parameter of \code{fpColors}.}
 
-\item{box}{The graphical parameters (\code{gpar}) of the box, circle
+\item{box}{The graphical parameters (\code{gpar}, \code{character}) of the box, circle
 or point indicating the point estimate, i.e. the middle
-of the confidence interval (may be a list of gpars)}
+of the confidence interval (may be a list of gpars). If provided
+a string a \code{gpar} will be generated with \code{col}, and \code{fill} for
+those arguments.}
 
-\item{lines}{The graphical parameters (\code{gpar}) of the confidence lines
-(may be a list of gpars)}
+\item{lines}{The graphical parameters (\code{gpar}, \code{character}) of the confidence lines
+(may be a list of gpars). If provided a string a \code{gpar} will be generated
+with \code{col} as the only arguments.}
 
-\item{vertices}{The graphical parameters (\code{gpar}) of the vertices
+\item{vertices}{The graphical parameters (\code{gpar}, \code{character}) of the vertices
 (may be a list of gpars).
 If \code{ci.vertices} is set to TRUE in \code{forestplot}
 \code{vertices} inherits from \code{lines} all its parameters but lty that is set
 to "solid" by default.}
 
-\item{summary}{The graphical parameters (\code{gpar}) of the summary
-(may be a list of gpars)}
+\item{summary}{The graphical parameters (\code{gpar}, \code{character}) of the summary
+(may be a list of gpars). If provided a string a \code{gpar} will be generated with
+\code{col}, and \code{fill} for those arguments.}
 
 \item{zero}{The graphical parameters (\code{gpar}) of the zero line
-(may not be a list of gpars)}
+(may not be a list of gpars). If provided a string a \code{gpar} will be generated
+with \code{col} as the only arguments.}
 
 \item{axes}{The graphical parameters (\code{gpar}) of the x-axis at the bottom
-(may not be a list of gpars)}
+(may not be a list of gpars).}
 
 \item{hrz_lines}{The graphical parameters (\code{gpar}) of the horizontal lines
-(may not be a list of gpars)}
+(may not be a list of gpars). If provided a string a \code{gpar} will be generated
+with \code{col} as the only arguments.}
 
 \item{grid}{The graphical parameters (\code{gpar}) of the grid (vertical lines)
-(may be a list of gpars)}
+(may be a list of gpars). If provided a string a \code{gpar} will be generated
+with \code{col} as the only arguments.}
 }
 \value{
 list A list with the elements:
-\item{default}{the gpar for default attributes}
-\item{box}{the gpar or list of gpars of the box/marker}
-\item{lines}{the gpar or list of gpars of the lines}
-\item{vertices}{the gpar or list of gpars of the vertices}
-\item{summary}{the gpar or list of gpars of the summary}
-\item{zero}{the gpar of the zero vertical line}
-\item{axes}{the gpar of the x-axis}
-\item{hrz_lines}{the gpar of the horizontal lines}
-\item{grid}{the gpar or list of gpars of the grid lines}
+\itemize{
+\item default: the gpar for default attributes
+\item box: the gpar or list of gpars of the box/marker
+\item lines: the gpar or list of gpars of the lines
+\item vertices: the gpar or list of gpars of the vertices
+\item summary: the gpar or list of gpars of the summary
+\item zero: the gpar of the zero vertical line
+\item axes: the gpar of the x-axis
+\item hrz_lines: the gpar of the horizontal lines
+\item grid: the gpar or list of gpars of the grid lines
+}
 }
 \description{
 This function encapsulates all the non-text elements that are used in the
-\code{\link{forestplot}} function. As there are plenty of shapes
+\code{\link[=forestplot]{forestplot()}} function. As there are plenty of shapes
 options this function gathers them all in one place.
 }
 \details{
-This function obsoletes \code{\link{fpColors}}.
+This function obsoletes \code{\link[=fpColors]{fpColors()}}.
 
 If some, but not all parameters of a shape (e.g. box) are specified in gpar()
 such as setting lwd but not line color, the unspecified parameters default

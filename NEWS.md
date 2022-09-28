@@ -1,8 +1,25 @@
 NEWS for the forestplot package
 
-Changes for 2.0.2
+Changes for 3.0.0
 -----------------
+* The `forestplot()` now returns an object with raw data that can be manipulated
+  by subsequent functions prior to plotting. All visual output is now generated
+  during the actual generation of the graph - this allows saving the plot and
+  plotting it when explicitly requested. BREAKING - this may be a breaking
+  feature although most of the old syntax should work without much need for
+  adaptation.
+* New additive syntax with:
+  * Row manipulation: `fp_insert_row`, `fp_add_header`, and `fp_append_row`
+  * Style functions: `fp_set_style`, `fp_set_zebra_style`, and `fp_decorate_graph`
+  * Text styling: `fp_txt_bold`, `fp_txt_italic`, ...
+  * Align functions: `fp_align_left`, `fp_align_center`, `fp_align_right`
+* Fixed bug with how grouped data frames are processed and presented.
+* Expressions are now allowed in data.frame tidyverse input.
+* Moved to native R-pipe operator (|> instead of %>%)
 * Fixed case when all rows are summaries (Thanks Christian Röver)
+* Fixed automated ticks.
+* Fixed bug calculating graph width
+* Added graph decoration (fixes issue #11)
 
 Changes for 2.0.1
 -----------------

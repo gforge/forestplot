@@ -160,7 +160,7 @@ This is used together with shapes_gp to retrieve graphical parameters for that i
 }
 \value{
 \code{void} The function outputs the line using grid compatible
- functions and does not return anything.
+functions and does not return anything.
 }
 \description{
 A function that is used to draw the different

@@ -1,16 +1,15 @@
 #' Draws a forest plot
 #'
-#' The \emph{forestplot} is based on the \pkg{rmeta}-package`s
-#' \code{forestplot} function. This
-#' function resolves some limitations of the original
+#' The **forestplot** is based on the \pkg{rmeta}-package`s
+#' `forestplot()` function. This function resolves some limitations of the original
 #' functions such as:
-#' \itemize{
-#'   \item{Adding expressions: }{Allows use of expressions, e.g. \code{expression(beta)}}
-#'   \item{Multiple bands: }{Using multiple confidence bands for the same label}
-#'   \item{Autosize: }{Adapts to viewport (graph) size}
-#' }
 #'
-#' See \code{vignette("forestplot")} for details.
+#' * Adding expressions: Allows use of expressions, e.g. `expression(beta)`
+#' * Multiple bands: Using multiple confidence bands for the same label
+#' * Autosize: Adapts to viewport (graph) size
+#' * Convenient dplyr syntax
+#'
+#' See `vignette("forestplot")` for details.
 #'
 #' @section Multiple bands:
 #'
@@ -25,19 +24,16 @@
 #' The argument \code{hrzl_lines} can be either \code{TRUE} or a \code{list} with \code{\link[grid]{gpar}}
 #' elements:
 #'
-#' \itemize{
-#'  \item{\code{TRUE}}{A line will be added based upon the \code{is.summary} rows. If the first line is a summary it}
-#'  \item{\code{\link[grid]{gpar}}}{The same as above but the lines will be formatted according to the
-#'                                  \code{\link[grid]{gpar}} element}
-#'  \item{\code{list}}{The list must either be numbered, i.e. \code{list("2" = gpar(lty = 1))}, or have the same length
-#'                     as the \code{NROW(mean) + 1}. If the list is numbered the numbers should not exceed the \code{NROW(mean) + 1}.
-#'                     The no. \emph{1 row designates the top}, i.e. the line above the first row, all other correspond  to
-#'                     \emph{the row below}. Each element in the list needs to be \code{TRUE}, \code{NULL}, or
-#'                     \code{\link[grid]{gpar}} element. The \code{TRUE} defaults to a standard line, the \code{NULL}
-#'                     skips a line, while \code{\link[grid]{gpar}} corresponds to the fully customized line. Apart from
-#'                     allowing standard \code{\link[grid]{gpar}} line descriptions, \code{lty}, \code{lwd}, \code{col}, and more
-#'                     you can also specify \code{gpar(columns = c(1:3, 5))} if you for instance want the line to skip a column.}
-#' }
+#' * `TRUE`: A line will be added based upon the \code{is.summary} rows. If the first line is a summary it
+#' * [grid::gpar]: The same as above but the lines will be formatted according to the [grid::gpar] element
+#' * `list`: The list must either be numbered, i.e. \code{list("2" = gpar(lty = 1))}, or have the same length
+#'           as the \code{NROW(mean) + 1}. If the list is numbered the numbers should not exceed the \code{NROW(mean) + 1}.
+#'           The no. \emph{1 row designates the top}, i.e. the line above the first row, all other correspond  to
+#'           \emph{the row below}. Each element in the list needs to be \code{TRUE}, \code{NULL}, or
+#'           \code{\link[grid]{gpar}} element. The \code{TRUE} defaults to a standard line, the \code{NULL}
+#'           skips a line, while \code{\link[grid]{gpar}} corresponds to the fully customized line. Apart from
+#'           allowing standard \code{\link[grid]{gpar}} line descriptions, \code{lty}, \code{lwd}, \code{col}, and more
+#'           you can also specify \code{gpar(columns = c(1:3, 5))} if you for instance want the line to skip a column.
 #'
 #' @section Known issues:
 #'
@@ -45,10 +41,9 @@
 #' always the best option, try to set these manually as much as possible.
 #'
 #' @section API-changes from \pkg{rmeta}-package`s \code{forestplot}:
-#' \itemize{
-#'   \item{xlog: }{The xlog outputs the axis in log() format but the input data should be in antilog/exp format}
-#'   \item{col: }{The corresponding function is \code{\link{fpColors}} for this package}
-#' }
+#'
+#' * xlog: The xlog outputs the axis in log() format but the input data should be in antilog/exp format
+#' * col: The corresponding function is \code{\link{fpColors}} for this package
 #'
 #' @param labeltext A list, matrix, vector or expression with the names of each
 #'  row or the name of the column if using the *dplyr* select syntax - defaults to "labeltext".
@@ -96,7 +91,7 @@
 #'   line height, then you set this variable to a certain height, note this should
 #'   be provided as a \code{\link[grid]{unit}} object. A good option
 #'   is to set the line height to \code{unit(2, "cm")}. A third option
-#'   is to set line height to "lines" and then you get 50 \% more than what the
+#'   is to set line height to "lines" and then you get 50% more than what the
 #'   text height is as your line height
 #' @param line.margin Set the margin between rows, provided in numeric or \code{\link[grid]{unit}} form.
 #'   When having multiple confidence lines per row setting the correct
@@ -134,7 +129,7 @@
 #'  any other line type than 1 since there is a risk of a dash occurring
 #'  at the very end, i.e. showing incorrectly narrow confidence interval.
 #' @param ci.vertices.height The height hoft the vertices. Defaults to npc units
-#'  corresponding to 10\% of the row height.
+#'  corresponding to 10% of the row height.
 #'  \emph{Note that the arrows correspond to the vertices heights.}
 #' @param boxsize Override the default box size based on precision
 #' @param mar A numerical vector of the form \code{c(bottom, left, top, right)} of

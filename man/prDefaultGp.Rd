@@ -15,7 +15,7 @@ prDefaultGp(col, lwd, lty)
 }
 \value{
 a \code{\link[grid]{gpar}} object
- containing these three attributes
+containing these three attributes
 }
 \description{
 Construct default parameters from arguments that may include missing arguments

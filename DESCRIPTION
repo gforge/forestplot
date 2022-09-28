@@ -1,5 +1,5 @@
 Package: forestplot
-Version: 2.0.2
+Version: 3.0.0
 Title: Advanced Forest Plot Using 'grid' Graphics
 Authors@R: c(person(given = "Max",
                     family = "Gordon",
@@ -23,19 +23,21 @@ Biarch: yes
 Depends:
     R (>= 3.5.0),
     grid,
-    magrittr,
-    checkmate
+    checkmate,
+    abind
 Suggests:
-    testthat,
-    abind,
+    dplyr,
     knitr,
+    purrr,
     rmarkdown,
     rmeta,
-    dplyr,
+    testthat,
+    tibble,
     tidyr,
+    tidyselect,
     rlang
 Encoding: UTF-8
 NeedsCompilation: no
 VignetteBuilder: knitr
-Roxygen: list()
-RoxygenNote: 7.1.1
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.1
