@@ -105,11 +105,14 @@ base_data |>
   fp_set_style(box = "royalblue",
                line = "darkblue",
                summary = "royalblue",
+               align = "lrrr",
                hrz_lines = "#999999") |> 
   fp_add_header(study = c("", "Study"),
-                deaths_steroid = c("Deaths", "(steroid)"),
-                deaths_placebo = c("Deaths", "(placebo)"),
-                OR = c("", "OR")) |>
+                deaths_steroid = c("Deaths", "(steroid)") |> 
+                  fp_align_center(),
+                deaths_placebo = c("Deaths", "(placebo)") |> 
+                  fp_align_center(),
+                OR = c("", fp_align_center("OR"))) |>
   fp_append_row(mean  = 0.531,
                 lower = 0.386,
                 upper = 0.731,
@@ -130,11 +133,14 @@ base_data |>
   fp_set_style(box = "royalblue",
                line = "darkblue",
                summary = "royalblue",
+               align = "lrrr",
                hrz_lines = "#999999") |> 
   fp_add_header(study = c("", "Study"),
-                deaths_steroid = c("Deaths", "(steroid)"),
-                deaths_placebo = c("Deaths", "(placebo)"),
-                OR = c("", "OR")) |>
+                deaths_steroid = c("Deaths", "(steroid)") |> 
+                  fp_align_center(),
+                deaths_placebo = c("Deaths", "(placebo)") |> 
+                  fp_align_center(),
+                OR = c("", fp_align_center("OR"))) |>
   fp_append_row(mean  = 0.531,
                 lower = 0.386,
                 upper = 0.731,
@@ -159,11 +165,14 @@ base_data |>
   fp_set_style(box = "royalblue",
                line = "darkblue",
                summary = "royalblue",
-               hrz_lines = "#999999") |> 
+               align = "lrrr",
+               hrz_lines = "#999999")  |> 
   fp_add_header(study = c("", "Study"),
-                deaths_steroid = c("Deaths", "(steroid)"),
-                deaths_placebo = c("Deaths", "(placebo)"),
-                OR = c("", "OR")) |>
+                deaths_steroid = c("Deaths", "(steroid)") |> 
+                  fp_align_center(),
+                deaths_placebo = c("Deaths", "(placebo)") |> 
+                  fp_align_center(),
+                OR = c("", fp_align_center("OR"))) |>
   fp_append_row(mean  = 0.531,
                 lower = 0.386,
                 upper = 0.731,

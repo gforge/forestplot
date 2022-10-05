@@ -1,5 +1,9 @@
 NEWS for the forestplot package
 
+Changes for 3.0.1
+-----------------
+* Fixed align bug and added align to `fp_set_style`
+
 Changes for 3.0.0
 -----------------
 * The `forestplot()` now returns an object with raw data that can be manipulated

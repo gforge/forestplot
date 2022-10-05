@@ -4,6 +4,7 @@
 #'
 #' @inheritParams fp_insert_row
 #' @inheritParams fpShapesGp
+#' @inheritParams forestplot
 #' @param txt_gp Set the fonts etc for all text elements. See [`fpTxtGp()`]
 #'   for details
 #'
@@ -23,7 +24,8 @@ fp_set_style <- function(x,
                          axes = NULL,
                          hrz_lines = NULL,
                          grid = NULL,
-                         txt_gp = NULL) {
+                         txt_gp = NULL,
+                         align = NULL) {
   new_gp <- fpShapesGp(default = default,
                        box = box,
                        lines = lines,
@@ -41,6 +43,10 @@ fp_set_style <- function(x,
 
   if (!is.null(txt_gp)) {
     x$txt_gp <- txt_gp
+  }
+
+  if (!is.null(align)) {
+    x$align <- prepAlign(align, graph.pos = x$graph.pos, nc = attr(x$labels, "no_cols"))
   }
 
   return(x)
