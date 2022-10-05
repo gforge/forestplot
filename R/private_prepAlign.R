@@ -21,7 +21,9 @@ prepAlign <- function(align, graph.pos, nc) {
     return(c("l", rep("c", nc - 1)))
   }
 
-  if (is.character(align)  && nchar(align) > 1) {
+  if (length(align) == 1 &&
+      is.character(align) &&
+      nchar(align) > 1) {
     align <- strsplit(align, split = "")[[1]]
   }
 
