@@ -21,7 +21,7 @@ URL: https://gforge.se/packages/
 BugReports: https://github.com/gforge/forestplot/issues
 Biarch: yes
 Depends:
-    R (>= 3.5.0),
+    R (>= 4.1.0),
     grid,
     checkmate,
     abind
