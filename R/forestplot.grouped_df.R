@@ -69,7 +69,10 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
     dplyr::group_by(.fp_groups)
 
   if (length(is.summary) %in% c(1, nrow(core_data))) {
-    core_data <- dplyr::mutate(core_data, is.summary = is.summary)
+    core_data <- core_data |>
+      dplyr::ungroup() |>
+      dplyr::mutate(is.summary = is.summary) |>
+      dplyr::group_by(.fp_groups)
     is.summary <- NULL
   }
 
