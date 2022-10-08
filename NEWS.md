@@ -3,6 +3,7 @@ NEWS for the forestplot package
 Changes for 3.0.1
 -----------------
 * Fixed align bug and added align to `fp_set_style`
+* Fixed width calculation bug
 
 Changes for 3.0.0
 -----------------

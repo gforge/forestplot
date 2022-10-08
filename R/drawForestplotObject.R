@@ -82,12 +82,6 @@ drawForestplotObject <- function(obj) {
 
   plot(legend, margin = TRUE)
 
-  colwidths <- getColWidths(labels = labels,
-                            graphwidth = obj$graphwidth,
-                            colgap = obj$colgap,
-                            graph.pos = obj$graph.pos)
-
-
   # Add space for the axis and the label
   axis_height <- unit(0, "npc")
   if (is.grob(axisList$axisGrob)) {
@@ -115,6 +109,11 @@ drawForestplotObject <- function(obj) {
     name = "axis_margin"
   ))
   pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 1))
+
+  colwidths <- getColWidths(labels = labels,
+                            graphwidth = obj$graphwidth,
+                            colgap = obj$colgap,
+                            graph.pos = obj$graph.pos)
 
   # The base viewport, set the increase.line_height paremeter if it seems a little
   # crowded between the lines that might happen when having multiple comparisons
