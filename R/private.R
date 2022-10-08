@@ -280,6 +280,7 @@ prFpPrintLabels <- function(labels, nc, nr, graph.pos) {
   cols <- 1:(nc + 1)
   cols <- cols[cols != graph.pos]
   cols <- cols * 2 - 1
+
   for (label_col in 1:nc) {
     j <- cols[label_col]
     # The row
