@@ -16,7 +16,7 @@ plotConfidenceInterval <- function(obj, axisList, info, labels, fn.ci_sum, fn.ci
 
     # Draw multiple confidence intervals
     if (dim(obj$estimates)[3] > 1) {
-      b_height <- max(info[i,])
+      b_height <- max(info[i,], na.rm = TRUE)
       if (is.unit(b_height)) {
         b_height <- convertUnit(b_height, unitTo = "npc", valueOnly = TRUE)
       }

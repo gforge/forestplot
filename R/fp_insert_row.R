@@ -113,7 +113,7 @@ fp_insert_row <- function(x,
                       x$is.summary[position:length(x$is.summary)])
   }
 
-  if (!is.null(x$boxsize)) {
+  if (!is.null(x$boxsize) && !all(is.na(boxsize))) {
     boxsize <- rep(boxsize, length.out = nrow(estimates))
     if (position == "last") {
       x$boxsize <- c(x$boxsize, boxsize)

@@ -3,18 +3,20 @@ drawForestplotObject <- function(obj) {
   ##################
   # Build the plot #
   ##################
-  hrzl_lines <- prFpGetLines(hrzl_lines = obj$hrzl_lines,
-                             is.summary = obj$is.summary,
-                             total_columns = attr(obj$labels, "no_cols") + 1,
-                             col = obj$col,
-                             shapes_gp = obj$shapes_gp)
-
   labels <- prGetLabelsList(labels = obj$labels,
                             align = obj$align,
                             is.summary = obj$is.summary,
                             txt_gp = obj$txt_gp,
                             col = obj$col)
   obj$labels <- NULL
+
+  lines <- prepLines(lines = obj$lines,
+                     is.summary = obj$is.summary,
+                     number_of_columns = attr(labels, "no_cols") + 1,
+                     number_of_rows = attr(labels, "no_rows"),
+                     col = obj$col,
+                     shapes_gp = obj$shapes_gp)
+
 
   missing_rows <- apply(obj$estimates, 2, \(row) all(is.na(row)))
 
@@ -135,17 +137,15 @@ drawForestplotObject <- function(obj) {
                       is.summary = obj$is.summary,
                       txt_gp = obj$txt_gp)
 
-  prFpPrintLabels(
-    labels = labels,
-    nc = attr(labels, "no_cols"),
-    nr = attr(labels, "no_rows"),
-    graph.pos = obj$graph.pos
-  )
+  plot(lines,
+       colwidths = colwidths,
+       graph.pos = obj$graph.pos)
 
-  prFpDrawLines(hrzl_lines = hrzl_lines,
-                nr = attr(labels, "no_rows"),
-                colwidths = colwidths,
-                graph.pos = obj$graph.pos)
+  prFpPrintLabels(labels = labels,
+                  nc = attr(labels, "no_cols"),
+                  nr = attr(labels, "no_rows"),
+                  graph.pos = obj$graph.pos)
+
 
   plotGraphBox(boxGrob = obj$graph_box,
                estimates = obj$estimates,

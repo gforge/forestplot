@@ -1,9 +1,11 @@
 NEWS for the forestplot package
 
-Changes for 3.0.1
+Changes for 3.1.0
 -----------------
+* Added `fp_add_lines()` for superseding `hrzl_lines` argument and also adding the option of vertical lines
 * Fixed align bug and added align to `fp_set_style`
 * Fixed width calculation bug
+* Fixed multi-line `NA` bug
 
 Changes for 3.0.0
 -----------------

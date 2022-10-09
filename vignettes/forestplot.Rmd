@@ -100,8 +100,8 @@ The same as above but with lines based on the summary elements and also using a 
 base_data |> 
   forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR), 
              clip = c(0.1, 2.5), 
-             hrzl_lines = TRUE,
              xlog = TRUE) |> 
+  fp_add_lines() |> 
   fp_set_style(box = "royalblue",
                line = "darkblue",
                summary = "royalblue",
@@ -127,9 +127,9 @@ We can also choose what lines we want by providing a list where the name is the 
 base_data |> 
   forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR), 
              clip = c(0.1, 2.5), 
-             hrzl_lines = list("3" = gpar(lty = 2), 
-                               "11" = gpar(lwd = 1, columns = 1:4, col = "#000044")),
              xlog = TRUE) |> 
+  fp_add_lines(h_3 = gpar(lty = 2), 
+               h_11 = gpar(lwd = 1, columns = 1:4, col = "#000044")) |> 
   fp_set_style(box = "royalblue",
                line = "darkblue",
                summary = "royalblue",
@@ -158,10 +158,10 @@ For marking the start/end points it is common to add a vertical line at the end 
 base_data |> 
   forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR), 
              clip = c(0.1, 2.5), 
-             hrzl_lines = list("3" = gpar(lty = 2), 
-                               "11" = gpar(lwd = 1, columns = 1:4, col = "#000044")),
              vertices = TRUE,
              xlog = TRUE) |> 
+  fp_add_lines(h_3 = gpar(lty = 2), 
+               h_11 = gpar(lwd = 1, columns = 1:4, col = "#000044")) |> 
   fp_set_style(box = "royalblue",
                line = "darkblue",
                summary = "royalblue",
@@ -190,11 +190,11 @@ You can also choose to have the graph positioned within the text table by specif
 base_data |> 
   forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR), 
              clip = c(0.1, 2.5), 
-             hrzl_lines = list("3" = gpar(lty = 2), 
-                               "11" = gpar(lwd = 1, columns = 1:4, col = "#000044")),
              graph.pos = 4,
              vertices = TRUE,
              xlog = TRUE) |> 
+  fp_add_lines(h_3 = gpar(lty = 2), 
+               h_11 = gpar(lwd = 1, columns = 1:4, col = "#000044")) |> 
   fp_set_style(box = "royalblue",
                line = "darkblue",
                summary = "royalblue",
@@ -208,7 +208,8 @@ base_data |>
                 upper = 0.731,
                 study = "Summary",
                 OR = "0.53",
-                is.summary = TRUE)
+                is.summary = TRUE) |> 
+  fp_decorate_graph(box = gpar(lty = 2, col = "lightgray"))
 ```
 
 Using expressions
@@ -373,6 +374,8 @@ dfHRQoL |>
              ci.vertices.height = 0.05,
              boxsize = .1,
              xlab = "EQ-5D index") |> 
+  fp_add_lines("steelblue") |> 
+  fp_add_header("Variable") |> 
   fp_set_style(box = c("blue", "darkred") |> lapply(function(x) gpar(fill = x, col = "#555555")),
                default = gpar(vertices = TRUE))
 ```

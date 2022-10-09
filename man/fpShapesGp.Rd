@@ -13,6 +13,7 @@ fpShapesGp(
   zero = NULL,
   axes = NULL,
   hrz_lines = NULL,
+  vrtcl_lines = NULL,
   grid = NULL
 )
 }
@@ -50,6 +51,10 @@ with \code{col} as the only arguments.}
 (may not be a list of gpars).}
 
 \item{hrz_lines}{The graphical parameters (\code{gpar}) of the horizontal lines
+(may not be a list of gpars). If provided a string a \code{gpar} will be generated
+with \code{col} as the only arguments.}
+
+\item{vrtcl_lines}{The graphical parameters (\code{gpar}) of the vertical lines
 (may not be a list of gpars). If provided a string a \code{gpar} will be generated
 with \code{col} as the only arguments.}
 
