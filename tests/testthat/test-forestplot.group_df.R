@@ -22,7 +22,7 @@ test_that("Basic", {
     )
 
   expect_equivalent(out$estimates[,1,],
-                    lapply(HRQoL, \(x) x[,"coef"]) |> do.call(cbind, args = _))
+                    lapply(HRQoL, \(x) x[,"coef"]) |> (\(args) do.call(cbind, args = args))())
 })
 
 
