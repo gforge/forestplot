@@ -21,7 +21,13 @@ prepAlign <- function(align, graph.pos, nc) {
     return(c("l", rep("c", nc - 1)))
   }
 
-  if (any(!c("l", "c", "r") %in% align)) {
+  if (length(align) == 1 &&
+      is.character(align) &&
+      nchar(align) > 1) {
+    align <- strsplit(align, split = "")[[1]]
+  }
+
+  if (any(!align %in% c("l", "c", "r"))) {
     stop("The align argument must only contain 'l', 'c', or 'r'. You provided: ", align)
   }
   rep(align, length.out = nc)

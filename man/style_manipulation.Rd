@@ -15,7 +15,8 @@ fp_set_style(
   axes = NULL,
   hrz_lines = NULL,
   grid = NULL,
-  txt_gp = NULL
+  txt_gp = NULL,
+  align = NULL
 )
 }
 \arguments{
@@ -63,6 +64,8 @@ with \code{col} as the only arguments.}
 
 \item{txt_gp}{Set the fonts etc for all text elements. See \code{\link[=fpTxtGp]{fpTxtGp()}}
 for details}
+
+\item{align}{Vector giving alignment (l,r,c) for the table columns}
 }
 \value{
 The foresplot object with the styles
@@ -95,6 +98,7 @@ base_data |>
 }
 \seealso{
 Other graph modifiers: 
+\code{\link{fp_add_lines}()},
 \code{\link{fp_decorate_graph}()},
 \code{\link{fp_insert_row}()},
 \code{\link{fp_set_zebra_style}()}

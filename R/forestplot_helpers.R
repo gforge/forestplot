@@ -554,6 +554,7 @@ fpDrawBarCI <- function(lower_limit, estimate, upper_limit, size, col, y.offset 
 #' @param text The color of the text
 #' @param axes The color of the x-axis at the bottom
 #' @param hrz_lines The color of the horizontal lines
+#' @param vrtcl_lines The color of the vertical lines
 #' @return A list with key elements
 #'
 #' @author Max Gordon, Thomas Lumley
@@ -571,7 +572,8 @@ fpColors <- function(all.elements,
                      zero = "lightgray",
                      text = "black",
                      axes = "black",
-                     hrz_lines = "black") {
+                     hrz_lines = "black",
+                     vrtcl_lines = "lightgray") {
   if (missing(all.elements)) {
     # Make sure the color lengths match
     # if nott then add a slightly lighter/darker shade
@@ -603,7 +605,8 @@ fpColors <- function(all.elements,
       zero = zero,
       text = text,
       axes = axes,
-      hrz_lines = hrz_lines
+      hrz_lines = hrz_lines,
+      vrtcl_lines = vrtcl_lines
     )
   } else {
     if (is.null(all.elements)) {
@@ -617,14 +620,14 @@ fpColors <- function(all.elements,
       zero = all.elements,
       text = all.elements,
       axes = all.elements,
-      hrz_lines = all.elements
+      hrz_lines = all.elements,
+      vrtcl_lines = all.elements
     )
   }
 
 
-  return(structure(ret,
-    class = c("fpColors", class(ret))
-  ))
+  ret |>
+    structure(class = c("fpColors", class(ret)))
 }
 
 #' A function for graphical parameters of the shapes used in `forestplot()`
@@ -680,6 +683,9 @@ fpColors <- function(all.elements,
 #' @param hrz_lines The graphical parameters (`gpar`) of the horizontal lines
 #'  (may not be a list of gpars). If provided a string a `gpar` will be generated
 #'  with `col` as the only arguments.
+#' @param vrtcl_lines The graphical parameters (`gpar`) of the vertical lines
+#'  (may not be a list of gpars). If provided a string a `gpar` will be generated
+#'  with `col` as the only arguments.
 #' @param grid The graphical parameters (`gpar`) of the grid (vertical lines)
 #'  (may be a list of gpars). If provided a string a `gpar` will be generated
 #'   with `col` as the only arguments.
@@ -710,6 +716,7 @@ fpShapesGp <- function(default = NULL,
                        zero = NULL,
                        axes = NULL,
                        hrz_lines = NULL,
+                       vrtcl_lines = NULL,
                        grid = NULL) {
   ret <- list(
     default = default,
@@ -720,6 +727,7 @@ fpShapesGp <- function(default = NULL,
     zero = zero,
     axes = axes,
     hrz_lines = hrz_lines,
+    vrtcl_lines = vrtcl_lines,
     grid = grid
   )
 
@@ -759,7 +767,8 @@ fpShapesGp <- function(default = NULL,
     }
   }
 
-  return(structure(ret, class = c("fpShapesGp", class(ret))))
+  ret |>
+    structure(class = c("fpShapesGp", class(ret)))
 }
 
 #' A function to extract graphical parameters from a fpShapesGp object
@@ -793,8 +802,8 @@ prGetShapeGp <- function(shapes_gp, coords, object, default = grid::gpar(), node
   if (!is.character(object) || !is.vector(object) || length(object) != 1) {
     stop("`object` must be a character vector of length")
   }
-  if (!(object %in% c("box", "lines", "vertices", "summary", "zero", "axes", "hrz_lines", "grid"))) {
-    stop("`object` must be one of: \"box\", \"lines\", \"vertices\", \"summary\", \"zero\", \"axes\", \"hrz_lines\", \"grid\"")
+  if (!(object %in% c("box", "lines", "vertices", "summary", "zero", "axes", "hrz_lines", "vrtcl_lines", "grid"))) {
+    stop("`object` must be one of: \"box\", \"lines\", \"vertices\", \"summary\", \"zero\", \"axes\", \"hrz_lines\", \"vrtcl_lines\", \"grid\"")
   }
 
   undefined_coords <- is.null(coords)

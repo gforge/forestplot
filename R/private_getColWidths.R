@@ -1,14 +1,41 @@
 getColWidths <- function(labels, graphwidth, colgap, graph.pos, nc) {
+  appendWidth <- \(x, width) x |>
+    append(list(width))
+
+  prependWidth <- \(x, width) list(width) |>
+    append(x)
+
   # There is always at least one column so grab the widest one
   # and have that as the base for the column widths
-  colwidths <- unit.c(prFpFindWidestGrob(labels[[1]]))
+  colwidths <- list(prFpFindWidestGrob(labels[[1]]))
   # If multiple row label columns, add the other column widths
   if (attr(labels, "no_cols") > 1) {
     for (i in 2:attr(labels, "no_cols")) {
-      colwidths <- unit.c(colwidths,
-                          colgap,
-                          prFpFindWidestGrob(labels[[i]]))
+      colwidths <- appendWidth(colwidths,
+                               prFpFindWidestGrob(labels[[i]]))
     }
+  }
+
+  # Add the base graph width to the total column width
+  # default is 2 inches
+  if (graph.pos == 1) {
+    colwidths <- prependWidth(colwidths, graphwidth)
+  } else if (graph.pos == attr(labels, "no_cols") + 1) {
+    colwidths <- appendWidth(colwidths, graphwidth)
+  } else {
+    spl_position <- graph.pos - 1
+    colwidths <- appendWidth(colwidths[1:spl_position],
+                             graphwidth) |>
+      append(colwidths[(spl_position + 1):length(colwidths)])
+  }
+
+  colwidths_with_colgap <- list()
+  for (i in 1:length(colwidths)) {
+    if (i != 1) {
+      colwidths_with_colgap <- appendWidth(colwidths_with_colgap, colgap)
+    }
+    colwidths_with_colgap <- appendWidth(colwidths_with_colgap,
+                                         colwidths[[i]])
   }
 
   ###########################################
@@ -17,16 +44,30 @@ getColWidths <- function(labels, graphwidth, colgap, graph.pos, nc) {
   ###########################################
   if (!is.unit(graphwidth) &&
       graphwidth == "auto") {
+    other_columns_width <- colwidths_with_colgap[sapply(colwidths_with_colgap, is.unit)] |>
+      (\(x) do.call(unit.c, x))() |>
+      sum()
+
+    graph_index <- sapply(colwidths_with_colgap, Negate(is.unit)) |> which()
+    if (length(graph_index) != 1) {
+      if (length(graph_index) == 0) {
+        stop("Could not find graph position")
+      } else {
+        stop("The graph can't be in multiple positions, this is a bug - please report to maintainer")
+      }
+    }
+
     # If graph width is not provided as a unit the autosize it to the
     # rest of the space available
-    graphwidth <- unit(1, "npc") - sum(colwidths)
+    graphwidth <- unit(1, "npc") - other_columns_width
     # While the logic makes sense it seems that the auto calculating
     # function is off and we shouldn't rely on the logic below
     # as the number is smaller than the graph actually turns out
     if (convertWidth(graphwidth, unitTo = "npc", valueOnly = TRUE) < 0.05) {
       graphwidth <- unit(0.3, "npc")
     }
-    # graphwidth <- unit(max(.05, graphwidth), "npc")
+
+    colwidths_with_colgap[[graph_index]] <- graphwidth
   } else if (!is.unit(graphwidth)) {
     stop(
       "You have to provide graph width either as a unit() object or as 'auto'.",
@@ -35,20 +76,5 @@ getColWidths <- function(labels, graphwidth, colgap, graph.pos, nc) {
     )
   }
 
-  # Add the base grapwh width to the total column width
-  # default is 2 inches
-  if (graph.pos == 1) {
-    colwidths <- unit.c(graphwidth, colgap, colwidths)
-  } else if (graph.pos == attr(labels, "no_cols") + 1) {
-    colwidths <- unit.c(colwidths, colgap, graphwidth)
-  } else {
-    spl_position <- ((graph.pos - 1) * 2 - 1)
-    colwidths <- unit.c(
-      colwidths[1:spl_position],
-      colgap,
-      graphwidth,
-      colwidths[(spl_position + 1):length(colwidths)]
-    )
-  }
-
+  do.call(unit.c, colwidths_with_colgap)
 }

@@ -12,7 +12,8 @@ fpColors(
   zero = "lightgray",
   text = "black",
   axes = "black",
-  hrz_lines = "black"
+  hrz_lines = "black",
+  vrtcl_lines = "lightgray"
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ it's set to the par("fg") color}
 \item{axes}{The color of the x-axis at the bottom}
 
 \item{hrz_lines}{The color of the horizontal lines}
+
+\item{vrtcl_lines}{The color of the vertical lines}
 }
 \value{
 A list with key elements
