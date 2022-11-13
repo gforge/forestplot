@@ -179,6 +179,7 @@ forestplot.default <- function(labeltext,
        clip = clip,
        zero = zero,
        lwd.xaxis = lwd.xaxis,
+       grid = grid,
        extra_arguments = list(...)) |>
     structure(class = "gforge_forestplot")
 }

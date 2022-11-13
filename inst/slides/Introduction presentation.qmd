@@ -1,0 +1,711 @@
+---
+editor: visual
+format: 
+  revealjs:
+    slide-number: c/t
+    width: 2000
+    height: 800
+    logo: "https://progressivesafety.se/wp-content/uploads/2018/09/ki_logo_rgb_0-1030x515.png"
+    footer: "[Foresplot introduction](https://cran.r-project.org/web/packages/forestplot/index.html)"
+    css: ["style.css"]
+engine: knitr
+---
+
+# The forestplot package
+
+::: columns
+::: {.column width="50%"}
+Author:\
+Max Gordon\
+Orthopedic surgeon, researcher at Karolinska Institutet
+:::
+
+::: {.column width="50%"}
+```{r echo=FALSE}
+library(forestplot)
+library(tidyverse)
+
+metadata <- tibble::tibble(mean  = c(0.578, 0.165, 0.246, 0.700, 0.348, 0.139, 1.017),
+                           lower = c(0.372, 0.018, 0.072, 0.333, 0.083, 0.016, 0.365),
+                           upper = c(0.898, 1.517, 0.833, 1.474, 1.455, 1.209, 2.831),
+                           study = c("Auckland", "Block", "Doran", "Gamsu",
+                                     "Morrison", "Papageorgiou", "Tauesch"),
+                           deaths_steroid = c("36", "1", "4", "14", "3", "1", "8"),
+                           deaths_placebo = c("60", "5", "11", "20", "7", "7", "10"),
+                           OR = c("0.58", "0.16", "0.25", "0.70", "0.35", "0.14", "1.02"))
+
+metadata |>
+  forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR),
+             clip = c(0.1, 2.5),
+             xlog = TRUE) |>
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = "royalblue") |> 
+  fp_add_header(study = c("", "Study"),
+                deaths_steroid = c("Deaths", "(steroid)"),
+                deaths_placebo = c("Deaths", "(placebo)"),
+                OR = c("", "OR")) |>
+  fp_append_row(mean  = 0.531,
+                lower = 0.386,
+                upper = 0.731,
+                study = "Summary",
+                OR = "0.53",
+                is.summary = TRUE) |> 
+  fp_set_zebra_style("#EFEFEF")
+```
+:::
+:::
+
+## Basics
+
+::: columns
+::: {.column width="50%"}
+``` r
+tibble::tribble(
+  ~Name,     ~Mean, ~Lower, ~Upper,
+  "Study A",     1,   -0.5,    1.5,
+  "Study B",   0.5,   0.25,   0.75,
+) |> 
+  forestplot(labeltext = Name,
+             mean = Mean,
+             lower = Lower,
+             upper = Upper)
+```
+:::
+
+::: {.column width="50%"}
+```{r echo=FALSE}
+tibble::tribble(
+  ~Name,     ~Mean, ~Lower, ~Upper,
+  "Study A",     1,   -0.5,    1.5,
+  "Study B",     0.5, 0.25,   0.75,
+) |> 
+  forestplot(labeltext = Name,
+             mean = Mean,
+             lower = Lower,
+             upper = Upper)
+```
+:::
+:::
+
+## Plot compositions
+
+::: columns
+::: {.column width="50%"}
+``` {.r code-line-numbers="10-13"}
+tibble::tribble(
+  ~Name,     ~Mean, ~Lower, ~Upper,
+  "Study A",     1,   -0.5,    1.5,
+  "Study B",   0.5,   0.25,   0.75,
+) |> 
+  forestplot(labeltext = Name,
+             mean = Mean,
+             lower = Lower,
+             upper = Upper) |> 
+  fp_add_header(Name = "Study") |> 
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = "royalblue") 
+```
+:::
+
+::: {.column width="50%"}
+```{r echo=FALSE}
+tibble::tribble(
+  ~Name,     ~Mean, ~Lower, ~Upper,
+  "Study A",     1,   -0.5,    1.5,
+  "Study B",     0.5, 0.25,   0.75,
+) |> 
+  forestplot(labeltext = Name,
+             mean = Mean,
+             lower = Lower,
+             upper = Upper) |> 
+  fp_add_header(Name = "Study") |> 
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = "royalblue") 
+```
+:::
+:::
+
+## More complex example
+
+::: columns
+::: {.column width="50%"}
+``` r
+metadata |>
+  forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR),
+             clip = c(0.1, 2.5),
+             xlog = TRUE) |>
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = "royalblue") |> 
+  fp_add_header(study = c("", "Study"),
+                deaths_steroid = c("Deaths", "(steroid)"),
+                deaths_placebo = c("Deaths", "(placebo)"),
+                OR = c("", "OR"))
+```
+:::
+
+::: {.column width="50%"}
+```{r echo=FALSE}
+metadata |>
+  forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR),
+             clip = c(0.1, 2.5),
+             xlog = TRUE) |>
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = "royalblue") |> 
+  fp_add_header(study = c("", "Study"),
+                deaths_steroid = c("Deaths", "(steroid)"),
+                deaths_placebo = c("Deaths", "(placebo)"),
+                OR = c("", "OR"))
+```
+:::
+:::
+
+## Adding a summary row
+
+::: columns
+::: {.column width="50%"}
+``` {.r code-line-numbers="12-17"}
+metadata |>
+  forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR),
+             clip = c(0.1, 2.5),
+             xlog = TRUE) |>
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = "royalblue") |> 
+  fp_add_header(study = c("", "Study"),
+                deaths_steroid = c("Deaths", "(steroid)"),
+                deaths_placebo = c("Deaths", "(placebo)"),
+                OR = c("", "OR")) |>
+  fp_append_row(mean  = 0.531,
+                lower = 0.386,
+                upper = 0.731,
+                study = "Summary",
+                OR = "0.53",
+                is.summary = TRUE)
+```
+:::
+
+::: {.column width="50%"}
+```{r echo=FALSE}
+metadata |>
+  forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR),
+             clip = c(0.1, 2.5),
+             xlog = TRUE) |>
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = "royalblue") |> 
+  fp_add_header(study = c("", "Study"),
+                deaths_steroid = c("Deaths", "(steroid)"),
+                deaths_placebo = c("Deaths", "(placebo)"),
+                OR = c("", "OR")) |>
+  fp_append_row(mean  = 0.531,
+                lower = 0.386,
+                upper = 0.731,
+                study = "Summary",
+                OR = "0.53",
+                is.summary = TRUE)
+```
+:::
+:::
+
+## Adding more decorations
+
+::: columns
+::: {.column width="50%"}
+``` {.r code-line-numbers="18-21"}
+metadata |>
+  forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR),
+             clip = c(0.1, 2.5),
+             xlog = TRUE) |>
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = "royalblue") |> 
+  fp_add_header(study = c("", "Study"),
+                deaths_steroid = c("Deaths", "(steroid)"),
+                deaths_placebo = c("Deaths", "(placebo)"),
+                OR = c("", "OR")) |>
+  fp_append_row(mean  = 0.531,
+                lower = 0.386,
+                upper = 0.731,
+                study = "Summary",
+                OR = "0.53",
+                is.summary = TRUE)  |> 
+  fp_set_zebra_style("#EFEFEF") |> 
+  fp_add_lines() |> 
+  fp_decorate_graph(left_bottom_txt = "good",
+                    right_bottom_txt = "bad")
+```
+:::
+
+::: {.column width="50%"}
+```{r echo=FALSE}
+metadata |>
+  forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR),
+             clip = c(0.1, 2.5),
+             xlog = TRUE) |>
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = "royalblue") |> 
+  fp_add_header(study = c("", "Study"),
+                deaths_steroid = c("Deaths", "(steroid)"),
+                deaths_placebo = c("Deaths", "(placebo)"),
+                OR = c("", "OR")) |>
+  fp_append_row(mean  = 0.531,
+                lower = 0.386,
+                upper = 0.731,
+                study = "Summary",
+                OR = "0.53",
+                is.summary = TRUE)  |> 
+  fp_set_zebra_style("#EFEFEF") |> 
+  fp_add_lines() |> 
+  fp_decorate_graph(box = TRUE,
+                    left_bottom_txt = "good",
+                    right_bottom_txt = "bad")
+```
+:::
+:::
+
+## Specifying text size, style & more
+
+::: columns
+::: {.column width="50%"}
+``` {.r code-line-numbers="8-11"}
+metadata |>
+  forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR),
+             clip = c(0.1, 2.5),
+             xlog = TRUE) |>
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = "royalblue",
+               txt_gp = fpTxtGp(label = list(gpar(),
+                                             gpar(col = "#660000")),
+                                ticks = gpar(cex = 1),
+                                xlab  = gpar(cex = 1.5))) |> 
+  fp_add_header(study = c("", "Study"),
+                deaths_steroid = c("Deaths", "(steroid)"),
+                deaths_placebo = c("Deaths", "(placebo)"),
+                OR = c("", "OR")) |>
+  fp_append_row(mean  = 0.531,
+                lower = 0.386,
+                upper = 0.731,
+                study = "Summary",
+                OR = "0.53",
+                is.summary = TRUE)  |> 
+  fp_set_zebra_style("#EFEFEF") |> 
+  fp_add_lines()
+```
+:::
+
+::: {.column width="50%"}
+```{r echo=FALSE}
+metadata |>
+  forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR),
+             clip = c(0.1, 2.5),
+             xlog = TRUE) |>
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = "royalblue",
+               txt_gp = fpTxtGp(label = list(gpar(),
+                                             gpar(col = "#660000")),
+                                ticks = gpar(cex = 1),
+                                xlab  = gpar(cex = 1.5))) |> 
+  fp_add_header(study = c("", "Study"),
+                deaths_steroid = c("Deaths", "(steroid)"),
+                deaths_placebo = c("Deaths", "(placebo)"),
+                OR = c("", "OR")) |>
+  fp_append_row(mean  = 0.531,
+                lower = 0.386,
+                upper = 0.731,
+                study = "Summary",
+                OR = "0.53",
+                is.summary = TRUE)  |> 
+  fp_set_zebra_style("#EFEFEF") |> 
+  fp_add_lines()
+```
+:::
+:::
+
+## Using expressions
+
+If we present a regression output it is sometimes convenient to have non-ascii letters, mathematical notations can be achieved with `expression()`.
+
+::: columns
+::: {.column width="50%"}
+``` r
+data(dfHRQoL)
+
+dfHRQoL |> 
+  filter(group == "Sweden") |> 
+  mutate(est = sprintf("%.2f", mean), .after = labeltext) |> 
+  forestplot(labeltext = c(labeltext, est), 
+             xlab = "EQ-5D index at 1 year") |> 
+  fp_add_header(est = expression(beta)) |> 
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = "royalblue")
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+data(dfHRQoL)
+
+dfHRQoL |> 
+  filter(group == "Sweden") |> 
+  mutate(est = sprintf("%.2f", mean), .after = labeltext) |> 
+  forestplot(labeltext = c(labeltext, est), 
+             xlab = "EQ-5D index at 1 year") |> 
+  fp_add_header(est = expression(beta)) |> 
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = "royalblue")
+```
+:::
+:::
+
+## Custom box size
+
+You can force the box size to a certain size through the `boxsize` argument.
+
+::: columns
+::: {.column width="50%"}
+``` r
+dfHRQoL |> 
+  filter(group == "Sweden") |> 
+  mutate(est = sprintf("%.2f", mean), .after = labeltext) |> 
+  forestplot(labeltext = c(labeltext, est), 
+             boxsize = 0.2,
+             clip = c(-.1, Inf),
+             xlab = "EQ-5D index") |> 
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = "royalblue")
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+dfHRQoL |> 
+  filter(group == "Sweden") |> 
+  mutate(est = sprintf("%.2f", mean), .after = labeltext) |> 
+  forestplot(labeltext = c(labeltext, est), 
+             boxsize = 0.2,
+             clip = c(-.1, Inf),
+             xlab = "EQ-5D index") |> 
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = "royalblue")
+```
+:::
+:::
+
+## Multiple confidence bands
+
+::: columns
+::: {.column width="50%"}
+``` r
+dfHRQoL |>
+  group_by(group) |>
+  forestplot(clip = c(-.1, 0.075),
+             ci.vertices = TRUE,
+             ci.vertices.height = 0.05,
+             boxsize = .1,
+             xlab = "EQ-5D index") |> 
+  fp_add_lines("steelblue") |> 
+  fp_add_header("Variable") |> 
+  fp_set_style(box = c("blue", "darkred") |> lapply(function(x) gpar(fill = x, col = "#555555")),
+               default = gpar(vertices = TRUE))
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+dfHRQoL |>
+  group_by(group) |>
+  forestplot(clip = c(-.1, 0.075),
+             ci.vertices = TRUE,
+             ci.vertices.height = 0.05,
+             boxsize = .1,
+             xlab = "EQ-5D index") |> 
+  fp_add_lines("steelblue") |> 
+  fp_add_header("Variable") |> 
+  fp_set_style(box = c("blue", "darkred") |> lapply(function(x) gpar(fill = x, col = "#555555")),
+               default = gpar(vertices = TRUE))
+```
+:::
+:::
+
+## Multiple confidence bands - legend
+
+::: columns
+::: {.column width="50%"}
+``` {.r code-line-numbers="3-6"}
+dfHRQoL |>
+  group_by(group) |>
+  forestplot(legend = c("Swedes", "Danes"),
+             legend_args = fpLegend(pos = list(x = .85, y = 0.25), 
+                                    gp = gpar(col = "#CCCCCC",
+                                              fill = "#F9F9F9")),
+             clip = c(-.1, 0.075),
+             ci.vertices = TRUE,
+             ci.vertices.height = 0.05,
+             boxsize = .1,
+             xlab = "EQ-5D index") |> 
+  fp_add_lines("steelblue") |> 
+  fp_add_header("Variable") |> 
+  fp_set_style(box = c("blue", "darkred") |> 
+                 lapply(\(x) gpar(fill = x, col = "#555555")),
+               default = gpar(vertices = TRUE))
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+dfHRQoL |>
+  group_by(group) |>
+  forestplot(legend = c("Swedes", "Danes"),
+             legend_args = fpLegend(pos = list(x = .85, y = 0.25), 
+                                    gp = gpar(col = "#CCCCCC", fill = "#F9F9F9")),
+             clip = c(-.1, 0.075),
+             ci.vertices = TRUE,
+             ci.vertices.height = 0.05,
+             boxsize = .1,
+             xlab = "EQ-5D index") |> 
+  fp_add_lines("steelblue") |> 
+  fp_add_header("Variable") |> 
+  fp_set_style(box = c("blue", "darkred") |> 
+                 lapply(\(x) gpar(fill = x, col = "#555555")),
+               default = gpar(vertices = TRUE))
+```
+:::
+:::
+
+## Multiple confidence bands - confidence interval style
+
+::: columns
+::: {.column width="50%"}
+``` r
+dfHRQoL |>
+  group_by(group) |>
+  forestplot(fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+             boxsize = .25,
+             line.margin = .1,
+             clip = c(-.125, 0.075),
+             lty.ci = c(1, 2),
+             xlab = "EQ-5D index") |> 
+  fp_set_style(box = c("blue", "darkred") |> 
+                 lapply(\(x) gpar(fill = x, col = "#555555")),
+               default = gpar(vertices = TRUE))
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+dfHRQoL |>
+  group_by(group) |>
+  forestplot(fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+             boxsize = .25,
+             line.margin = .1,
+             clip = c(-.125, 0.075),
+             lty.ci = c(1, 2),
+             xlab = "EQ-5D index") |> 
+  fp_set_style(box = c("blue", "darkred") |> 
+                 lapply(\(x) gpar(fill = x, col = "#555555")),
+               default = gpar(vertices = TRUE))
+```
+:::
+:::
+
+## Ticks
+
+::: columns
+::: {.column width="50%"}
+``` r
+xticks <- seq(from = -.1, to = .05, by = 0.025)
+xtlab <- rep(c(TRUE, FALSE), length.out = length(xticks))
+attr(xticks, "labels") <- xtlab
+
+dfHRQoL |>
+  group_by(group) |>
+  forestplot(fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+             boxsize = .25,
+             line.margin = .1,
+             clip = c(-.125, 0.075),
+             xticks = xticks,
+             xlab = "EQ-5D index") |> 
+  fp_set_style(box = c("blue", "darkred") |> 
+                    lapply(\(x) gpar(fill = x, col = "#555555")))
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+xticks <- seq(from = -.1, to = .05, by = 0.025)
+xtlab <- rep(c(TRUE, FALSE), length.out = length(xticks))
+attr(xticks, "labels") <- xtlab
+
+dfHRQoL |>
+  group_by(group) |>
+  forestplot(fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+             boxsize = .25, # We set the box size to better visualize the type
+             line.margin = .1, # We need to add this to avoid crowding
+             clip = c(-.125, 0.075),
+             xticks = xticks,
+             xlab = "EQ-5D index") |> 
+  fp_set_style(box = c("blue", "darkred") |>
+                 lapply(\(x) gpar(fill = x, col = "#555555")))
+```
+:::
+:::
+
+## Extra vertical lines, alias grid
+
+::: columns
+::: {.column width="50%"}
+``` {.r code-line-numbers="10"}
+dfHRQoL |>
+  group_by(group) |>
+  forestplot(fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+             boxsize = .25,
+             line.margin = .1,
+             clip = c(-.125, 0.075),
+             xlab = "EQ-5D index") |> 
+  fp_set_style(box = c("blue", "darkred") |>
+                 lapply(\(x) gpar(fill = x, col = "#555555"))) |> 
+  fp_decorate_graph(grid = c(-.1, -0.05, .05))
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+dfHRQoL |>
+  group_by(group) |>
+  forestplot(fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+             boxsize = .25,
+             line.margin = .1,
+             clip = c(-.125, 0.075),
+             xlab = "EQ-5D index") |> 
+  fp_set_style(box = c("blue", "darkred") |>
+                 lapply(\(x) gpar(fill = x, col = "#555555"))) |> 
+  fp_decorate_graph(grid = c(-.1, -0.05, .05))
+```
+:::
+:::
+
+## Direct model to forestplot conversion
+
+::: columns
+::: {.column width="50%"}
+``` r
+# simulated data to test
+set.seed(102)
+cov <- tibble(ftime = rexp(200)) |> 
+  mutate(x1 = runif(n()),
+         x2 = runif(n()),
+         x3 = runif(n()),
+         fstatus1 = if_else(x1 * 1 + 
+                              x2 * 0.2 + 
+                              x3 * 0.5 + 
+                              runif(n()) * 0.5 > 1, 
+                            1, 0),
+         fstatus2 = if_else(x1 * 0.2 + 
+                              x2 * 0.5 + 
+                              x3 * 0.1 + 
+                              runif(n()) * 2 > 1, 
+                            1, 0)) |> 
+  Gmisc::set_column_labels(x1 = "First variable",
+                           x2 = "Second variable")
+
+library(rms)
+dd <- datadist(cov)
+options(datadist = "dd")
+
+library(Greg)
+fit1 <- cph(Surv(ftime, fstatus1 == 1) ~ x1 + x2 + x3, data = cov)
+fit1 |> 
+  forestplotRegrObj() |> 
+  forestplot() |> 
+  fp_set_zebra_style("#f0f0f0") |> 
+  fp_set_style(lines = "steelblue",
+               box = "darkblue")
+```
+:::
+
+::: {.column width="50%"}
+```{r echo=FALSE}
+library(Greg)
+# simulated data to test
+set.seed(102)
+cov <- tibble(ftime = rexp(200)) |> 
+  mutate(x1 = runif(n()),
+         x2 = runif(n()),
+         x3 = runif(n()),
+         fstatus1 = if_else(x1 * 1 + 
+                              x2 * 0.2 + 
+                              x3 * 0.5 + 
+                              runif(n()) * 0.5 > 1, 
+                            1, 0),
+         fstatus2 = if_else(x1 * 0.2 + 
+                              x2 * 0.5 + 
+                              x3 * 0.1 + 
+                              runif(n()) * 2 > 1, 
+                            1, 0)) |> 
+  # Add some column labels
+  Gmisc::set_column_labels(x1 = "First variable",
+                           x2 = "Second variable")
+
+library(rms)
+dd <- datadist(cov)
+options(datadist = "dd")
+
+fit1 <- cph(Surv(ftime, fstatus1 == 1) ~ x1 + x2 + x3, data = cov)
+fit1 |> 
+  forestplotRegrObj() |> 
+  # Note that we need to convert the regression object first to a forestplot object
+  forestplot() |> 
+  fp_set_zebra_style("#f0f0f0") |> 
+  fp_set_style(lines = "steelblue",
+               box = "darkblue")
+```
+:::
+:::
+
+## Semantic versioning
+
+Given a version number MAJOR.MINOR.PATCH, increment the:
+
+*    MAJOR version when you make incompatible API changes
+*    MINOR version when you add functionality in a backwards compatible manner
+*    PATCH version when you make backwards compatible bug fixes
+
+
+```md
+Changes for 3.1.1
+-----------------
+* Fixed missing grid parameter
+* Fixed zebra style issue when no header is present and also graph box fill defaults now defaults to NA 
+  to allow zebra style
+
+Changes for 3.1.0
+-----------------
+* Added `fp_add_lines()` for superseding `hrzl_lines` argument and also adding the option of vertical lines
+* Fixed align bug and added align to `fp_set_style`
+* Fixed width calculation bug
+* Fixed multi-line `NA` bug
+
+Changes for 3.0.0
+-----------------
+* The `forestplot()` now returns an object with raw data that can be manipulated
+  by subsequent functions prior to plotting. All visual output is now generated
+  during the actual generation of the graph - this allows saving the plot and
+  plotting it when explicitly requested. BREAKING - this may be a breaking
+  feature although most of the old syntax should work without much need for
+  adaptation.
+  ...
+```
+
+## Thank you!

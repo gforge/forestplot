@@ -1,5 +1,11 @@
 NEWS for the forestplot package
 
+Changes for 3.1.1
+-----------------
+* Fixed missing grid parameter
+* Fixed zebra style issue when no header is present and also graph box fill defaults now defaults to NA 
+  to allow zebra style. Also fixed multiple sub-headers.
+
 Changes for 3.1.0
 -----------------
 * Added `fp_add_lines()` for superseding `hrzl_lines` argument and also adding the option of vertical lines

@@ -24,6 +24,7 @@
 #'
 #' @example inst/examples/fp_add_lines_example.R
 #' @family graph modifiers
+#' @family forestplot functions
 fp_add_lines <- function(x,
                         ...) {
   args <- list(...) |>

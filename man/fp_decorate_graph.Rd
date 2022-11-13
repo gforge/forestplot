@@ -10,7 +10,9 @@ fp_decorate_graph(
   right_bottom_txt = NULL,
   left_bottom_txt = NULL,
   right_top_txt = NULL,
-  left_top_txt = NULL
+  left_top_txt = NULL,
+  grid = NULL,
+  graph.pos = NULL
 )
 }
 \arguments{
@@ -32,6 +34,17 @@ be decorated fp_txt_* functions.}
 
 \item{left_top_txt}{Text to appear at the left top of the graph. Can
 be decorated fp_txt_* functions.}
+
+\item{grid}{If you want a discrete gray dashed grid at the level of the
+ticks you can set this parameter to \code{TRUE}. If you set the parameter
+to a vector of values lines will be drawn at the corresponding positions.
+If you want to specify the \code{\link[grid]{gpar}} of the lines then either
+directly pass a \code{\link[grid]{gpar}} object or set the gp attribute e.g.
+\code{attr(line_vector, "gp") <- \link[grid]{gpar}(lty = 2, col = "red")}}
+
+\item{graph.pos}{The position of the graph element within the table of text. The
+position can be \code{1-(ncol(labeltext) + 1)}. You can also choose set the position
+to \code{"left"} or \code{"right"}.}
 }
 \value{
 The forestplot object with the extended decoration
@@ -73,5 +86,17 @@ Other graph modifiers:
 \code{\link{fp_insert_row}()},
 \code{\link{fp_set_style}()},
 \code{\link{fp_set_zebra_style}()}
+
+Other forestplot functions: 
+\code{\link{forestplot}()},
+\code{\link{fpColors}()},
+\code{\link{fpDrawNormalCI}()},
+\code{\link{fpLegend}()},
+\code{\link{fpShapesGp}()},
+\code{\link{fp_add_lines}()},
+\code{\link{fp_insert_row}()},
+\code{\link{fp_set_style}()},
+\code{\link{fp_set_zebra_style}()}
 }
+\concept{forestplot functions}
 \concept{graph modifiers}

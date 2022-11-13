@@ -4,12 +4,15 @@
 \alias{fp_set_zebra_style}
 \title{Decorate the plot with a zebra pattern}
 \usage{
-fp_set_zebra_style(x, ...)
+fp_set_zebra_style(x, ..., ignore_subheaders = FALSE)
 }
 \arguments{
 \item{x}{The forestplot object}
 
 \item{...}{The styles for each row}
+
+\item{ignore_subheaders}{The zebra will automatically restart at sub-headers,
+i.e. when there is a \emph{summary} row that doesn't have any values.}
 }
 \value{
 The forestplot object with the zebra style
@@ -46,5 +49,17 @@ Other graph modifiers:
 \code{\link{fp_decorate_graph}()},
 \code{\link{fp_insert_row}()},
 \code{\link{fp_set_style}()}
+
+Other forestplot functions: 
+\code{\link{forestplot}()},
+\code{\link{fpColors}()},
+\code{\link{fpDrawNormalCI}()},
+\code{\link{fpLegend}()},
+\code{\link{fpShapesGp}()},
+\code{\link{fp_add_lines}()},
+\code{\link{fp_decorate_graph}()},
+\code{\link{fp_insert_row}()},
+\code{\link{fp_set_style}()}
 }
+\concept{forestplot functions}
 \concept{graph modifiers}

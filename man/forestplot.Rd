@@ -431,7 +431,12 @@ Other forestplot functions:
 \code{\link{fpColors}()},
 \code{\link{fpDrawNormalCI}()},
 \code{\link{fpLegend}()},
-\code{\link{fpShapesGp}()}
+\code{\link{fpShapesGp}()},
+\code{\link{fp_add_lines}()},
+\code{\link{fp_decorate_graph}()},
+\code{\link{fp_insert_row}()},
+\code{\link{fp_set_style}()},
+\code{\link{fp_set_zebra_style}()}
 }
 \author{
 Max Gordon, Thomas Lumley
