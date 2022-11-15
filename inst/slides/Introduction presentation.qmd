@@ -294,7 +294,7 @@ metadata |>
                 upper = 0.731,
                 study = "Summary",
                 OR = "0.53",
-                is.summary = TRUE)  |> 
+                is.summary = TRUE) |> 
   fp_set_zebra_style("#EFEFEF") |> 
   fp_add_lines()
 ```
@@ -322,7 +322,7 @@ metadata |>
                 upper = 0.731,
                 study = "Summary",
                 OR = "0.53",
-                is.summary = TRUE)  |> 
+                is.summary = TRUE) |> 
   fp_set_zebra_style("#EFEFEF") |> 
   fp_add_lines()
 ```
@@ -345,8 +345,7 @@ dfHRQoL |>
              xlab = "EQ-5D index at 1 year") |> 
   fp_add_header(est = expression(beta)) |> 
   fp_set_style(box = "royalblue",
-               line = "darkblue",
-               summary = "royalblue")
+               line = "darkblue")
 ```
 :::
 
@@ -361,8 +360,9 @@ dfHRQoL |>
              xlab = "EQ-5D index at 1 year") |> 
   fp_add_header(est = expression(beta)) |> 
   fp_set_style(box = "royalblue",
-               line = "darkblue",
-               summary = "royalblue")
+               line = "darkblue") |> 
+  fp_set_zebra_style("#EFEFEF") |> 
+  fp_add_lines()
 ```
 :::
 :::
@@ -381,9 +381,10 @@ dfHRQoL |>
              boxsize = 0.2,
              clip = c(-.1, Inf),
              xlab = "EQ-5D index") |> 
+  fp_add_lines("steelblue") |> 
+  fp_add_header("Variable") |> 
   fp_set_style(box = "royalblue",
-               line = "darkblue",
-               summary = "royalblue")
+               line = "darkblue")
 ```
 :::
 
@@ -396,9 +397,10 @@ dfHRQoL |>
              boxsize = 0.2,
              clip = c(-.1, Inf),
              xlab = "EQ-5D index") |> 
+  fp_add_lines("steelblue") |> 
+  fp_add_header("Variable") |> 
   fp_set_style(box = "royalblue",
-               line = "darkblue",
-               summary = "royalblue")
+               line = "darkblue")
 ```
 :::
 :::
@@ -416,7 +418,7 @@ dfHRQoL |>
              boxsize = .1,
              xlab = "EQ-5D index") |> 
   fp_add_lines("steelblue") |> 
-  fp_add_header("Variable") |> 
+  fp_add_header(fp_align_center("Variable")) |> 
   fp_set_style(box = c("blue", "darkred") |> lapply(function(x) gpar(fill = x, col = "#555555")),
                default = gpar(vertices = TRUE))
 ```
@@ -432,7 +434,7 @@ dfHRQoL |>
              boxsize = .1,
              xlab = "EQ-5D index") |> 
   fp_add_lines("steelblue") |> 
-  fp_add_header("Variable") |> 
+  fp_add_header(fp_align_center("Variable")) |> 
   fp_set_style(box = c("blue", "darkred") |> lapply(function(x) gpar(fill = x, col = "#555555")),
                default = gpar(vertices = TRUE))
 ```
@@ -499,7 +501,9 @@ dfHRQoL |>
              xlab = "EQ-5D index") |> 
   fp_set_style(box = c("blue", "darkred") |> 
                  lapply(\(x) gpar(fill = x, col = "#555555")),
-               default = gpar(vertices = TRUE))
+               default = gpar(vertices = TRUE)) |> 
+  fp_add_lines("steelblue") |> 
+  fp_add_header("Variable")
 ```
 :::
 
@@ -515,7 +519,9 @@ dfHRQoL |>
              xlab = "EQ-5D index") |> 
   fp_set_style(box = c("blue", "darkred") |> 
                  lapply(\(x) gpar(fill = x, col = "#555555")),
-               default = gpar(vertices = TRUE))
+               default = gpar(vertices = TRUE)) |> 
+  fp_add_lines("steelblue") |> 
+  fp_add_header("Variable")
 ```
 :::
 :::
@@ -526,8 +532,7 @@ dfHRQoL |>
 ::: {.column width="50%"}
 ``` r
 xticks <- seq(from = -.1, to = .05, by = 0.025)
-xtlab <- rep(c(TRUE, FALSE), length.out = length(xticks))
-attr(xticks, "labels") <- xtlab
+attr(xticks, "labels") <- rep(c(TRUE, FALSE), length.out = length(xticks))
 
 dfHRQoL |>
   group_by(group) |>
@@ -537,6 +542,8 @@ dfHRQoL |>
              clip = c(-.125, 0.075),
              xticks = xticks,
              xlab = "EQ-5D index") |> 
+  fp_add_lines("steelblue") |> 
+  fp_add_header("Variable") |> 
   fp_set_style(box = c("blue", "darkred") |> 
                     lapply(\(x) gpar(fill = x, col = "#555555")))
 ```
@@ -545,8 +552,7 @@ dfHRQoL |>
 ::: {.column width="50%"}
 ```{r}
 xticks <- seq(from = -.1, to = .05, by = 0.025)
-xtlab <- rep(c(TRUE, FALSE), length.out = length(xticks))
-attr(xticks, "labels") <- xtlab
+attr(xticks, "labels") <- rep(c(TRUE, FALSE), length.out = length(xticks))
 
 dfHRQoL |>
   group_by(group) |>
@@ -556,6 +562,8 @@ dfHRQoL |>
              clip = c(-.125, 0.075),
              xticks = xticks,
              xlab = "EQ-5D index") |> 
+  fp_add_lines("steelblue") |> 
+  fp_add_header("Variable") |> 
   fp_set_style(box = c("blue", "darkred") |>
                  lapply(\(x) gpar(fill = x, col = "#555555")))
 ```
@@ -596,6 +604,45 @@ dfHRQoL |>
 :::
 :::
 
+
+## Wide zero band
+
+::: columns
+::: {.column width="50%"}
+``` {.r code-line-numbers="6"}
+dfHRQoL |>
+  group_by(group) |>
+  forestplot(fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+             boxsize = .25,
+             line.margin = .1,
+             zero = -.025 * c(-1, 1),
+             clip = c(-.125, 0.075),
+             xlab = "EQ-5D index") |> 
+  fp_add_lines("lightgray") |> 
+  fp_add_header("Variable") |> 
+  fp_set_style(box = c("blue", "darkred") |>
+                 lapply(\(x) gpar(fill = x, col = "#555555")))
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+dfHRQoL |>
+  group_by(group) |>
+  forestplot(fn.ci_norm = c(fpDrawNormalCI, fpDrawCircleCI),
+             boxsize = .25,
+             line.margin = .1,
+             zero = -.025 * c(-1, 1),
+             clip = c(-.125, 0.075),
+             xlab = "EQ-5D index") |> 
+  fp_add_lines("lightgray") |> 
+  fp_add_header("Variable") |> 
+  fp_set_style(box = c("blue", "darkred") |>
+                 lapply(\(x) gpar(fill = x, col = "#555555")))
+```
+:::
+:::
+
 ## Direct model to forestplot conversion
 
 ::: columns
@@ -624,11 +671,8 @@ library(rms)
 dd <- datadist(cov)
 options(datadist = "dd")
 
-library(Greg)
-fit1 <- cph(Surv(ftime, fstatus1 == 1) ~ x1 + x2 + x3, data = cov)
-fit1 |> 
-  forestplotRegrObj() |> 
-  forestplot() |> 
+cph(Surv(ftime, fstatus1 == 1) ~ x1 + x2 + x3, data = cov) |> 
+  Greg::forestplotRegrObj() |> 
   fp_set_zebra_style("#f0f0f0") |> 
   fp_set_style(lines = "steelblue",
                box = "darkblue")
@@ -662,11 +706,8 @@ library(rms)
 dd <- datadist(cov)
 options(datadist = "dd")
 
-fit1 <- cph(Surv(ftime, fstatus1 == 1) ~ x1 + x2 + x3, data = cov)
-fit1 |> 
-  forestplotRegrObj() |> 
-  # Note that we need to convert the regression object first to a forestplot object
-  forestplot() |> 
+cph(Surv(ftime, fstatus1 == 1) ~ x1 + x2 + x3, data = cov) |> 
+  Greg::forestplotRegrObj() |> 
   fp_set_zebra_style("#f0f0f0") |> 
   fp_set_style(lines = "steelblue",
                box = "darkblue")
@@ -678,12 +719,11 @@ fit1 |>
 
 Given a version number MAJOR.MINOR.PATCH, increment the:
 
-*    MAJOR version when you make incompatible API changes
-*    MINOR version when you add functionality in a backwards compatible manner
-*    PATCH version when you make backwards compatible bug fixes
+-   MAJOR version when you make incompatible API changes
+-   MINOR version when you add functionality in a backwards compatible manner
+-   PATCH version when you make backwards compatible bug fixes
 
-
-```md
+``` md
 Changes for 3.1.1
 -----------------
 * Fixed missing grid parameter
