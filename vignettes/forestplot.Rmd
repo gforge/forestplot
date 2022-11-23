@@ -184,13 +184,12 @@ base_data |>
 Positioning the graph element
 -----------------------------
 
-You can also choose to have the graph positioned within the text table by specifying the `graph.pos` argument:
+You can also choose to have the graph positioned within the text table by specifying the `graph.pos` argument using the fp_:
 
 ```{r}
 base_data |> 
   forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR), 
              clip = c(0.1, 2.5), 
-             graph.pos = 4,
              vertices = TRUE,
              xlog = TRUE) |> 
   fp_add_lines(h_3 = gpar(lty = 2), 
@@ -209,7 +208,9 @@ base_data |>
                 study = "Summary",
                 OR = "0.53",
                 is.summary = TRUE) |> 
-  fp_decorate_graph(box = gpar(lty = 2, col = "lightgray"))
+  fp_decorate_graph(box = gpar(lty = 2, col = "lightgray"),
+                    graph.pos = 4) |> 
+  fp_set_zebra_style("#f9f9f9")
 ```
 
 Using expressions
@@ -394,7 +395,8 @@ dfHRQoL |>
              clip = c(-.125, 0.075),
              xlab = "EQ-5D index") |> 
   fp_set_style(box = c("blue", "darkred") |> lapply(function(x) gpar(fill = x, col = "#555555")),
-               default = gpar(vertices = TRUE))
+               default = gpar(vertices = TRUE)) |> 
+  fp_set_zebra_style("#F5F9F9")
 ```
 
 The confidence interval/box drawing functions are fully customizeable. You can write your own function that accepts the parameters: lower_limit, estimate, upper_limit, size, y.offset, clr.line, clr.marker, and lwd.
@@ -498,11 +500,12 @@ dfHRQoL |>
              boxsize = .25, # We set the box size to better visualize the type
              line.margin = .1, # We need to add this to avoid crowding
              clip = c(-.125, 0.075),
-             grid = TRUE,
              xticks = c(-.1, -0.05, 0, .05),
              zero = 0,
              xlab = "EQ-5D index") |> 
-  fp_set_style(box = c("blue", "darkred") |> lapply(function(x) gpar(fill = x, col = "#555555")))
+  fp_set_style(box = c("blue", "darkred") |> lapply(function(x) gpar(fill = x, col = "#555555"))) |> 
+  fp_decorate_graph(grid = structure(c(-.1, -.05, .05), 
+                              gp = gpar(lty = 2, col = "#CCCCFF")))
 ```
 
 You can easily customize both what grid lines to use and what type they should be by adding the gpar object to a vector:
@@ -514,10 +517,10 @@ dfHRQoL |>
              boxsize = .25, # We set the box size to better visualize the type
              line.margin = .1, # We need to add this to avoid crowding
              clip = c(-.125, 0.075),
-             grid = structure(c(-.1, -.05, .05), 
-                              gp = gpar(lty = 2, col = "#CCCCFF")), 
              xlab = "EQ-5D index") |> 
-  fp_set_style(box = c("blue", "darkred") |> lapply(function(x) gpar(fill = x, col = "#555555")))
+  fp_set_style(box = c("blue", "darkred") |> lapply(function(x) gpar(fill = x, col = "#555555"))) |> 
+  fp_decorate_graph(grid = structure(c(-.1, -.05, .05), 
+                                     gp = gpar(lty = 2, col = "#CCCCFF")))
 ```
 
 If you are unfamiliar with the structure call it is equivalent to generating a vector and then setting an attribute, eg:
@@ -533,4 +536,4 @@ identical(grid_arg,
 ```
 
 
-Ok, that's it. I hope you find the package `forestplot` useful.
+Ok, that is most of it. I hope you find the package `forestplot` useful.

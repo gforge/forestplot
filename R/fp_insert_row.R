@@ -18,8 +18,8 @@
 #' @export
 #'
 #' @family graph modifiers
+#' @family forestplot functions
 #' @example inst/examples/fp_insert_row_example.R
-
 #' @rdname row_manipulation
 fp_insert_row <- function(x,
                           ...,
