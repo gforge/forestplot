@@ -38,6 +38,7 @@ fp_set_zebra_style <- function(x, ..., ignore_subheaders = FALSE) {
   return(x)
 }
 
+#' @importFrom utils head
 plotZebraStyle <- function(obj) {
   if (is.null(obj$zebra_styles)) return()
   estimates <- obj$estimates

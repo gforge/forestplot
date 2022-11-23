@@ -27,18 +27,21 @@ Depends:
     abind
 Suggests:
     dplyr,
+    Gmisc,
+    Greg,
     knitr,
     purrr,
+    rlang,
     rmarkdown,
     rmeta,
+    rms,
     testthat,
     tibble,
     tidyr,
     tidyselect,
-    rlang,
-    Greg
+    tidyverse
 Encoding: UTF-8
 NeedsCompilation: no
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.2
