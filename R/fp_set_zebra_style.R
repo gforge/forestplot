@@ -44,6 +44,9 @@ plotZebraStyle <- function(obj) {
 
   empty_header_rows <- apply(estimates, \(x) all(is.na(x)), MARGIN = 1)
   last_headers <- which(head(empty_header_rows, length(empty_header_rows) - 1) & !tail(empty_header_rows, length(empty_header_rows) - 1))
+  if (length(last_headers) == 0) {
+    last_headers <- 0
+  }
 
   if (isTRUE(obj$zebra_styles_ignore_subheaders)) {
     last_headers <- last_headers[1]
