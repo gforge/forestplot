@@ -536,4 +536,4 @@ identical(grid_arg,
 ```
 
 
-Ok, that's it. I hope you find the package `forestplot` useful.
+Ok, that is most of it. I hope you find the package `forestplot` useful.

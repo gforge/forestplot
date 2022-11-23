@@ -5,6 +5,7 @@ Changes for 3.1.1
 * Fixed missing grid parameter
 * Fixed zebra style issue when no header is present and also graph box fill defaults now defaults to NA 
   to allow zebra style. Also fixed multiple sub-headers.
+* Fixed bad handling when providing ticks with xlog transformation
 
 Changes for 3.1.0
 -----------------
