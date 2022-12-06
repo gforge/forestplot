@@ -380,3 +380,4 @@ forestplot(1:3, coef, low, high,
   ),
   xlab = "The estimates"
 )
+
