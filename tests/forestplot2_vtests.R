@@ -380,3 +380,18 @@ forestplot(1:3, coef, low, high,
   ),
   xlab = "The estimates"
 )
+
+# Single row test - issue #57
+tt <- data.frame(
+  mean = 3, upper = 4, lower = 2, P = 0.01, gene = "XX"
+)
+tt |>
+  forestplot(labeltext = c(gene,P),
+             xlog = TRUE,
+             xlab = "OR",boxsize = 0.25) |>
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = "royalblue") |>
+  fp_add_header(gene = c("gene"),
+                P = c("P")) |>
+  fp_set_zebra_style("#EFEFEF")

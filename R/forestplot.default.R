@@ -57,7 +57,7 @@ forestplot.default <- function(labeltext,
   assert_class(col, "fpColors")
   assert_vector(zero, max.len = 2)
 
-  coreData <- buildEstimateArray(labeltext, lower, upper, mean)
+  coreData <- createEstimateArray(labeltext, lower, upper, mean)
   rm(labeltext)
   if (!missing(mean)) {
     rm(lower, upper, mean)

@@ -22,20 +22,29 @@ prepLabelText <- function(labeltext, nr) {
     label_nr <- length(labeltext)
     # Names are retained
     labeltext <- as.list(labeltext)
+  } else if (is.data.frame(labeltext)) {
+    # If labeltext is a data frame, handle it differently than a generic list
+    widthcolumn <- !apply(is.na(labeltext), 1, any)
+    nc <- ncol(labeltext)
+    label_nr <- nrow(labeltext)
+    cn <- colnames(labeltext)
+    labeltext <- lapply(seq(nc), function(i) as.list(labeltext[[i]]))
+    names(labeltext) <- cn
   } else if (is.list(labeltext)) {
-    if (sapply(labeltext, \(x)  length(x) == 1 && !is.list(x)) |> all()) {
+    if (isValidLabelList(labeltext)) {
       labeltext <- list(labeltext)
     }
     labeltext <- sapply(labeltext,
-                        function(x) {
-                          if (is.list(x)) {
-                            return(x)
-                          }
+      function(x) {
+        if (is.list(x)) {
+          return(x)
+        }
 
-                          return(as.list(x))
-                        },
-                        simplify = FALSE,
-                        USE.NAMES = TRUE)
+        return(as.list(x))
+      },
+      simplify = FALSE,
+      USE.NAMES = TRUE
+    )
 
     if (!prFpValidateLabelList(labeltext)) {
       stop("Invalid labellist, it has to be formed as a matrix m x n elements")
@@ -51,7 +60,7 @@ prepLabelText <- function(labeltext, nr) {
       empty_row <- TRUE
       for (row.no in seq(along = labeltext[[col.no]])) {
         if (is.expression(labeltext[[col.no]][[row.no]]) ||
-            !is.na(labeltext[[col.no]][[row.no]])) {
+          !is.na(labeltext[[col.no]][[row.no]])) {
           empty_row <- FALSE
           break
         }
@@ -72,7 +81,10 @@ prepLabelText <- function(labeltext, nr) {
     nc <- NCOL(labeltext)
     label_nr <- NROW(labeltext)
     label_colnames <- colnames(labeltext)
-    labeltext <- (\(x) lapply(seq(NCOL(labeltext)), function(i) as.list(x[,i])))(labeltext)
+    labeltext <- (\(x) lapply(
+      seq(NCOL(labeltext)),
+      function(i) as.list(x[, i])
+    ))(labeltext)
     names(labeltext) <- label_colnames
   }
 
@@ -84,10 +96,16 @@ prepLabelText <- function(labeltext, nr) {
   }
 
   structure(labeltext,
-            no_cols = nc,
-            no_rows = label_nr,
-            widthcolumn = widthcolumn,
-            class = "forestplot_labeltext")
+    no_cols = nc,
+    no_rows = label_nr,
+    widthcolumn = widthcolumn,
+    class = "forestplot_labeltext"
+  )
+}
+
+# Helper function to validate if all elements of a list are atomic (not lists) and of length 1
+isValidLabelList <- function(listData) {
+  sapply(listData, function(x) length(x) == 1 && !is.list(x)) |> all()
 }
 
 #' @describeIn prepLabelText Pick the value that corresponds to the row and column.
@@ -98,17 +116,16 @@ prepLabelText <- function(labeltext, nr) {
 #'
 #' @inheritParams forestplot
 #' @keywords internal
-`[.forestplot_labeltext` <- function(x, i, j, ...)
-{
+`[.forestplot_labeltext` <- function(x, i, j, ...) {
   # I get annoying warnings with this
   # if (!is.expression(x[[j]][[i]]) && is.na(x[[j]][[i]]))
   #    return(FALSE)
   row_column_text <- x[[j]][[i]]
 
   if (!is.expression(row_column_text) &&
-      !is.call(row_column_text) &&
-      (is.na(row_column_text) ||
-       is.null(row_column_text))) {
+    !is.call(row_column_text) &&
+    (is.na(row_column_text) ||
+      is.null(row_column_text))) {
     return("")
   }
 

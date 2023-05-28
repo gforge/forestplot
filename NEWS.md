@@ -1,5 +1,9 @@
 NEWS for the forestplot package
 
+Changes for 3.1.2
+-----------------
+* Fixed bug width single row forestplots - (issue #57)
+
 Changes for 3.1.1
 -----------------
 * Fixed missing grid parameter

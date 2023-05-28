@@ -1,4 +1,4 @@
-buildEstimateArray <- function(labeltext, lower, upper, mean) {
+createEstimateArray <- function(labeltext, lower, upper, mean) {
   if (missing(lower) &&
       missing(upper) &&
       missing(mean)) {
