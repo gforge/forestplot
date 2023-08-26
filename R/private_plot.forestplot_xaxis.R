@@ -3,36 +3,37 @@
 #' A helper function to the \code{\link{forestplot}}
 #' function.
 #'
-#' @param axisList The list from \code{\link{prFpGetGraphTicksAndClips}}
+#' @param x The list from \code{\link{prFpGetGraphTicksAndClips}}
+#' @param ... Unused
 #' @return void
 #'
 #' @inheritParams forestplot
 #' @noRd
-plot.forestplot_xaxis <- function(axisList) {
+plot.forestplot_xaxis <- function(x, ...) {
   # Now plot the axis inkluding the horizontal bar
-  pushViewport(axisList$axis_vp)
+  pushViewport(x$axis_vp)
 
   # Plot the vertical "zero" axis
-  gp_list <- list(col = axisList$col$zero)
-  if (!is.null(axisList$lwd.zero)) {
-    gp_list$lwd <- axisList$lwd.zero
+  gp_list <- list(col = x$col$zero)
+  if (!is.null(x$lwd.zero)) {
+    gp_list$lwd <- x$lwd.zero
   }
-  zero_gp <- prGetShapeGp(axisList$shapes_gp, NULL, "zero", default = do.call(gpar, gp_list))
+  zero_gp <- prGetShapeGp(x$shapes_gp, NULL, "zero", default = do.call(gpar, gp_list))
 
-  if (length(axisList$zero) > 1 || !is.na(axisList$zero)) {
-    if (length(axisList$zero) == 1) {
+  if (length(x$zero) > 1 || !is.na(x$zero)) {
+    if (length(x$zero) == 1) {
       grid.lines(
-        x = unit(axisList$zero, "native"),
+        x = unit(x$zero, "native"),
         y = 0:1,
         gp = zero_gp
       )
-    } else if (length(axisList$zero) == 2) {
+    } else if (length(x$zero) == 2) {
       gp_list$fill <- gp_list$col
       grid.polygon(
         x = unit(
           c(
-            axisList$zero,
-            rev(axisList$zero)
+            x$zero,
+            rev(x$zero)
           ),
           "native"
         ),
@@ -42,21 +43,21 @@ plot.forestplot_xaxis <- function(axisList) {
     }
   }
 
-  if (is.grob(axisList$gridList)) {
-    grid.draw(axisList$gridList)
+  if (is.grob(x$gridList)) {
+    grid.draw(x$gridList)
   }
 
   lab_y <- unit(0, "mm")
   lab_grob_height <- unit(-2, "mm")
   # Omit the axis if specified as 0
-  if (is.grob(axisList$axisGrob)) {
+  if (is.grob(x$axisGrob)) {
     # Plot the actual x-axis
-    grid.draw(axisList$axisGrob)
-    lab_grob_height <- grobHeight(axisList$axisGrob)
+    grid.draw(x$axisGrob)
+    lab_grob_height <- grobHeight(x$axisGrob)
     lab_y <- lab_y - lab_grob_height
   }
 
-  if (is.grob(axisList$labGrob)) {
+  if (is.grob(x$labGrob)) {
     # Add some padding between text and ticks proportional to the ticks height
     padding <-
       unit(
@@ -67,10 +68,10 @@ plot.forestplot_xaxis <- function(axisList) {
     # The text is strangely messy
     # and needs its own viewport
     pushViewport(viewport(
-      height = grobHeight(axisList$labGrob),
+      height = grobHeight(x$labGrob),
       y = lab_y - padding, just = "top"
     ))
-    grid.draw(axisList$labGrob)
+    grid.draw(x$labGrob)
     upViewport()
   }
   upViewport()

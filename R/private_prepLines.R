@@ -30,9 +30,9 @@ prepLines <- function(lines,
 }
 
 plot.gforge_forestplot_lines <- function(x,
-                                         y,
                                          colwidths,
-                                         graph.pos) {
+                                         graph.pos,
+                                         ...) {
 
   drawVerticalLines(lines = x$vertical,
                     number_of_rows = x$number_of_rows,
