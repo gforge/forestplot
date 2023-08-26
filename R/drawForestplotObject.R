@@ -73,10 +73,10 @@ drawForestplotObject <- function(obj) {
     prGridPlotTitle(title = obj$title, gp = obj$txt_gp$title)
   }
 
-  legend <- buildLegend(obj$legend,
-                        obj$txt_gp,
-                        obj$legend_args,
-                        obj$colgap,
+  legend <- buildLegend(legend = obj$legend,
+                        txt_gp = obj$txt_gp,
+                        legend_args = obj$legend_args,
+                        colgap = obj$colgap,
                         col = obj$col,
                         shapes_gp = obj$shapes_gp,
                         lineheight = obj$lineheight,

@@ -51,12 +51,16 @@ pr_plot_forestplot_legend_at_margin <- function(x) {
   pushViewport())
 }
 
-pr_plot_forestplot_legend_inside_plot <- function(x, graph.pos, shapes_gp, legend_args, legend_colgap) {
+pr_plot_forestplot_legend_inside_plot <- function(x, graph.pos, legend_args, legend_colgap) {
   plot_vp <- viewport(
     layout.pos.col = 2 * graph.pos - 1,
     name = "main_plot_area"
   )
   pushViewport(plot_vp)
+
+  if (is.null(legend_colgap)) {
+    legend_colgap <- attr(x, "legend_colgap")
+  }
 
   if ("align" %in% names(legend_args$pos) && legend_args$pos[["align"]] == "horizontal") {
     # Calculated with padding above

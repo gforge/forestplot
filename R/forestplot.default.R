@@ -53,6 +53,7 @@ forestplot.default <- function(labeltext,
   }
   colgap <- convertUnit(colgap, "mm")
 
+  assert_number(colgap)
   assert_class(txt_gp, "fpTxtGp")
   assert_class(col, "fpColors")
   assert_vector(zero, max.len = 2)

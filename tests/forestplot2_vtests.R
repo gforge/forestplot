@@ -395,3 +395,14 @@ tt |>
   fp_add_header(gene = c("gene"),
                 P = c("P")) |>
   fp_set_zebra_style("#EFEFEF")
+
+# From issue #59
+data(dfHRQoL)
+
+dfHRQoL |>
+  dplyr::group_by(.data$group) |>
+  forestplot::forestplot(
+    legend_args = forestplot::fpLegend(
+      pos = list("top", "align" = "horizontal")
+    )
+  )
