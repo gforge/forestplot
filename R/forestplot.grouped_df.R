@@ -55,6 +55,14 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
     dplyr::select(-.rows & where(\(col) length(unique(col)) > 1)) |>
     colnames()
 
+  if (length(groups) == 0) {
+    groups <- attr(x, "groups") |>
+      dplyr::select(-.rows) |>
+      colnames()
+    stop("You are using groups but there is only one group (call dplyr::ungroup() to undo the groups first), the grouped variable(s): ",
+            paste(groups, collapse = ", "))
+  }
+
   # Convert into a clean dataset
   core_data <- x |>
     dplyr::ungroup() |>
@@ -82,6 +90,10 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
     lapply(\(x) x$.fp_labels) |>
     unlist() |>
     unique()
+
+  if (nrow(core_data) %% length(all_labels) != 0) {
+    stop("The row labels should be the same for all groups. Have you used group specific labels (e.g. estimate)?")
+  }
 
   # Check for bad data assumptions
   bad_rows <- core_data |>
