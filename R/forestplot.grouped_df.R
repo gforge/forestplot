@@ -91,10 +91,6 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
     unlist() |>
     unique()
 
-  if (nrow(core_data) %% length(all_labels) != 0) {
-    stop("The row labels should be the same for all groups. Have you used group specific labels (e.g. estimate)?")
-  }
-
   # Check for bad data assumptions
   bad_rows <- core_data |>
     dplyr::mutate(level = sapply(.fp_labels, \(lbl) which(all_labels == lbl)[[1]])) |>
