@@ -1,8 +1,12 @@
 NEWS for the forestplot package
 
+Changes for 3.1.3
+-----------------
+* Fixed bug for horizontal legends (issue #59)
+
 Changes for 3.1.2
 -----------------
-* Fixed bug width single row forestplots - (issue #57)
+* Fixed bug width single row forestplots (issue #57)
 
 Changes for 3.1.1
 -----------------
