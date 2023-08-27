@@ -1,7 +1,7 @@
 #' @rdname forestplot
 #' @method forestplot default
 #' @export
-#' @importFrom checkmate assert_class assert_vector assert_matrix check_matrix check_array assert check_integer
+#' @importFrom checkmate assert_class assert_vector assert_matrix check_matrix check_array assert check_integer assert_number
 forestplot.default <- function(labeltext,
                                mean, lower, upper,
                                align = NULL,
@@ -53,11 +53,12 @@ forestplot.default <- function(labeltext,
   }
   colgap <- convertUnit(colgap, "mm")
 
+  assert_number(colgap)
   assert_class(txt_gp, "fpTxtGp")
   assert_class(col, "fpColors")
   assert_vector(zero, max.len = 2)
 
-  coreData <- buildEstimateArray(labeltext, lower, upper, mean)
+  coreData <- createEstimateArray(labeltext, lower, upper, mean)
   rm(labeltext)
   if (!missing(mean)) {
     rm(lower, upper, mean)

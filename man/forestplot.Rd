@@ -215,40 +215,39 @@ of all shapes drawn (squares, lines, diamonds, etc.). This overrides \code{col},
 \item{y}{Ignored}
 }
 \value{
-\code{NULL}
+\code{gforge_forestplot} object
 }
 \description{
-The \strong{forestplot} is based on the \pkg{rmeta}-package\code{s }forestplot()` function. This function resolves some limitations of the original
-functions such as:
+This function generates a forest plot with extended capabilities compared to
+the default \code{forestplot()} function in the \code{rmeta} package. It overcomes some limitations
+of the original function, including the addition of expressions, use of multiple confidence
+bands per label, autosizing to viewport, and uses modern tidyverse syntax. Refer to \code{vignette("forestplot")}
+for comprehensive details.
 }
 \details{
+This version of \code{forestplot()} enhances the standard function in the following ways:
 \itemize{
-\item Adding expressions: Allows use of expressions, e.g. \code{expression(beta)}
-\item Multiple bands: Using multiple confidence bands for the same label
-\item Autosize: Adapts to viewport (graph) size
-\item Convenient dplyr syntax
+\item \strong{Adding Expressions:} Allows the use of expressions, such as \code{expression(beta)}.
+\item \strong{Multiple Bands:} Enables multiple confidence bands for the same label.
+\item \strong{Autosize:} Adapts to the viewport (graph) size.
+\item \strong{Tidyverse syntax:} Utilizes convenient dplyr/tidyverse syntax for more flexible data manipulation.
 }
-
-See \code{vignette("forestplot")} for details.
 }
 \section{Multiple bands}{
 
-
-Using multiple bands, i.e. multiple lines, per variable can be interesting when
-you want to compare different outcomes. E.g. if you want to compare survival
-specific to heart disease to overall survival for smoking it may be useful to
-have two bands on top of each other. Another useful implementation is to show
-crude and adjusted estimates as separate bands.
+Multiple bands (or lines) per variable can be useful for comparing different outcomes.
+For instance, you may want to compare heart disease-specific survival to overall survival
+rates for smokers. It can be insightful to overlay two bands for this purpose. Another application
+could be displaying crude and adjusted estimates as separate bands.
 }
 
 \section{Horizontal lines}{
 
 
-The argument \code{hrzl_lines} can be either \code{TRUE} or a \code{list} with \code{\link[grid]{gpar}}
-elements:
+The \code{hrzl_lines} argument can be set as \code{TRUE} or a \code{list} with \code{grid::gpar} elements.
 \itemize{
 \item \code{TRUE}: A line will be added based upon the \code{is.summary} rows. If the first line is a summary it
-\item \link[grid:gpar]{grid::gpar}: The same as above but the lines will be formatted according to the \link[grid:gpar]{grid::gpar} element
+\item \code{grid::gpar}: The same as above but the lines will be formatted according to the \code{\link[grid:gpar]{grid::gpar}} element
 \item \code{list}: The list must either be numbered, i.e. \code{list("2" = gpar(lty = 1))}, or have the same length
 as the \code{NROW(mean) + 1}. If the list is numbered the numbers should not exceed the \code{NROW(mean) + 1}.
 The no. \emph{1 row designates the top}, i.e. the line above the first row, all other correspond  to
@@ -260,18 +259,19 @@ you can also specify \code{gpar(columns = c(1:3, 5))} if you for instance want t
 }
 }
 
-\section{Known issues}{
-
-
-The x-axis does not entirely respect the margin. Autosizing boxes is not
-always the best option, try to set these manually as much as possible.
-}
-
-\section{API-changes from \pkg{rmeta}-package`s \code{forestplot}}{
+\section{Known Issues}{
 
 \itemize{
-\item xlog: The xlog outputs the axis in log() format but the input data should be in antilog/exp format
-\item col: The corresponding function is \code{\link{fpColors}} for this package
+\item The x-axis does not completely adhere to the margin.
+\item Autosizing boxes may not always yield the best visual result; manual adjustment is recommended where possible.
+}
+}
+
+\section{API Changes from \code{rmeta} package's \code{forestplot}}{
+
+\itemize{
+\item \strong{xlog:} Outputs the axis in log() format, but the input data should be in antilog/exp format.
+\item \strong{col:} The corresponding function in this package is \code{fpColors}.
 }
 }
 
@@ -427,6 +427,8 @@ par(ask = ask)
 # vignette("forestplot",  package="forestplot")
 }
 \seealso{
+\code{vignette("forestplot")}
+
 Other forestplot functions: 
 \code{\link{fpColors}()},
 \code{\link{fpDrawNormalCI}()},

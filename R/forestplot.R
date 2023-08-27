@@ -1,31 +1,29 @@
-#' Draws a forest plot
+#' @title Draws a forest plot
 #'
-#' The **forestplot** is based on the \pkg{rmeta}-package`s
-#' `forestplot()` function. This function resolves some limitations of the original
-#' functions such as:
+#' @description This function generates a forest plot with extended capabilities compared to
+#' the default `forestplot()` function in the `rmeta` package. It overcomes some limitations
+#' of the original function, including the addition of expressions, use of multiple confidence
+#' bands per label, autosizing to viewport, and uses modern tidyverse syntax. Refer to `vignette("forestplot")`
+#' for comprehensive details.
 #'
-#' * Adding expressions: Allows use of expressions, e.g. `expression(beta)`
-#' * Multiple bands: Using multiple confidence bands for the same label
-#' * Autosize: Adapts to viewport (graph) size
-#' * Convenient dplyr syntax
-#'
-#' See `vignette("forestplot")` for details.
+#' @details This version of `forestplot()` enhances the standard function in the following ways:
+#' * **Adding Expressions:** Allows the use of expressions, such as `expression(beta)`.
+#' * **Multiple Bands:** Enables multiple confidence bands for the same label.
+#' * **Autosize:** Adapts to the viewport (graph) size.
+#' * **Tidyverse syntax:** Utilizes convenient dplyr/tidyverse syntax for more flexible data manipulation.
 #'
 #' @section Multiple bands:
-#'
-#' Using multiple bands, i.e. multiple lines, per variable can be interesting when
-#' you want to compare different outcomes. E.g. if you want to compare survival
-#' specific to heart disease to overall survival for smoking it may be useful to
-#' have two bands on top of each other. Another useful implementation is to show
-#' crude and adjusted estimates as separate bands.
+#' Multiple bands (or lines) per variable can be useful for comparing different outcomes.
+#' For instance, you may want to compare heart disease-specific survival to overall survival
+#' rates for smokers. It can be insightful to overlay two bands for this purpose. Another application
+#' could be displaying crude and adjusted estimates as separate bands.
 #'
 #' @section Horizontal lines:
 #'
-#' The argument \code{hrzl_lines} can be either \code{TRUE} or a \code{list} with \code{\link[grid]{gpar}}
-#' elements:
+#' The `hrzl_lines` argument can be set as `TRUE` or a `list` with `grid::gpar` elements.
 #'
 #' * `TRUE`: A line will be added based upon the \code{is.summary} rows. If the first line is a summary it
-#' * [grid::gpar]: The same as above but the lines will be formatted according to the [grid::gpar] element
+#' * `grid::gpar`: The same as above but the lines will be formatted according to the [`grid::gpar`] element
 #' * `list`: The list must either be numbered, i.e. \code{list("2" = gpar(lty = 1))}, or have the same length
 #'           as the \code{NROW(mean) + 1}. If the list is numbered the numbers should not exceed the \code{NROW(mean) + 1}.
 #'           The no. \emph{1 row designates the top}, i.e. the line above the first row, all other correspond  to
@@ -35,15 +33,16 @@
 #'           allowing standard \code{\link[grid]{gpar}} line descriptions, \code{lty}, \code{lwd}, \code{col}, and more
 #'           you can also specify \code{gpar(columns = c(1:3, 5))} if you for instance want the line to skip a column.
 #'
-#' @section Known issues:
+#' @section Known Issues:
 #'
-#' The x-axis does not entirely respect the margin. Autosizing boxes is not
-#' always the best option, try to set these manually as much as possible.
+#' * The x-axis does not completely adhere to the margin.
+#' * Autosizing boxes may not always yield the best visual result; manual adjustment is recommended where possible.
 #'
-#' @section API-changes from \pkg{rmeta}-package`s \code{forestplot}:
 #'
-#' * xlog: The xlog outputs the axis in log() format but the input data should be in antilog/exp format
-#' * col: The corresponding function is \code{\link{fpColors}} for this package
+#' @section API Changes from `rmeta` package's `forestplot`:
+#'
+#' * **xlog:** Outputs the axis in log() format, but the input data should be in antilog/exp format.
+#' * **col:** The corresponding function in this package is `fpColors`.
 #'
 #' @param labeltext A list, matrix, vector or expression with the names of each
 #'  row or the name of the column if using the *dplyr* select syntax - defaults to "labeltext".
@@ -155,7 +154,7 @@
 #'  \code{lwd.xaxis}, \code{lwd.zero}, \code{lwd.ci} and \code{lty.ci}.
 #' @param ... Passed on to the \code{fn.ci_norm} and
 #'  \code{fn.ci_sum} arguments
-#' @return \code{NULL}
+#' @return `gforge_forestplot` object
 #'
 #' @import grid
 #' @importFrom grDevices dev.cur
@@ -164,6 +163,7 @@
 #'
 #' @example inst/examples/forestplot_example.R
 #' @family forestplot functions
+#' @seealso `vignette("forestplot")`
 #' @rdname forestplot
 #' @export forestplot
 #' @aliases forestplot forestplot.default
