@@ -81,6 +81,8 @@ drawForestplotObject <- function(obj) {
                         shapes_gp = obj$shapes_gp,
                         lineheight = obj$lineheight,
                         fn.legend = obj$fn.legend)
+  attr(legend, "cex") <- attr(labels, "cex")
+  attr(legend, "no_rows") <- attr(labels, "cex")
 
   plot(legend, margin = TRUE)
 
@@ -122,7 +124,7 @@ drawForestplotObject <- function(obj) {
   main_grid_layout <- grid.layout(nrow = attr(labels, "no_rows"),
                                   ncol = length(colwidths),
                                   widths = colwidths,
-                                  heights = unit(rep(1 / attr(labels, "no_rows"), attr(labels, "no_rows")), "npc"),
+                                  heights = getLineHeight(obj, labels = labels),
                                   respect = TRUE)
 
   pushViewport(viewport(
@@ -170,4 +172,21 @@ drawForestplotObject <- function(obj) {
   # Go back to the original viewport
   seekViewport("forestplot_margins")
   upViewport(2)
+}
+
+getLineHeight <- function(obj, labels) {
+  no_rows <- attr(labels, "no_rows")
+  if (is.unit(obj$lineheight)) {
+    return(unit.c(rep(obj$lineheight, length.out = no_rows)))
+  }
+
+  if (obj$lineheight == "auto" || is.null(obj$lineheight)) {
+    return(unit(rep(1 / no_rows, no_rows), "npc"))
+  }
+
+  if (obj$lineheight == "lines") {
+    return(unit(rep(attr(labels, "cex") * 1.5, length.out = no_rows), "lines"))
+  }
+
+  return(unit.c(rep(obj$lineheight, length.out = no_rows)))
 }

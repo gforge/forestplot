@@ -406,3 +406,4 @@ dfHRQoL |>
       pos = list("top", "align" = "horizontal")
     )
   )
+

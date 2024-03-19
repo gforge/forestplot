@@ -374,6 +374,7 @@ dfHRQoL |>
              ci.vertices = TRUE,
              ci.vertices.height = 0.05,
              boxsize = .1,
+             lineheight = "lines",
              xlab = "EQ-5D index") |> 
   fp_add_lines("steelblue") |> 
   fp_add_header("Variable") |> 

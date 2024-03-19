@@ -1,5 +1,9 @@
 NEWS for the forestplot package
 
+Changes for 3.1.4
+-----------------
+* Fixed lineheight bug (issue #64)
+
 Changes for 3.1.3
 -----------------
 * Fixed bug for horizontal legends (issue #59)
