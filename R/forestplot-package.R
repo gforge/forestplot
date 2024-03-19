@@ -23,6 +23,8 @@
 #' \eqn{2^n} since a doubling is a concept easy to grasp for less mathematical-savvy
 #' readers.
 #'
-#' @name forestplot-package
-#' @docType package
+"_PACKAGE"
+
+## usethis namespace: start
+## usethis namespace: end
 NULL

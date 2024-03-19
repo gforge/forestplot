@@ -1,3 +1,4 @@
+#' @export
 plot.forestplot_legend <- function(x, margin, legend_args, graph.pos, legend_colgap, ...) {
   # No forestplot to output
   if (length(x) == 0) {

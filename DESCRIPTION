@@ -1,5 +1,5 @@
 Package: forestplot
-Version: 3.1.3
+Version: 3.1.4
 Title: Advanced Forest Plot Using 'grid' Graphics
 Authors@R: c(person(given = "Max",
                     family = "Gordon",
@@ -13,9 +13,11 @@ Description: A forest plot that allows for
     custom fonts for each text element,
     custom confidence intervals,
     text mixed with expressions, and more.
-    The aim is to extend the use of forest plots beyond meta-analyses.
-    This is a more general version of the original 'rmeta' package's forestplot()
-    function and relies heavily on the 'grid' package.
+    The aim is to extend the use of forest 
+    plots beyond meta-analyses. This is a more 
+    general version of the original 'rmeta' package's 
+    forestplot() function and relies heavily on the
+    'grid' package.
 License: GPL-2
 URL: https://gforge.se/packages/
 BugReports: https://github.com/gforge/forestplot/issues
@@ -44,4 +46,4 @@ Encoding: UTF-8
 NeedsCompilation: no
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.2
+RoxygenNote: 7.3.1

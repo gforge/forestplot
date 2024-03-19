@@ -29,6 +29,7 @@ prepLines <- function(lines,
     structure(class = c("gforge_forestplot_lines", class(list())))
 }
 
+#' @export
 plot.gforge_forestplot_lines <- function(x,
                                          colwidths,
                                          graph.pos,
