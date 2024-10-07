@@ -137,6 +137,7 @@ forestplot.default <- function(labeltext,
     clip[clip < 0] <- 0
     clip <- log(clip)
     zero <- log(zero)
+    if (!is.null(xticks)) xticks <- log(xticks)
   }
 
   # Prep basics

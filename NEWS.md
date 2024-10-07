@@ -1,5 +1,9 @@
 NEWS for the forestplot package
 
+Changes for 3.1.5
+-----------------
+* Fixed xticks bug with log transformation (issue #67)
+
 Changes for 3.1.4
 -----------------
 * Fixed lineheight bug (issue #64)
