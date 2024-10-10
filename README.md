@@ -1,13 +1,13 @@
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/forestplot)](https://cran.r-project.org/package=forestplot) [![](https://cranlogs.r-pkg.org/badges/forestplot)](https://cran.r-project.org/package=forestplot)
 
-# The Forestplot package
+# Forest plot package
 
-A forest plot that allows for multiple confidence intervals per row, custom fonts for each text element, custom confidence intervals, text mixed with expressions, and more. The aim is to extend the use of forest plots beyond meta-analyses. This is a more general version of the original 'rmeta' package's forestplot function and relies heavily on the 'grid' package.
+The **forestplot** package enables the creation of advanced forest plots, offering features such as multiple confidence intervals per row, customizable fonts for individual text elements, and custom confidence interval drawing functions. Additionally, it supports text mixed with mathematical expressions, extending the use of forest plots beyond traditional meta-analyses. This package is a more general version of the original 'rmeta' package's forestplot function, with heavy reliance on the 'grid' package for graphical elements.
 
 ## Questions
 
-Due to the package's popularity I suggest that you start with asking questions on [StackOverflow](https://stackoverflow.com/) so that others can learn from your own problems. Add the tag [r-forestplot](https://stackoverflow.com/questions/tagged/r-forestplot) so that others can quickly find the question.
+Given the package's popularity, it's recommended to ask questions on [StackOverflow](https://stackoverflow.com/) where others can benefit from the shared knowledge. Please use the [r-forestplot](https://stackoverflow.com/questions/tagged/r-forestplot) tag to ensure your question is easily discoverable.
 
 ## Contributing
 
-All contributions are welcome. The package is managed at [GitHub](https://github.com/gforge/forestplot) and I suggest that you start with creating an [issue](https://github.com/gforge/forestplot/issues). If you feel that you're able to solve the coding on your own then fork the package and once you're done, create a [pull request](https://github.com/gforge/forestplot/pulls).
+All contributions are welcome! The package is managed on [GitHub](https://github.com/gforge/forestplot). To contribute, consider starting by [creating an issue](https://github.com/gforge/forestplot/issues). If you have a solution, feel free to fork the repository, make your changes, and submit a [pull request](https://github.com/gforge/forestplot/pulls) when you're ready.
