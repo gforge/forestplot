@@ -342,7 +342,8 @@ forestplot(row_names,
            cex = 1,
            lineheight = "auto",
            xlab = "Odds",
-           xlog = TRUE)
+           xlog = TRUE,
+           xticks = c(1, 2, 5, 10))
 
 #####################
 # Check square data #
@@ -406,3 +407,4 @@ dfHRQoL |>
       pos = list("top", "align" = "horizontal")
     )
   )
+

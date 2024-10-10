@@ -33,3 +33,20 @@ The major use is for exponential form where ticks are generated using the
 readers.
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://gforge.se/packages/}
+  \item Report bugs at \url{https://github.com/gforge/forestplot/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Max Gordon \email{max@gforge.se}
+
+Authors:
+\itemize{
+  \item Thomas Lumley [contributor]
+}
+
+}
