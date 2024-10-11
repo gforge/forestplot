@@ -10,3 +10,4 @@ cran-comments.md
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
 inst/slides
+.pytest_cache
