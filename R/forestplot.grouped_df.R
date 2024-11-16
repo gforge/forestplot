@@ -63,17 +63,23 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
             paste(groups, collapse = ", "))
   }
 
+  raw_x <- x |> dplyr::ungroup()
+
   # Convert into a clean dataset
-  core_data <- x |>
-    dplyr::ungroup() |>
+  fp_label_core_values <- raw_x |>
     dplyr::select({{ lblid }},
                   mean = {{ mean }},
                   lower = {{ lower }},
-                  upper = {{ upper }}) |>
-    dplyr::bind_cols(x |>
-                       tidyr::unite(".fp_groups", dplyr::all_of(groups), sep = " > ", remove = FALSE) |>
-                       tidyr::unite(".fp_labels", {{lblid}}, sep = " > ") |>
-                       dplyr::select(dplyr::starts_with(".fp"), dplyr::all_of(groups))) |>
+                  upper = {{ upper }})
+
+  fp_group_and_label_cols <- raw_x |>
+    dplyr::mutate(dplyr::across({{ lblid }}, \(x) dplyr::if_else(x == "", NA_character_, x))) |>
+    tidyr::unite(".fp_groups", dplyr::all_of(groups), sep = " > ", remove = FALSE) |>
+    tidyr::unite(".fp_labels", {{ lblid }}, sep = " > ", na.rm = TRUE) |>
+    dplyr::select(dplyr::starts_with(".fp"), dplyr::all_of(groups))
+
+  core_data <- dplyr::bind_cols(fp_label_core_values,
+                                fp_group_and_label_cols) |>
     dplyr::group_by(.fp_groups)
 
   if (length(is.summary) %in% c(1, nrow(core_data))) {
@@ -93,8 +99,7 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
 
   # Check for bad data assumptions
   bad_rows <- core_data |>
-    filter(!is.na(mean)) |>
-    select(.fp_labels, .fp_groups) |>
+    dplyr::select(.fp_labels, .fp_groups) |>
     dplyr::mutate(level = sapply(.fp_labels, \(lbl) which(all_labels == lbl)[[1]]),
                   lead_level = dplyr::lead(level)) |>
     dplyr::filter(!is.na(lead_level) & level > lead_level)
@@ -185,7 +190,9 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
                         dplyr::select(.fp_labels,
                                       .fp_groups,
                                       {{value_col}}) |>
-                        tidyr::pivot_wider(names_from = .fp_groups, values_from = {{value_col}}, names_prefix = "@estimates@") |>
+                        tidyr::pivot_wider(names_from = .fp_groups,
+                                           values_from = {{value_col}},
+                                           names_prefix = "@estimates@") |>
                         dplyr::select(dplyr::starts_with("@estimates@")) |>
                         dplyr::rename_with(\(x) sub(pattern = "^@estimates@",
                                                     replacement = "",
