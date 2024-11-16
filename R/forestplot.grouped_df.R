@@ -93,16 +93,20 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
 
   # Check for bad data assumptions
   bad_rows <- core_data |>
-    dplyr::mutate(level = sapply(.fp_labels, \(lbl) which(all_labels == lbl)[[1]])) |>
-    dplyr::filter(level > dplyr::lead(level))
+    filter(!is.na(mean)) |>
+    select(.fp_labels, .fp_groups) |>
+    dplyr::mutate(level = sapply(.fp_labels, \(lbl) which(all_labels == lbl)[[1]]),
+                  lead_level = dplyr::lead(level)) |>
+    dplyr::filter(!is.na(lead_level) & level > lead_level)
   if (nrow(bad_rows) > 0) {
-    stop("There are seem be invalid the labels: ", bad_rows$.fp_labels |> paste(collapse = ", "),
+    stop("There are invalid labels: ", bad_rows$.fp_labels |> paste(collapse = ", "),
          "\n appear in the wrong position.")
   }
 
   bad_rows <- core_data |>
+    dplyr::filter(!is.na(mean)) |>
     dplyr::group_by(.fp_groups, .fp_labels) |>
-    dplyr::summarise(n = dplyr::n(), .groups = "drop") |>
+    dplyr::count() |>
     dplyr::filter(n > 1)
   if (nrow(bad_rows) > 0) {
     stop("There are seem be non-unique labels: ", bad_rows$.fp_labels |> paste(collapse = ", "))
@@ -113,16 +117,26 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
     tidyr::nest() |>
     dplyr::mutate(data = lapply(data, function(df) {
       for (i in 1:length(all_labels)) {
-        if (df$.fp_labels[i] != all_labels[i]) {
+
+        if (i > nrow(df) ||
+            df$.fp_labels[i] != all_labels[i]) {
           new_row <- core_data |>
             dplyr::ungroup() |>
-            dplyr::select({{lblid}}, .fp_labels) |>
+            dplyr::select({{lblid}}, .fp_labels, dplyr::all_of(groups)) |>
             dplyr::filter(.fp_labels == all_labels[i]) |>
             dplyr::distinct(.fp_labels, .keep_all = TRUE)
 
-          df <- tibble::add_row(df,
-                                new_row,
-                                .before = i)
+          if (nrow(new_row) == 0) {
+            stop("There is no data for the label: ", all_labels[i])
+          }
+          if (i > nrow(df)) {
+            df <- tibble::add_row(df,
+                                  new_row)
+          } else {
+            df <- tibble::add_row(df,
+                                  new_row,
+                                  .before = i)
+          }
         }
       }
       return(df)
