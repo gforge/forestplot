@@ -73,8 +73,9 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
                   upper = {{ upper }})
 
   fp_group_and_label_cols <- raw_x |>
-    dplyr::mutate(dplyr::across({{ lblid }}, \(x) dplyr::if_else(x == "", NA_character_, x))) |>
-    tidyr::unite(".fp_groups", dplyr::all_of(groups), sep = " > ", remove = FALSE) |>
+    # Can't use if_else as the output is a list/true/false/expression
+    dplyr::mutate(dplyr::across({{ lblid }}, \(x) ifelse(x == "", NA, x))) |>
+    tidyr::unite(".fp_groups", dplyr::all_of(groups), sep = " > ", remove = FALSE, na.rm = TRUE) |>
     tidyr::unite(".fp_labels", {{ lblid }}, sep = " > ", na.rm = TRUE) |>
     dplyr::select(dplyr::starts_with(".fp"), dplyr::all_of(groups))
 
@@ -90,63 +91,8 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
     is.summary <- NULL
   }
 
-  all_labels <- core_data |>
-    tidyr::nest() |>
-    dplyr::pull(data) |>
-    lapply(\(x) x$.fp_labels) |>
-    unlist() |>
-    unique()
-
-  # Check for bad data assumptions
-  bad_rows <- core_data |>
-    dplyr::select(.fp_labels, .fp_groups) |>
-    dplyr::mutate(level = sapply(.fp_labels, \(lbl) which(all_labels == lbl)[[1]]),
-                  lead_level = dplyr::lead(level)) |>
-    dplyr::filter(!is.na(lead_level) & level > lead_level)
-  if (nrow(bad_rows) > 0) {
-    stop("There are invalid labels: ", bad_rows$.fp_labels |> paste(collapse = ", "),
-         "\n appear in the wrong position.")
-  }
-
-  bad_rows <- core_data |>
-    dplyr::filter(!is.na(mean)) |>
-    dplyr::group_by(.fp_groups, .fp_labels) |>
-    dplyr::count() |>
-    dplyr::filter(n > 1)
-  if (nrow(bad_rows) > 0) {
-    stop("There are seem be non-unique labels: ", bad_rows$.fp_labels |> paste(collapse = ", "))
-  }
-
   # Add missing rows to those groups that don't have the given category
-  fixed_data <- core_data |>
-    tidyr::nest() |>
-    dplyr::mutate(data = lapply(data, function(df) {
-      for (i in 1:length(all_labels)) {
-
-        if (i > nrow(df) ||
-            df$.fp_labels[i] != all_labels[i]) {
-          new_row <- core_data |>
-            dplyr::ungroup() |>
-            dplyr::select({{lblid}}, .fp_labels, dplyr::all_of(groups)) |>
-            dplyr::filter(.fp_labels == all_labels[i]) |>
-            dplyr::distinct(.fp_labels, .keep_all = TRUE)
-
-          if (nrow(new_row) == 0) {
-            stop("There is no data for the label: ", all_labels[i])
-          }
-          if (i > nrow(df)) {
-            df <- tibble::add_row(df,
-                                  new_row)
-          } else {
-            df <- tibble::add_row(df,
-                                  new_row,
-                                  .before = i)
-          }
-        }
-      }
-      return(df)
-    })) |>
-    tidyr::unnest(cols = data)
+  fixed_data <- grp_fix_missing_rows(core_data, lblid = {{ lblid }})
 
   if (!is.null(is.summary)) {
     fixed_is.summary <- rep(is.summary, times = nrow(attr(fixed_data, "groups")))
@@ -166,7 +112,8 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
       dplyr::ungroup() |>
       dplyr::select({{grouped_columns}}) |>
       dplyr::distinct() |>
-      tidyr::unite(col = "legend", dplyr::everything(), sep = " > ") |>
+      tidyr::unite(col = "legend", dplyr::everything(), sep = " > ", na.rm = TRUE) |>
+      dplyr::filter(legend != "") |>
       purrr::pluck("legend")
   }
 
@@ -212,4 +159,48 @@ forestplot.grouped_df <- function(x, labeltext, mean, lower, upper, legend, is.s
   )
 }
 
-globalVariables(c("data", ".rows", ".fp_labels", ".fp_groups", "n", "level", "where"))
+globalVariables(c("data",
+                  ".rows", ".fp_labels", ".fp_groups", ".fp_sort_no",
+                  "n", "level", "where"))
+
+grp_fix_missing_rows <- function(core_data, lblid) {
+  bad_rows <- core_data |>
+    dplyr::filter(!is.na(mean)) |>
+    dplyr::group_by(.fp_groups, .fp_labels) |>
+    dplyr::count() |>
+    dplyr::filter(n > 1)
+  if (nrow(bad_rows) > 0) {
+    stop("There are seem be non-unique labels: ", bad_rows$.fp_labels |> paste(collapse = ", "))
+  }
+
+  # Key values include lblid and .fp_labels
+  key_values <- core_data |>
+    dplyr::ungroup() |>
+    dplyr::select({{ lblid }}, .fp_labels) |>
+    dplyr::distinct()
+
+  # Process each group to add missing rows
+  core_data |>
+    tidyr::nest(data = -dplyr::group_vars(core_data)) |>
+    dplyr::mutate(data = purrr::map(data, function(df) {
+      # Identify keys for joining
+      keys <- intersect(names(df), names(key_values))
+
+      # Find and add missing rows
+      missing_rows <- key_values |>
+        dplyr::anti_join(df, by = keys)
+      if ("is.summary" %in% names(df)) {
+        missing_rows$is.summary <- FALSE
+      }
+
+      # Combine rows, sort, and clean
+      dplyr::bind_rows(df, missing_rows) |>
+        dplyr::left_join(
+          key_values |> dplyr::mutate(.fp_sort_no = dplyr::row_number()),
+          by = keys
+        ) |>
+        dplyr::arrange(.fp_sort_no) |>
+        dplyr::select(-.fp_sort_no)
+    })) |>
+    tidyr::unnest(cols = data)
+}

@@ -1,5 +1,9 @@
 NEWS for the forestplot package
 
+Changes for 3.1.6
+-----------------
+* Fixed grouped_df for dplyr dataframes (issue #69)
+
 Changes for 3.1.5
 -----------------
 * Fixed xticks bug with log transformation (issue #67)
