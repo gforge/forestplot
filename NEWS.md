@@ -1,5 +1,9 @@
 NEWS for the forestplot package
 
+Changes for 3.1.7
+-----------------
+* Fixed box issue when first row is not a header (issue #70)
+
 Changes for 3.1.6
 -----------------
 * Fixed grouped_df for dplyr dataframes (issue #69)
