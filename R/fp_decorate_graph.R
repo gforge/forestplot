@@ -75,7 +75,12 @@ fp_decorate_graph <- function(x,
 plotGraphBox <- function(boxGrob, estimates, graph.pos) {
   if (is.null(boxGrob)) return();
 
+  # Get the first regular row, i.e. the first row that is not a header
   first_regular_row <- which(apply(estimates, \(x) all(is.na(x)), MARGIN = 1)) |> tail(1) + 1
+  if (length(first_regular_row) == 0) {
+    # There is no header
+    first_regular_row <- 1
+  }
   pushViewport(viewport(
     layout.pos.row = first_regular_row:nrow(estimates),
     layout.pos.col = graph.pos * 2 - 1,
