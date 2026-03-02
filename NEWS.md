@@ -1,10 +1,25 @@
 NEWS for the forestplot package
 
-Changes for 3.1.8
+Changes for 3.2.0
 -----------------
 * Added input validation: error if a mean lies outside its confidence limits or
   if a lower bound exceeds its upper bound. Prevents missing boxes and
   internal `Inf`/logical errors when working with negative estimates.
+* New `fp_span()` helper (and span attribute) allows a label to occupy multiple
+  text columns. Useful for centering sub‑headers such as "Events / N" beneath
+  several adjacent columns.
+* New `fp_extract_labeltext()` helper simplifies label column extraction for
+  both grouped and ungrouped data, with optional column renaming and NA
+  replacement.
+* New selector-style post-processing helpers `fp_align_where()`,
+  `fp_txt_where()`, and `fp_span_where()` allow row/column/cell targeted
+  alignment, text styling, and spanning directly on `gforge_forestplot`
+  objects.
+* New `fp_set_summary()` helper allows setting summary rows on existing
+  `gforge_forestplot` objects using selector-style predicates in a pipe flow.
+* Internal label handling now tolerates grid grobs and other non-atomic objects
+  in `labeltext`. Previously such values could trigger coercion errors during
+  preparation; these are now treated as valid content.
 
 Changes for 3.1.7
 -----------------

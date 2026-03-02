@@ -213,6 +213,149 @@ base_data |>
   fp_set_zebra_style("#f9f9f9")
 ```
 
+inventors_vs_mello workflow (single setup)
+-------------------------------------------
+
+To avoid duplicating boilerplate, the examples below use `inventors_vs_mello`
+with a single setup chunk. We then reuse the same prepared objects to
+demonstrate multi-column header spans, grouped label extraction, and
+selector-based post-processing.
+
+```{r, message=FALSE}
+data("inventors_vs_mello")
+
+inventors <- inventors_vs_mello |>
+  mutate(
+    cicol = paste(rep(" ", 20), collapse = ""),
+    weights = ifelse(is.na(weights), "", sprintf("%0.1f%%", weights))
+  )
+
+for (letter in letters[1:6]) {
+  col_name <- paste0("rb.", letter)
+  inventors[[col_name]] <- lapply(inventors[[col_name]], function(val) {
+    if (is.na(val) || val == "") {
+      col <- "white"
+    } else {
+      col <- switch(val,
+                    "+" = "green",
+                    "-" = "red",
+                    "?" = "gold",
+                    "black")
+    }
+    grid::textGrob("\u25CF", gp = gpar(col = col))
+  })
+}
+
+fp_inventors <- inventors |>
+  forestplot(mean = est,
+             lower = lb,
+             upper = ub,
+             labeltext = author,
+             txt_gp = fpTxtGp(summary = gpar(fontface = "bold", cex = 1)),
+             graph.pos = 2,
+             xlog = TRUE,
+             clip = c(0.05, 100),
+             graphwidth = grid::unit(0.3, "npc"),
+             colgap = grid::unit(1.5, "mm")) |>
+  fp_extract_labels(
+    Study = author,
+    E1 = ai,
+    N1 = n1i,
+    E2 = ci,
+    N2 = n2i,
+    Weight = weights,
+    OR = orci,
+    CI = cicol,
+    A = rb.a,
+    B = rb.b,
+    C = rb.c,
+    D = rb.d,
+    E = rb.e,
+    F = rb.f,
+    na = ""
+  ) |>
+  fp_set_summary(startsWith(type, "subtotal") |
+                   startsWith(type, "total") |
+                   type %in% c("header"))
+
+summary_rows <- which(fp_inventors$is.summary)
+```
+
+### Header spans with extracted labels
+
+```{r, fig.width=10, fig.height=6, message=FALSE}
+fp_inventors |>
+  fp_decorate_graph(graph.pos = 9) |>
+  fp_align_where(align = "l", cols = "Study") |>
+  fp_align_where(align = "r", cols = c("E1", "N1", "E2", "N2", "Weight", "OR")) |>
+  fp_align_where(align = "c", cols = c("CI", LETTERS[1:6])) |>
+  fp_txt_where(rows = summary_rows,
+               cols = "Study",
+               gp = gpar(col = "#222222")) |>
+  fp_align_where(rows = summary_rows,
+                 cols = "Study",
+                 align = "l") |>
+  fp_add_header(
+    Study = c("", "Study or Subgroup"),
+    E1 = c(fp_span("Caffeine", columns = c(2,3)), "Events") |> fp_align_center(),
+    N1 = c("", "Total"),
+    E2 = c(fp_span("Decaf", columns = c(4,5)), "Events") |> fp_align_center(),
+    N2 = c("", "Total"),
+    Weight = c("", "Weight"),
+    OR = c("", ""),
+    CI = c("", ""),
+    A = c("", "A"), B = c("", "B"), C = c("", "C"),
+    D = c("", "D"), E = c("", "E"), F = c("", "F")
+  ) |>
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = "royalblue",
+               hrz_lines = "#999999") |>
+  fp_set_zebra_style(c("#f9f9f9", "#ffffff"))
+```
+
+### Grouped label extraction
+
+```{r, message=FALSE}
+inventors |>
+  rename(mean = est, lower = lb, upper = ub) |>
+  group_by(group) |>
+  fp_extract_labeltext(author, orci, na = "") |>
+  head(4)
+```
+
+### Selector-based post-processing
+
+```{r, fig.width=10, fig.height=6, message=FALSE}
+fp_inventors |>
+  fp_decorate_graph(graph.pos = 9) |>
+  fp_align_where(align = "l", cols = "Study") |>
+  fp_align_where(align = "r", cols = c("E1", "N1", "E2", "N2", "Weight", "OR")) |>
+  fp_align_where(align = "c", cols = c("CI", LETTERS[1:6])) |>
+  fp_txt_where(rows = summary_rows,
+               cols = "Study",
+               gp = gpar(col = "#222222")) |>
+  fp_align_where(rows = summary_rows,
+                 cols = "Study",
+                 align = "l") |>
+  fp_add_header(
+    Study = c("", "Study or Subgroup"),
+    E1 = c(fp_span("Caffeine", columns = c(2,3)), "Events") |> fp_align_center(),
+    N1 = c("", "Total"),
+    E2 = c(fp_span("Decaf", columns = c(4,5)), "Events") |> fp_align_center(),
+    N2 = c("", "Total"),
+    Weight = c("", "Weight"),
+    OR = c("", ""),
+    CI = c("", ""),
+    A = c("", "A"), B = c("", "B"), C = c("", "C"),
+    D = c("", "D"), E = c("", "E"), F = c("", "F")
+  ) |>
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = "royalblue") |>
+  fp_set_zebra_style(c("#f9f9f9", "#ffffff"))
+```
+
 Using expressions
 -----------------
 

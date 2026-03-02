@@ -22,7 +22,8 @@ forestplot.data.frame <- function(x, mean, lower, upper, labeltext, is.summary, 
   if (!missing(boxsize)) {
     boxid <- substitute(boxsize)
     boxsize <- tryCatch(x |> dplyr::pull({{ boxid }}) |> sapply(function(x) ifelse(is.na(x), NA, x)),
-                        error = function(e) boxsize)
+      error = function(e) boxsize
+    )
   } else {
     boxsize <- NULL
   }
@@ -39,11 +40,34 @@ forestplot.data.frame <- function(x, mean, lower, upper, labeltext, is.summary, 
     is.summary <- FALSE
   }
 
-  forestplot.default(labeltext = labeltext,
-                     mean = estimates$mean,
-                     lower = estimates$lower,
-                     upper = estimates$upper,
-                     is.summary = is.summary,
-                     boxsize = boxsize,
-                     ...)
+  get_tidy_name <- function(value) {
+    if (!isTRUE(attr(value, "tidyFormat"))) {
+      return(NULL)
+    }
+
+    if (is.data.frame(value) && ncol(value) == 1) {
+      return(colnames(value)[1])
+    }
+
+    NULL
+  }
+
+  out <- forestplot.default(
+    labeltext = labeltext,
+    mean = estimates$mean,
+    lower = estimates$lower,
+    upper = estimates$upper,
+    is.summary = is.summary,
+    boxsize = boxsize,
+    ...
+  )
+
+  out$extra_arguments$.fp_data <- x
+  out$extra_arguments$.fp_estimate_names <- list(
+    mean = get_tidy_name(estimates$mean),
+    lower = get_tidy_name(estimates$lower),
+    upper = get_tidy_name(estimates$upper)
+  )
+
+  out
 }

@@ -21,11 +21,12 @@
 #' @keywords internal
 prFpGetConfintFnList <- function(fn, no_rows, no_depth, missing_rows, is.summary, summary) {
   ret <- prPopulateList(fn,
-                        no_rows = no_rows,
-                        no_depth = no_depth,
-                        missing_rows = missing_rows,
-                        is.summary = is.summary,
-                        summary = summary)
+    no_rows = no_rows,
+    no_depth = no_depth,
+    missing_rows = missing_rows,
+    is.summary = is.summary,
+    summary = summary
+  )
 
   makeCalleable <- function(value) {
     if (is.function(value)) {
@@ -285,15 +286,43 @@ prFpPrintLabels <- function(labels, nc, nr, graph.pos) {
     j <- cols[label_col]
     # The row
     for (i in 1:nr) {
-      if (!is.null(labels[[label_col]][[i]])) {
+      grob <- labels[[label_col]][[i]]
+      if (!is.null(grob)) {
+        # determine if the grob has a span attribute
+        span <- attr(grob, "span")
+        if (!is.null(span)) {
+          # numeric check already done earlier, now enforce within bounds
+          if (any(span < 1 | span > nc)) {
+            stop(
+              "'span' attribute refers to invalid column(s) ",
+              paste(span, collapse = ", "),
+              ", but only ", nc, " columns are available"
+            )
+          }
+          if (graph.pos %in% span) {
+            stop("Cannot span the graph column (position ", graph.pos, ")")
+          }
+          span <- sort(unique(as.integer(span)))
+          # make contiguous range
+          span <- seq(min(span), max(span))
+          # only draw once in the first column of the span
+          if (label_col != span[1]) {
+            next
+          }
+          layout_cols <- cols[span]
+          name_col <- cols[span[1]]
+        } else {
+          layout_cols <- j
+          name_col <- j
+        }
         # The column position is 2 * j - 1 due to the column gap
         vp <- viewport(
           layout.pos.row = i,
-          layout.pos.col = j,
-          name = sprintf("Label_vp_%d_%d", i, j)
+          layout.pos.col = layout_cols,
+          name = sprintf("Label_vp_%d_%d", i, name_col)
         )
         pushViewport(vp)
-        grid.draw(labels[[label_col]][[i]])
+        grid.draw(grob)
         upViewport()
       }
     }
@@ -404,8 +433,8 @@ prFpFetchRowLabel <- function(label_type, labeltext, i, j) {
   }
 
   if (!is.expression(row_column_text) &&
-      !is.call(row_column_text) &&
-      is.na(row_column_text)) {
+    !is.call(row_column_text) &&
+    is.na(row_column_text)) {
     return("")
   }
 
@@ -433,8 +462,9 @@ prFpGetLayoutVP <- function(lineheight, labels, legend_layout = NULL) {
     }
   } else {
     lvp_height <- (convertY(lineheight,
-                            unitTo = "lines",
-                            valueOnly = TRUE) * attr(labels, "no_rows")) |>
+      unitTo = "lines",
+      valueOnly = TRUE
+    ) * attr(labels, "no_rows")) |>
       unit("lines")
   }
 
@@ -644,9 +674,11 @@ prFpPrepareLegendMarker <- function(fn.legend, col_no, row_no, fn.ci_norm) {
   }
 
   if (length(fn.ci_norm) == col_no) {
-    return(prFpGetConfintFnList(fn = fn.ci_norm,
-                                no_rows = row_no,
-                                no_depth = col_no)[[1]])
+    return(prFpGetConfintFnList(
+      fn = fn.ci_norm,
+      no_rows = row_no,
+      no_depth = col_no
+    )[[1]])
   }
 
   # Not sure what to do if the number don't match the number of legends

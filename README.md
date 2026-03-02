@@ -4,6 +4,8 @@
 
 The **forestplot** package enables the creation of advanced forest plots, offering features such as multiple confidence intervals per row, customizable fonts for individual text elements, and custom confidence interval drawing functions. Additionally, it supports text mixed with mathematical expressions, extending the use of forest plots beyond traditional meta-analyses. This package is a more general version of the original 'rmeta' package's forestplot function, with heavy reliance on the 'grid' package for graphical elements.
 
+One of the newer features is the ability to have text span multiple table columns via the `fp_span()` helper, making it easy to centre sub‑headers across adjacent columns. The label system has also been hardened so that you can include arbitrary grid `grob` objects in `labeltext`; they will be plotted in the appropriate cell without triggering errors.
+
 ## Questions
 
 Given the package's popularity, it's recommended to ask questions on [StackOverflow](https://stackoverflow.com/) where others can benefit from the shared knowledge. Please use the [r-forestplot](https://stackoverflow.com/questions/tagged/r-forestplot) tag to ensure your question is easily discoverable.

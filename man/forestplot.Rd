@@ -86,11 +86,12 @@ The list should be wrapped in m x n number to resemble a matrix:
 \code{list(list("rowname 1 col 1", "rowname 2 col 1"), list("r1c2", expression(beta))}.
 You can also provide a matrix although this cannot have expressions by design:
 \code{matrix(c("rowname 1 col 1", "rowname 2 col 1", "r1c2", "beta"), ncol = 2)}.
-Use \code{NA}:s for blank spaces and if you provide a full column with \code{NA} then
-that column is a empty column that adds some space. \emph{Note:} If you do not
-provide the mean/lower/upper arguments the function expects the label text
-to be a matrix containing the labeltext in the rownames and then columns for
-mean, lower, and upper.}
+Any element may also be a grid grob, which will be drawn directly inside the
+corresponding table cell. Use \code{NA}:s for blank spaces and if you provide
+a full column with \code{NA} then that column is a empty column that adds some
+space. \emph{Note:} If you do not provide the mean/lower/upper arguments the
+function expects the label text to be a matrix containing the labeltext in the
+rownames and then columns for mean, lower, and upper.}
 
 \item{is.summary}{A vector indicating by \code{TRUE}/\code{FALSE} if
 the value is a summary value which means that it will have a different
@@ -297,40 +298,53 @@ test_data <- data.frame(
   high = c(1.8, 1.55)
 )
 test_data |>
-  forestplot(labeltext = row_names,
-             mean = coef,
-             lower = low,
-             upper = high,
-             zero = 1,
-             cex  = 2,
-             lineheight = "auto",
-             xlab = "Lab axis txt") |>
+  forestplot(
+    labeltext = row_names,
+    mean = coef,
+    lower = low,
+    upper = high,
+    zero = 1,
+    cex = 2,
+    lineheight = "auto",
+    xlab = "Lab axis txt"
+  ) |>
   fp_add_header("Group") |>
   fp_set_style(lines = gpar(col = "darkblue"))
+
+# demonstrate column spanning: center "Events / N" over two columns
+forestplot(
+  labeltext = list(list("A", "B"), list("C very long", "D")),
+  mean = c(1, 2), lower = c(.5, 1), upper = c(1.5, 2.5)
+) |>
+  fp_add_header(fp_span("Events / N", columns = c(1, 2)))
 
 # Print two plots side by side using the grid
 # package's layout option for viewports
 fp1 <- test_data |>
-  forestplot(labeltext = row_names,
-             mean = coef,
-             lower = low,
-             upper = high,
-             zero = 1,
-             cex  = 2,
-             lineheight = "auto",
-             title = "Plot 1",
-             xlab = "Lab axis txt")
+  forestplot(
+    labeltext = row_names,
+    mean = coef,
+    lower = low,
+    upper = high,
+    zero = 1,
+    cex = 2,
+    lineheight = "auto",
+    title = "Plot 1",
+    xlab = "Lab axis txt"
+  )
 fp2 <- test_data |>
-  forestplot(labeltext = row_names,
-             mean = coef,
-             lower = low,
-             upper = high,
-             zero = 1,
-             cex  = 2,
-             lineheight = "auto",
-             xlab = "Lab axis txt",
-             title = "Plot 2",
-             new_page = FALSE)
+  forestplot(
+    labeltext = row_names,
+    mean = coef,
+    lower = low,
+    upper = high,
+    zero = 1,
+    cex = 2,
+    lineheight = "auto",
+    xlab = "Lab axis txt",
+    title = "Plot 2",
+    new_page = FALSE
+  )
 
 grid.newpage()
 pushViewport(viewport(layout = grid.layout(1, 2)))
@@ -344,90 +358,114 @@ popViewport(2)
 # An advanced example
 library(dplyr)
 library(tidyr)
-test_data <- data.frame(id = 1:4,
-                        coef1 = c(1, 1.59, 1.3, 1.24),
-                        coef2 = c(1, 1.7, 1.4, 1.04),
-                        low1 = c(1, 1.3, 1.1, 0.99),
-                        low2 = c(1, 1.6, 1.2, 0.7),
-                        high1 = c(1, 1.94, 1.6, 1.55),
-                        high2 = c(1, 1.8, 1.55, 1.33))
+test_data <- data.frame(
+  id = 1:4,
+  coef1 = c(1, 1.59, 1.3, 1.24),
+  coef2 = c(1, 1.7, 1.4, 1.04),
+  low1 = c(1, 1.3, 1.1, 0.99),
+  low2 = c(1, 1.6, 1.2, 0.7),
+  high1 = c(1, 1.94, 1.6, 1.55),
+  high2 = c(1, 1.8, 1.55, 1.33)
+)
 
 # Convert into dplyr formatted data
 out_data <- test_data |>
   pivot_longer(cols = everything() & -id) |>
-  mutate(group = gsub("(.+)([12])$", "\\\\2", name),
-         name = gsub("(.+)([12])$", "\\\\1", name)) |>
+  mutate(
+    group = gsub("(.+)([12])$", "\\\\2", name),
+    name = gsub("(.+)([12])$", "\\\\1", name)
+  ) |>
   pivot_wider() |>
   group_by(id) |>
-  mutate(col1 = lapply(id, \(x) ifelse(x < 4,
-                                       paste("Category", id),
-                                       expression(Category >= 4))),
-         col2 = lapply(1:n(), \(i) substitute(expression(bar(x) == val),
-                                              list(val = mean(coef) |> round(2)))),
-         col2 = if_else(id == 1,
-                        rep("ref", n()) |> as.list(),
-                        col2)) |>
+  mutate(
+    col1 = lapply(id, \(x) ifelse(x < 4,
+      paste("Category", id),
+      expression(Category >= 4)
+    )),
+    col2 = lapply(1:n(), \(i) substitute(
+      expression(bar(x) == val),
+      list(val = mean(coef) |> round(2))
+    )),
+    col2 = if_else(id == 1,
+      rep("ref", n()) |> as.list(),
+      col2
+    )
+  ) |>
   group_by(group)
 
 out_data |>
-  forestplot(mean = coef,
-             lower = low,
-             upper = high,
-             labeltext = c(col1, col2),
-             title = "Cool study",
-             zero = c(0.98, 1.02),
-             grid = structure(c(2^-.5, 2^.5),
-                              gp = gpar(col = "steelblue", lty = 2)
-             ),
-             boxsize = 0.25,
-             xlab = "The estimates",
-             new_page = TRUE,
-             legend = c("Treatment", "Placebo"),
-             legend_args = fpLegend(
-               pos = list("topright"),
-               title = "Group",
-               r = unit(.1, "snpc"),
-               gp = gpar(col = "#CCCCCC", lwd = 1.5)
-             )) |>
-  fp_set_style(box = c("royalblue", "gold"),
-               line = c("darkblue", "orange"),
-               summary = c("darkblue", "red"))
+  forestplot(
+    mean = coef,
+    lower = low,
+    upper = high,
+    labeltext = c(col1, col2),
+    title = "Cool study",
+    zero = c(0.98, 1.02),
+    grid = structure(c(2^-.5, 2^.5),
+      gp = gpar(col = "steelblue", lty = 2)
+    ),
+    boxsize = 0.25,
+    xlab = "The estimates",
+    new_page = TRUE,
+    legend = c("Treatment", "Placebo"),
+    legend_args = fpLegend(
+      pos = list("topright"),
+      title = "Group",
+      r = unit(.1, "snpc"),
+      gp = gpar(col = "#CCCCCC", lwd = 1.5)
+    )
+  ) |>
+  fp_set_style(
+    box = c("royalblue", "gold"),
+    line = c("darkblue", "orange"),
+    summary = c("darkblue", "red")
+  )
 
 # An example of how the exponential works
-data.frame(coef = c(2.45, 0.43),
-           low = c(1.5, 0.25),
-           high = c(4, 0.75),
-           boxsize = c(0.25, 0.25),
-           variables = c("Variable A", "Variable B")) |>
-  forestplot(labeltext = c(variables, coef),
-             mean = coef,
-             lower = low,
-             upper = high,
-             boxsize = boxsize,
-             zero = 1,
-             xlog = TRUE) |>
+data.frame(
+  coef = c(2.45, 0.43),
+  low = c(1.5, 0.25),
+  high = c(4, 0.75),
+  boxsize = c(0.25, 0.25),
+  variables = c("Variable A", "Variable B")
+) |>
+  forestplot(
+    labeltext = c(variables, coef),
+    mean = coef,
+    lower = low,
+    upper = high,
+    boxsize = boxsize,
+    zero = 1,
+    xlog = TRUE
+  ) |>
   fp_set_style(lines = "red", box = "darkred") |>
-  fp_add_header(coef = "HR" |> fp_txt_plain() |> fp_align_center(),
-                variables = "Measurements")
+  fp_add_header(
+    coef = "HR" |> fp_txt_plain() |> fp_align_center(),
+    variables = "Measurements"
+  )
 
 # An example using style
-forestplot(labeltext = cbind(Author = c("Smith et al", "Smooth et al", "Al et al")),
-           mean = cbind(1:3, 1.5:3.5),
-           lower = cbind(0:2, 0.5:2.5),
-           upper = cbind(4:6, 5.5:7.5),
-           is.summary = c(FALSE, FALSE, TRUE),
-           vertices = TRUE) |>
-  fp_set_style(default = gpar(lineend = "square", linejoin = "mitre", lwd = 3, col = "pink"),
-               box = gpar(fill = "black", col = "red"), # only one parameter
-               lines = list( # as many parameters as CI
-                 gpar(lwd = 10), gpar(lwd = 5),
-                 gpar(), gpar(),
-                 gpar(lwd = 2), gpar(lwd = 1)
-               ),
-               summary = list( # as many parameters as band per label
-                 gpar(fill = "violet", col = "gray", lwd = 10),
-                 gpar(fill = "orange", col = "gray", lwd = 10)
-               ))
+forestplot(
+  labeltext = cbind(Author = c("Smith et al", "Smooth et al", "Al et al")),
+  mean = cbind(1:3, 1.5:3.5),
+  lower = cbind(0:2, 0.5:2.5),
+  upper = cbind(4:6, 5.5:7.5),
+  is.summary = c(FALSE, FALSE, TRUE),
+  vertices = TRUE
+) |>
+  fp_set_style(
+    default = gpar(lineend = "square", linejoin = "mitre", lwd = 3, col = "pink"),
+    box = gpar(fill = "black", col = "red"), # only one parameter
+    lines = list( # as many parameters as CI
+      gpar(lwd = 10), gpar(lwd = 5),
+      gpar(), gpar(),
+      gpar(lwd = 2), gpar(lwd = 1)
+    ),
+    summary = list( # as many parameters as band per label
+      gpar(fill = "violet", col = "gray", lwd = 10),
+      gpar(fill = "orange", col = "gray", lwd = 10)
+    )
+  )
 
 par(ask = ask)
 # See vignette for a more detailed description

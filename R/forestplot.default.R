@@ -39,12 +39,7 @@ forestplot.default <- function(labeltext,
                                shapes_gp = fpShapesGp(),
                                ...) {
   if (is.null(colgap)) {
-    colgap <- convertUnit(unit(6, "mm"), "npc", valueOnly = TRUE)
-    if (colgap < .1) {
-      colgap <- unit(.05, "npc")
-    } else {
-      colgap <- unit(colgap, "npc")
-    }
+    colgap <- unit(6, "mm")
   } else if (!grid::is.unit(colgap)) {
     colgap <- as.numeric(colgap)
     if (is.na(colgap)) {

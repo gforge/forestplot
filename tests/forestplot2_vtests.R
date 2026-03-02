@@ -54,6 +54,14 @@ forestplot(row_names, coef, low, high,
   legend = c("Treatment", "Placebo")
 )
 
+# visual regression for column span
+forestplot(row_names, coef, low, high,
+  title = "Span test",
+  zero = 1,
+  xlab = "test"
+) |>
+  fp_add_header(fp_span("Events / N", columns = c(1, 2)))
+
 # Check colgap
 forestplot(row_names, coef, low, high,
   fn.ci_norm = fpDrawDiamondCI,
@@ -335,15 +343,16 @@ test_data <- data.frame(
 )
 
 forestplot(row_names,
-           test_data$coef,
-           test_data$low,
-           test_data$high,
-           zero = 1,
-           cex = 1,
-           lineheight = "auto",
-           xlab = "Odds",
-           xlog = TRUE,
-           xticks = c(1, 2, 5, 10))
+  test_data$coef,
+  test_data$low,
+  test_data$high,
+  zero = 1,
+  cex = 1,
+  lineheight = "auto",
+  xlab = "Odds",
+  xlog = TRUE,
+  xticks = c(1, 2, 5, 10)
+)
 
 #####################
 # Check square data #
@@ -387,14 +396,20 @@ tt <- data.frame(
   mean = 3, upper = 4, lower = 2, P = 0.01, gene = "XX"
 )
 tt |>
-  forestplot(labeltext = c(gene,P),
-             xlog = TRUE,
-             xlab = "OR",boxsize = 0.25) |>
-  fp_set_style(box = "royalblue",
-               line = "darkblue",
-               summary = "royalblue") |>
-  fp_add_header(gene = c("gene"),
-                P = c("P")) |>
+  forestplot(
+    labeltext = c(gene, P),
+    xlog = TRUE,
+    xlab = "OR", boxsize = 0.25
+  ) |>
+  fp_set_style(
+    box = "royalblue",
+    line = "darkblue",
+    summary = "royalblue"
+  ) |>
+  fp_add_header(
+    gene = c("gene"),
+    P = c("P")
+  ) |>
   fp_set_zebra_style("#EFEFEF")
 
 # From issue #59
@@ -407,4 +422,3 @@ dfHRQoL |>
       pos = list("top", "align" = "horizontal")
     )
   )
-

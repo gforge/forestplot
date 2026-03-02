@@ -21,3 +21,4 @@ revdep
 inst/slides/*.html
 inst/slides/*.html
 inst/slides/Introduction*_files
+Rplots.pdf

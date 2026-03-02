@@ -50,8 +50,10 @@ make_forest_metadata_inventors_vs_mello <- function(seed = 1) {
 
     # introduce some Not Estimated rows
     ne_idx <- sample(seq_len(k), size = max(1, floor(k * 0.15)))
-    ai[ne_idx] <- 0; ci[ne_idx] <- 0
-    n1[ne_idx] <- 0; n2[ne_idx] <- 0
+    ai[ne_idx] <- 0
+    ci[ne_idx] <- 0
+    n1[ne_idx] <- 0
+    n2[ne_idx] <- 0
 
     cc <- 0.5
     estimable <- !(n1 == 0 & n2 == 0)
@@ -65,16 +67,16 @@ make_forest_metadata_inventors_vs_mello <- function(seed = 1) {
     se <- rep(NA_real_, k)
 
     log_or[estimable] <- log((a[estimable] / b[estimable]) /
-                               (c_[estimable] / d[estimable]))
+      (c_[estimable] / d[estimable]))
 
     se[estimable] <- sqrt(
-      1/a[estimable] + 1/b[estimable] +
-        1/c_[estimable] + 1/d[estimable]
+      1 / a[estimable] + 1 / b[estimable] +
+        1 / c_[estimable] + 1 / d[estimable]
     )
 
     est <- exp(log_or)
-    lb  <- exp(log_or - 1.96 * se)
-    ub  <- exp(log_or + 1.96 * se)
+    lb <- exp(log_or - 1.96 * se)
+    ub <- exp(log_or + 1.96 * se)
 
     w_raw <- ifelse(estimable, 1 / (se^2), NA_real_)
 
@@ -91,8 +93,9 @@ make_forest_metadata_inventors_vs_mello <- function(seed = 1) {
       weights_raw = w_raw,
       weights = NA_real_,
       orci = ifelse(!estimable,
-                    "Not Estimated",
-                    sprintf("%.2f [%.2f, %.2f]", est, lb, ub)),
+        "Not Estimated",
+        sprintf("%.2f [%.2f, %.2f]", est, lb, ub)
+      ),
       rb_mat,
       est = est, lb = lb, ub = ub,
       cicol = "",
@@ -116,24 +119,24 @@ make_forest_metadata_inventors_vs_mello <- function(seed = 1) {
     se_mu <- sqrt(1 / sum(w))
 
     est <- exp(mu)
-    lb  <- exp(mu - 1.96 * se_mu)
-    ub  <- exp(mu + 1.96 * se_mu)
+    lb <- exp(mu - 1.96 * se_mu)
+    ub <- exp(mu + 1.96 * se_mu)
 
     data.frame(
-      group=g, type="subtotal", author=paste0("Subtotal (", g, ")"),
-      ai=NA, n1i=sum(dt$n1i[dt$group==g], na.rm=TRUE),
-      ci=NA, n2i=sum(dt$n2i[dt$group==g], na.rm=TRUE),
-      weights_raw=NA_real_,
-      weights=sum(dt$weights[dt$group==g], na.rm=TRUE),
-      orci=sprintf("%.2f [%.2f, %.2f]", est, lb, ub),
-      rb.a="", rb.b="", rb.c="", rb.d="", rb.e="", rb.f="",
-      est=est, lb=lb, ub=ub, cicol="",
+      group = g, type = "subtotal", author = paste0("Subtotal (", g, ")"),
+      ai = NA, n1i = sum(dt$n1i[dt$group == g], na.rm = TRUE),
+      ci = NA, n2i = sum(dt$n2i[dt$group == g], na.rm = TRUE),
+      weights_raw = NA_real_,
+      weights = sum(dt$weights[dt$group == g], na.rm = TRUE),
+      orci = sprintf("%.2f [%.2f, %.2f]", est, lb, ub),
+      rb.a = "", rb.b = "", rb.c = "", rb.d = "", rb.e = "", rb.f = "",
+      est = est, lb = lb, ub = ub, cicol = "",
       stringsAsFactors = FALSE
     )
   }
 
-  sub_inv  <- mk_subtotal("Inventors")
-  sub_mel  <- mk_subtotal("Melodifestival Winners")
+  sub_inv <- mk_subtotal("Inventors")
+  sub_mel <- mk_subtotal("Melodifestival Winners")
 
   # total
   x <- dt[!is.na(dt$est), ]
@@ -142,27 +145,31 @@ make_forest_metadata_inventors_vs_mello <- function(seed = 1) {
   se_mu <- sqrt(1 / sum(w))
 
   total <- data.frame(
-    group="Total", type="total", author="Total",
-    ai=NA, n1i=sum(dt$n1i, na.rm=TRUE),
-    ci=NA, n2i=sum(dt$n2i, na.rm=TRUE),
-    weights_raw=NA_real_, weights=100,
-    orci=sprintf("%.2f [%.2f, %.2f]",
-                 exp(mu), exp(mu - 1.96 * se_mu), exp(mu + 1.96 * se_mu)),
-    rb.a="", rb.b="", rb.c="", rb.d="", rb.e="", rb.f="",
-    est=exp(mu), lb=exp(mu - 1.96 * se_mu), ub=exp(mu + 1.96 * se_mu),
-    cicol="",
+    group = "Total", type = "total", author = "Total",
+    ai = NA, n1i = sum(dt$n1i, na.rm = TRUE),
+    ci = NA, n2i = sum(dt$n2i, na.rm = TRUE),
+    weights_raw = NA_real_, weights = 100,
+    orci = sprintf(
+      "%.2f [%.2f, %.2f]",
+      exp(mu), exp(mu - 1.96 * se_mu), exp(mu + 1.96 * se_mu)
+    ),
+    rb.a = "", rb.b = "", rb.c = "", rb.d = "", rb.e = "", rb.f = "",
+    est = exp(mu), lb = exp(mu - 1.96 * se_mu), ub = exp(mu + 1.96 * se_mu),
+    cicol = "",
     stringsAsFactors = FALSE
   )
 
-  header <- function(g) data.frame(
-    group=g, type="header", author=g,
-    ai=NA, n1i=NA, ci=NA, n2i=NA,
-    weights_raw=NA_real_, weights=NA_real_,
-    orci="",
-    rb.a="", rb.b="", rb.c="", rb.d="", rb.e="", rb.f="",
-    est=NA_real_, lb=NA_real_, ub=NA_real_, cicol="",
-    stringsAsFactors = FALSE
-  )
+  header <- function(g) {
+    data.frame(
+      group = g, type = "header", author = g,
+      ai = NA, n1i = NA, ci = NA, n2i = NA,
+      weights_raw = NA_real_, weights = NA_real_,
+      orci = "",
+      rb.a = "", rb.b = "", rb.c = "", rb.d = "", rb.e = "", rb.f = "",
+      est = NA_real_, lb = NA_real_, ub = NA_real_, cicol = "",
+      stringsAsFactors = FALSE
+    )
+  }
 
   out <- rbind(
     header("Inventors"),
@@ -176,9 +183,9 @@ make_forest_metadata_inventors_vs_mello <- function(seed = 1) {
 
   # final column order similar to forestploter metadata
   out <- out[, c(
-    "author","ai","n1i","ci","n2i","weights","orci",
-    "rb.a","rb.b","rb.c","rb.d","rb.e","rb.f",
-    "est","lb","ub","cicol","group","type"
+    "author", "ai", "n1i", "ci", "n2i", "weights", "orci",
+    "rb.a", "rb.b", "rb.c", "rb.d", "rb.e", "rb.f",
+    "est", "lb", "ub", "cicol", "group", "type"
   )]
 
   out

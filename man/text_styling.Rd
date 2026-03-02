@@ -7,6 +7,7 @@
 \alias{fp_txt_gp}
 \alias{fp_align_left}
 \alias{fp_align_center}
+\alias{fp_span}
 \alias{fp_align_right}
 \title{Text styling}
 \usage{
@@ -22,19 +23,34 @@ fp_align_left(txt)
 
 fp_align_center(txt)
 
+fp_span(txt, columns)
+
 fp_align_right(txt)
 }
 \arguments{
 \item{txt}{The text to styl}
 
 \item{gp}{A \code{\link[grid:gpar]{grid::gpar()}} style to apply}
+
+\item{columns}{Integer vector of column indices to span. The span covers the
+continuous range between the smallest and largest values. Values are
+validated when the plot is built; they must lie between 1 and the number of
+label columns and may not include the graph column.}
 }
 \value{
 A list of txt with style attributes
 }
 \description{
 This is a collection of functions to allow styling of text
+
+Apply a column span to a text element. The text will be printed in a
+grid viewport whose layout.pos.col spans the specified columns. If called
+multiple times on the same object, the most recent call overwrites the
+previous span (i.e. last call wins).
 }
 \examples{
 fp_txt_italic("Italic text")
+# centre "Events / N" under columns 2 and 3
+fp_span("Events / N", columns = c(2, 3))
+
 }
