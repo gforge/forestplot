@@ -12,6 +12,13 @@
 #' * **Autosize:** Adapts to the viewport (graph) size.
 #' * **Tidyverse syntax:** Utilizes convenient dplyr/tidyverse syntax for more flexible data manipulation.
 #'
+#' The function now performs strict input validation on the `mean`, `lower`,
+#' and `upper` arguments.  A `lower` bound must not exceed its corresponding
+#' `upper` bound, and when all three values are provided, the `mean` must lie
+#' between them.  Invalid data provoke an early error rather than producing
+#' missing boxes or internal warnings, especially when negative estimates are
+#' involved.
+#'
 #' @section Multiple bands:
 #' Multiple bands (or lines) per variable can be useful for comparing different outcomes.
 #' For instance, you may want to compare heart disease-specific survival to overall survival

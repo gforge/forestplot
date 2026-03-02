@@ -232,6 +232,13 @@ This version of \code{forestplot()} enhances the standard function in the follow
 \item \strong{Autosize:} Adapts to the viewport (graph) size.
 \item \strong{Tidyverse syntax:} Utilizes convenient dplyr/tidyverse syntax for more flexible data manipulation.
 }
+
+The function now performs strict input validation on the \code{mean}, \code{lower},
+and \code{upper} arguments.  A \code{lower} bound must not exceed its corresponding
+\code{upper} bound, and when all three values are provided, the \code{mean} must lie
+between them.  Invalid data provoke an early error rather than producing
+missing boxes or internal warnings, especially when negative estimates are
+involved.
 }
 \section{Multiple bands}{
 

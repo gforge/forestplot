@@ -122,14 +122,20 @@ forestplot.default <- function(labeltext,
 
   # Save the original values since the function due to it's inheritance
   # from the original forestplot needs some changing to the parameters
+  # It's critical that mean/lower/upper represent valid confidence intervals.
+  # Users supplying means outside their bounds or a lower bound above the upper
+  # will receive a clear error; this helps avoid missing boxes or internal
+  # crashes when negative values are drawn.
   if (xlog) {
     if (any(coreData$estimates < 0, na.rm = TRUE) ||
-        (!is.null(clip) && any(Filter(Negate(is.infinite), clip) <= 0, na.rm = TRUE)) ||
-        (!is.null(grid) && !isFALSE(grid) && any(grid <= 0, na.rm = TRUE))) {
-      stop("All argument values (mean, lower, upper, zero, grid and clip)",
-           " should be provided in exponential form when using the log scale.",
-           " This is an intentional break with the original forestplot function in order",
-           " to simplify other arguments such as ticks, clips, and more.")
+      (!is.null(clip) && any(Filter(Negate(is.infinite), clip) <= 0, na.rm = TRUE)) ||
+      (!is.null(grid) && !isFALSE(grid) && any(grid <= 0, na.rm = TRUE))) {
+      stop(
+        "All argument values (mean, lower, upper, zero, grid and clip)",
+        " should be provided in exponential form when using the log scale.",
+        " This is an intentional break with the original forestplot function in order",
+        " to simplify other arguments such as ticks, clips, and more."
+      )
     }
 
     # Change all the values along the log scale
@@ -141,48 +147,52 @@ forestplot.default <- function(labeltext,
   }
 
   # Prep basics
-  labels <- prepLabelText(labeltext = coreData$labeltext,
-                          nr = nrow(coreData$estimates))
+  labels <- prepLabelText(
+    labeltext = coreData$labeltext,
+    nr = nrow(coreData$estimates)
+  )
   graph.pos <- prepGraphPositions(graph.pos, nc = attr(labels, "no_cols"))
   align <- prepAlign(align, graph.pos = graph.pos, nc = attr(labels, "no_cols"))
 
   is.summary <- rep(is.summary, length.out = nrow(coreData$estimates))
 
-  list(labels = labels,
-       estimates = coreData$estimates,
-       mar = mar,
-       align = align,
-       title = title,
-       legend = legend,
-       legend_args = legend_args,
-       txt_gp = txt_gp,
-       colgap = colgap,
-       lineheight = lineheight,
-       col = col,
-       graphwidth = graphwidth,
-       graph.pos = graph.pos,
-       boxsize = boxsize,
-       is.summary = is.summary,
-       shapes_gp = shapes_gp,
-       lines = list(horizontal = hrzl_lines),
-       line.margin = line.margin,
-       fn.legend = fn.legend,
-       fn.ci_sum = fn.ci_sum,
-       fn.ci_norm = fn.ci_norm,
-       lty.ci = lty.ci,
-       ci.vertices.height = ci.vertices.height,
-       ci.vertices = ci.vertices,
-       lwd.zero = lwd.zero,
-       lwd.ci = lwd.ci,
-       xticks = xticks,
-       xticks.digits = xticks.digits,
-       xlab = xlab,
-       xlog = xlog,
-       clip = clip,
-       zero = zero,
-       lwd.xaxis = lwd.xaxis,
-       grid = grid,
-       extra_arguments = list(...)) |>
+  list(
+    labels = labels,
+    estimates = coreData$estimates,
+    mar = mar,
+    align = align,
+    title = title,
+    legend = legend,
+    legend_args = legend_args,
+    txt_gp = txt_gp,
+    colgap = colgap,
+    lineheight = lineheight,
+    col = col,
+    graphwidth = graphwidth,
+    graph.pos = graph.pos,
+    boxsize = boxsize,
+    is.summary = is.summary,
+    shapes_gp = shapes_gp,
+    lines = list(horizontal = hrzl_lines),
+    line.margin = line.margin,
+    fn.legend = fn.legend,
+    fn.ci_sum = fn.ci_sum,
+    fn.ci_norm = fn.ci_norm,
+    lty.ci = lty.ci,
+    ci.vertices.height = ci.vertices.height,
+    ci.vertices = ci.vertices,
+    lwd.zero = lwd.zero,
+    lwd.ci = lwd.ci,
+    xticks = xticks,
+    xticks.digits = xticks.digits,
+    xlab = xlab,
+    xlog = xlog,
+    clip = clip,
+    zero = zero,
+    lwd.xaxis = lwd.xaxis,
+    grid = grid,
+    extra_arguments = list(...)
+  ) |>
     structure(class = "gforge_forestplot")
 }
 

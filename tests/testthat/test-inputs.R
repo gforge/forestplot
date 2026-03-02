@@ -54,4 +54,25 @@ test_that("Check different input formats", {
     ) |>
       forestplot()
   )
+
+  # new validation cases ------------------------------------------------------
+  # mean outside CI (deliberately outside bounds)
+  df <- data.frame(coef = 1, low = -1, high = 0.5)
+  expect_error(
+    forestplot(df, labeltext = 1, mean = coef, lower = low, upper = high),
+    "Estimate outside confidence interval"
+  )
+
+  # lower > upper (negative values included)
+  df2 <- data.frame(coef = -2, low = -1, high = -3)
+  expect_error(
+    forestplot(df2, labeltext = 1, mean = coef, lower = low, upper = high),
+    "lower bound exceeds upper bound"
+  )
+
+  # valid negative scenario should be silent
+  df3 <- data.frame(coef = c(-2, -4), low = c(-2.5, -5), high = c(-1.5, -3))
+  expect_silent(
+    forestplot(df3, labeltext = 1:2, mean = coef, lower = low, upper = high)
+  )
 })

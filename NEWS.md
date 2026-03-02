@@ -1,5 +1,11 @@
 NEWS for the forestplot package
 
+Changes for 3.1.8
+-----------------
+* Added input validation: error if a mean lies outside its confidence limits or
+  if a lower bound exceeds its upper bound. Prevents missing boxes and
+  internal `Inf`/logical errors when working with negative estimates.
+
 Changes for 3.1.7
 -----------------
 * Fixed box issue when first row is not a header (issue #70)
@@ -27,7 +33,7 @@ Changes for 3.1.2
 Changes for 3.1.1
 -----------------
 * Fixed missing grid parameter
-* Fixed zebra style issue when no header is present and also graph box fill defaults now defaults to NA 
+* Fixed zebra style issue when no header is present and also graph box fill defaults now defaults to NA
   to allow zebra style. Also fixed multiple sub-headers.
 * Fixed bad handling when providing ticks with xlog transformation
 
