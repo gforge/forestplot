@@ -72,8 +72,94 @@ fp_decorate_graph <- function(x,
   return(x)
 }
 
+#' Set favors indicators around the x-axis
+#'
+#' Adds left/right "Favours ..." indicators with optional arrows either inside
+#' the graph (just above the x-axis) or outside (below the x-axis labels).
+#'
+#' @param x The forestplot object
+#' @param low Label for the lower (left) side. If this is a character string and
+#'   does not start with "Favours", the function prefixes it with "Favours ".
+#'   Can be decorated with `fp_txt_*` functions.
+#' @param high Label for the upper (right) side. If this is a character string and
+#'   does not start with "Favours", the function prefixes it with "Favours ".
+#'   Can be decorated with `fp_txt_*` functions.
+#' @param arrows Should arrows pointing away from the center be drawn?
+#' @param position Where to draw the indicators: `"outside"` (default, below axis)
+#'   or `"inside"` (inside graph, just above axis).
+#' @param txt_gp Optional [grid::gpar()] overrides for both favors labels.
+#' @param arrow_gp Optional [grid::gpar()] for arrows.
+#' @param label_x_nudge Horizontal nudge for favors labels from the arrow heads.
+#'   Accepts [grid::unit()] or numeric (interpreted as mm). If `NULL` it scales
+#'   automatically with the effective text `cex`.
+#' @param label_y_nudge Vertical nudge for favors labels. Accepts [grid::unit()]
+#'   or numeric (interpreted as mm). If `NULL` it scales automatically with the
+#'   effective text `cex`.
+#'
+#' @return The forestplot object with favors indicators
+#' @example inst/examples/fp_set_favors_example.R
+#' @export
+#' @family graph modifiers
+#' @family forestplot functions
+fp_set_favors <- function(x,
+                          low = "Group 1",
+                          high = "Group 2",
+                          arrows = TRUE,
+                          position = c("outside", "inside"),
+                          txt_gp = NULL,
+                          arrow_gp = NULL,
+                          label_x_nudge = NULL,
+                          label_y_nudge = NULL) {
+  fpAssertPlotObject(x)
+
+  position <- match.arg(position)
+
+  if (!is.logical(arrows) || length(arrows) != 1 || is.na(arrows)) {
+    stop("'arrows' must be a non-missing TRUE/FALSE value")
+  }
+
+  if (!is.null(txt_gp) && !is.list(txt_gp)) {
+    stop("'txt_gp' must be a gpar/list or NULL")
+  }
+
+  if (!is.null(arrow_gp) && !is.list(arrow_gp)) {
+    stop("'arrow_gp' must be a gpar/list or NULL")
+  }
+
+  to_unit <- function(value, name) {
+    if (is.null(value)) {
+      return(NULL)
+    }
+    if (is.unit(value)) {
+      return(value)
+    }
+    if (is.numeric(value) && length(value) == 1 && !is.na(value)) {
+      return(unit(value, "mm"))
+    }
+    stop("'", name, "' must be a grid::unit() or a non-missing numeric value")
+  }
+
+  label_x_nudge <- to_unit(label_x_nudge, "label_x_nudge")
+  label_y_nudge <- to_unit(label_y_nudge, "label_y_nudge")
+
+  x$graph_favors <- list(
+    low = low,
+    high = high,
+    arrows = arrows,
+    position = position,
+    txt_gp = txt_gp,
+    arrow_gp = arrow_gp,
+    label_x_nudge = label_x_nudge,
+    label_y_nudge = label_y_nudge
+  )
+
+  return(x)
+}
+
 plotGraphBox <- function(boxGrob, estimates, graph.pos) {
-  if (is.null(boxGrob)) return();
+  if (is.null(boxGrob)) {
+    return()
+  }
 
   # Get the first regular row, i.e. the first row that is not a header
   first_regular_row <- which(apply(estimates, \(x) all(is.na(x)), MARGIN = 1)) |> tail(1) + 1
@@ -94,7 +180,9 @@ plotGraphBox <- function(boxGrob, estimates, graph.pos) {
 plotGraphText <- function(obj) {
   txt_names <- paste0("graph_", c("leftt_bottom_txt", "right_bottom_txt"))
   txt_elements <- obj[which(names(obj) %in% txt_names)]
-  if (length(txt_elements) == 0) return()
+  if (length(txt_elements) == 0) {
+    return()
+  }
   estimates <- obj$estimates
   graph.pos <- obj$graph.pos
 
@@ -107,40 +195,47 @@ plotGraphText <- function(obj) {
 
   drawBox <- function(name, ...) {
     elmnt <- obj[[name]]
-    if (is.null(elmnt)) return()
+    if (is.null(elmnt)) {
+      return()
+    }
     if (is.list(elmnt)) {
       elmnt <- elmnt[[1]]
     }
 
     grid.text(elmnt,
-              gp = attr(elmnt, "txt_gp"),
-              ...)
+      gp = attr(elmnt, "txt_gp"),
+      ...
+    )
   }
 
 
   drawBox("graph_left_top_txt",
-          x = unit(2, "mm"),
-          y = unit(1, "npc") - unit(2, "mm"),
-          hjust = 0,
-          vjust = 1)
+    x = unit(2, "mm"),
+    y = unit(1, "npc") - unit(2, "mm"),
+    hjust = 0,
+    vjust = 1
+  )
 
   drawBox("graph_right_top_txt",
-          x = unit(1, "npc") - unit(2, "mm"),
-          y = unit(1, "npc") - unit(2, "mm"),
-          hjust = 1,
-          vjust = 1)
+    x = unit(1, "npc") - unit(2, "mm"),
+    y = unit(1, "npc") - unit(2, "mm"),
+    hjust = 1,
+    vjust = 1
+  )
 
   drawBox("graph_left_bottom_txt",
-          x = unit(2, "mm"),
-          y = unit(2, "mm"),
-          hjust = 0,
-          vjust = 0)
+    x = unit(2, "mm"),
+    y = unit(2, "mm"),
+    hjust = 0,
+    vjust = 0
+  )
 
   drawBox("graph_right_bottom_txt",
-          x = unit(1, "npc") - unit(2, "mm"),
-          y = unit(2, "mm"),
-          hjust = 1,
-          vjust = 0)
+    x = unit(1, "npc") - unit(2, "mm"),
+    y = unit(2, "mm"),
+    hjust = 1,
+    vjust = 0
+  )
 
   upViewport()
 }

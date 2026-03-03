@@ -39,6 +39,12 @@ data(dfHRQoL)
 dfHRQoL
 
 # Example: construct label + CI text for a table column
-with(dfHRQoL, paste0(sprintf("\%.3f", mean), " [", sprintf("\%.3f", lower), ", ", sprintf("\%.3f", upper), "]"))
+with(dfHRQoL,
+     paste0(sprintf("\%.3f", mean),
+            " [",
+            sprintf("\%.3f", lower),
+            ", ",
+            sprintf("\%.3f", upper), "]")
+)
 }
 \keyword{datasets}

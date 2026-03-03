@@ -11,7 +11,7 @@ vignette: >
   %\usepackage[utf8]{inputenc}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options:
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 ```{r, echo=FALSE}
@@ -296,16 +296,20 @@ fp_inventors |>
                  cols = "Study",
                  align = "l") |>
   fp_add_header(
-    Study = c("", "Study or Subgroup"),
-    E1 = c(fp_span("Caffeine", columns = c(2,3)), "Events") |> fp_align_center(),
-    N1 = c("", "Total"),
-    E2 = c(fp_span("Decaf", columns = c(4,5)), "Events") |> fp_align_center(),
-    N2 = c("", "Total"),
-    Weight = c("", "Weight"),
-    OR = c("", ""),
-    CI = c("", ""),
-    A = c("", "A"), B = c("", "B"), C = c("", "C"),
-    D = c("", "D"), E = c("", "E"), F = c("", "F")
+    Study = "Study or Subgroup",
+    E1 = "Events",
+    N1 = "Total",
+    E2 = "Events",
+    N2 = "Total",
+    Weight = "Weight",
+    OR = "",
+    CI = "",
+    A = "A", B = "B", C = "C",
+    D = "D", E = "E", F = "F"
+  ) |>
+  fp_add_header(
+    fp_span("Caffeine", columns = c(2,3)) |> fp_align_center(),
+    fp_span("Decaf", columns = c(4,5)) |> fp_align_center()
   ) |>
   fp_set_style(box = "royalblue",
                line = "darkblue",
@@ -339,16 +343,21 @@ fp_inventors |>
                  cols = "Study",
                  align = "l") |>
   fp_add_header(
-    Study = c("", "Study or Subgroup"),
-    E1 = c(fp_span("Caffeine", columns = c(2,3)), "Events") |> fp_align_center(),
-    N1 = c("", "Total"),
-    E2 = c(fp_span("Decaf", columns = c(4,5)), "Events") |> fp_align_center(),
-    N2 = c("", "Total"),
-    Weight = c("", "Weight"),
-    OR = c("", ""),
-    CI = c("", ""),
-    A = c("", "A"), B = c("", "B"), C = c("", "C"),
-    D = c("", "D"), E = c("", "E"), F = c("", "F")
+    Study = "Study or Subgroup",
+    E1 = "Events",
+    N1 = "Total",
+    E2 = "Events",
+    N2 = "Total",
+    Weight = "Weight",
+    OR = "",
+    CI = "",
+    A = "A", B = "B", C = "C",
+    D = "D", E = "E", F = "F"
+  ) |>
+  fp_add_header(
+    fp_span("Caffeine", columns = c(2,3)) |> fp_align_center(),
+    fp_span("Decaf", columns = c(4,5)) |> fp_align_center(),
+    E = "E"
   ) |>
   fp_set_style(box = "royalblue",
                line = "darkblue",
@@ -677,6 +686,44 @@ identical(grid_arg,
           structure(c(-.1, -.05, .05),
                     gp = gpar(lty = 2, col = "#CCCCFF")))
 # Returns TRUE
+```
+
+Favors indicators
+=================
+
+You can add left/right interpretation labels around the x-axis using
+`fp_set_favors()`. By default these are placed below the axis, and arrows are
+included:
+
+```{r fig.width = 7, fig.height = 3}
+dfHRQoL |>
+  filter(group == "Sweden") |>
+  mutate(est = sprintf("%.2f", mean), .after = labeltext) |>
+  forestplot(labeltext = c(labeltext, est),
+             clip = c(-.1, Inf),
+             xlab = "EQ-5D index") |>
+  fp_set_favors(low = "Favours worse", high = "Favours better", txt_gp = gpar(cex = 0.7)) |>
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = "royalblue")
+```
+
+If you prefer them inside the graph just above the axis (and without arrows),
+set `position = "inside"` and `arrows = FALSE`:
+
+```{r}
+dfHRQoL |>
+  filter(group == "Sweden") |>
+  mutate(est = sprintf("%.2f", mean), .after = labeltext) |>
+  forestplot(labeltext = c(labeltext, est),
+             clip = c(-.1, Inf),
+             xlab = "EQ-5D index") |>
+  fp_set_favors(low = "Favours worse", high = "Favours better",
+                position = "inside",
+                arrows = FALSE) |>
+  fp_set_style(box = "royalblue",
+               line = "darkblue",
+               summary = "royalblue")
 ```
 
 

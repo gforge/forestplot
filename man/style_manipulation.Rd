@@ -101,6 +101,7 @@ Other graph modifiers:
 \code{\link{fp_add_lines}()},
 \code{\link{fp_decorate_graph}()},
 \code{\link{fp_insert_row}()},
+\code{\link{fp_set_favors}()},
 \code{\link{fp_set_zebra_style}()}
 
 Other forestplot functions: 
@@ -112,6 +113,7 @@ Other forestplot functions:
 \code{\link{fp_add_lines}()},
 \code{\link{fp_decorate_graph}()},
 \code{\link{fp_insert_row}()},
+\code{\link{fp_set_favors}()},
 \code{\link{fp_set_zebra_style}()}
 }
 \concept{forestplot functions}

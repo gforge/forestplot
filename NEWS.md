@@ -20,6 +20,8 @@ Changes for 3.2.0
 * Internal label handling now tolerates grid grobs and other non-atomic objects
   in `labeltext`. Previously such values could trigger coercion errors during
   preparation; these are now treated as valid content.
+* New `fp_set_favors()` helper allows setting the "favors" text on existing `gforge_forestplot`
+  objects in a pipe flow.
 
 Changes for 3.1.7
 -----------------

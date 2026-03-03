@@ -1,4 +1,3 @@
-
 #' A helper function to forestplot
 #'
 #' Gets the x-label and zero-bar details
@@ -25,25 +24,27 @@ prFpGetGraphTicksAndClips <- function(xticks,
                                       x_range,
                                       estimates,
                                       graph.pos,
+                                      graph_favors = NULL,
                                       shapes_gp = fpShapesGp()) {
   layoutRowSpan <- getActiveRowSpan(estimates)
 
   if (xlog) {
     if (is.null(xticks)) {
       ticks <- getTicks(exp(x_range),
-                        clip = clip,
-                        exp = xlog,
-                        digits = xticks.digits)
+        clip = clip,
+        exp = xlog,
+        digits = xticks.digits
+      )
 
       # Add the endpoint ticks to the tick list if
       # it's not already there
       if (is.infinite(clip[1]) == FALSE &&
-          min(ticks, na.rm = TRUE) < clip[1]) {
+        min(ticks, na.rm = TRUE) < clip[1]) {
         ticks <- unique(c(exp(clip[1]), ticks))
       }
 
       if (is.infinite(clip[2]) == FALSE &&
-          max(ticks, na.rm = TRUE) > clip[2]) {
+        max(ticks, na.rm = TRUE) > clip[2]) {
         ticks <- unique(c(ticks, exp(clip[2])))
       }
 
@@ -58,21 +59,22 @@ prFpGetGraphTicksAndClips <- function(xticks,
       ticks <- exp(xticks)
     }
 
-    axis_vp <- viewport(layout.pos.col = graph.pos * 2 - 1,
-                        layout.pos.row = layoutRowSpan,
-                        xscale = x_range,
-                        name = "axis")
-
+    axis_vp <- viewport(
+      layout.pos.col = graph.pos * 2 - 1,
+      layout.pos.row = layoutRowSpan,
+      xscale = x_range,
+      name = "axis"
+    )
 
 
     # Draw the x-axis if there are any ticks
     if (length(ticks)) {
-
       # Decide on the number of digits, if below zero then there should
       # be by default one more digit
       ticklabels <- ifelse(ticks < 1 | abs(floor(ticks * 10) - ticks * 10) > 0,
-                           format(ticks, digits = 2, nsmall = 2),
-                           format(ticks, digits = 1, nsmall = 1))
+        format(ticks, digits = 2, nsmall = 2),
+        format(ticks, digits = 1, nsmall = 1)
+      )
       ticks <- log(ticks)
     } else {
       ticks <- NULL
@@ -81,20 +83,20 @@ prFpGetGraphTicksAndClips <- function(xticks,
   } else {
     if (is.null(xticks)) {
       ticks <- getTicks(x_range,
-                        clip = clip,
-                        exp = xlog,
-                        digits = xticks.digits
+        clip = clip,
+        exp = xlog,
+        digits = xticks.digits
       )
 
       # Add the endpoint ticks to the tick list if
       # it's not already there
       if (is.infinite(clip[1]) == FALSE &&
-          min(ticks, na.rm = TRUE) < clip[1]) {
+        min(ticks, na.rm = TRUE) < clip[1]) {
         ticks <- unique(c(clip[1], ticks))
       }
 
       if (is.infinite(clip[2]) == FALSE &&
-          max(ticks, na.rm = TRUE) > clip[2]) {
+        max(ticks, na.rm = TRUE) > clip[2]) {
         ticks <- unique(c(ticks, clip[2]))
       }
 
@@ -112,17 +114,19 @@ prFpGetGraphTicksAndClips <- function(xticks,
       ticklabels <- TRUE
     }
 
-    axis_vp <- viewport(layout.pos.col = 2 * graph.pos - 1,
-                        layout.pos.row = layoutRowSpan,
-                        xscale = x_range,
-                        name = "axis")
+    axis_vp <- viewport(
+      layout.pos.col = 2 * graph.pos - 1,
+      layout.pos.row = layoutRowSpan,
+      xscale = x_range,
+      name = "axis"
+    )
   }
 
   # Clean
   if (any(ticks < .Machine$double.eps &
-          ticks > -.Machine$double.eps)) {
+    ticks > -.Machine$double.eps)) {
     ticks[ticks < .Machine$double.eps &
-            ticks > -.Machine$double.eps] <- 0
+      ticks > -.Machine$double.eps] <- 0
   }
 
 
@@ -144,7 +148,7 @@ prFpGetGraphTicksAndClips <- function(xticks,
     gp_axis <- prGetShapeGp(shapes_gp, NULL, "axes", default = do.call(grid::gpar, gp_list))
 
     if (!is.null(xticks) &&
-        !is.null(attr(xticks, "labels"))) {
+      !is.null(attr(xticks, "labels"))) {
       labattr <- attr(xticks, "labels")
       if (length(labattr) != length(ticks)) {
         stop(
@@ -163,12 +167,14 @@ prFpGetGraphTicksAndClips <- function(xticks,
         ticklabels <- labattr
       }
     }
-    dg <- xaxisGrob(at = ticks,
-                    label = ticklabels,
-                    gp = gp_axis)
+    dg <- xaxisGrob(
+      at = ticks,
+      label = ticklabels,
+      gp = gp_axis
+    )
     if (length(grid) == 1) {
       if (is.logical(grid) &&
-          grid == TRUE) {
+        grid == TRUE) {
         grid <- ticks
       }
     }
@@ -210,22 +216,26 @@ prFpGetGraphTicksAndClips <- function(xticks,
     gp_list$col <- col$axes
     # Write the label for the x-axis
     labGrob <- textGrob(xlab,
-                        gp = do.call(gpar, gp_list)
+      gp = do.call(gpar, gp_list)
     )
   } else {
     labGrob <- FALSE
   }
 
-  list(axis_vp = axis_vp,
-       axisGrob = dg,
-       gridList = gridList,
-       labGrob = labGrob,
-       zero = zero,
-       clip = clip,
-       x_range = x_range,
-       col = col,
-       shapes_gp = shapes_gp,
-       lwd.zero = lwd.zero) |>
+  list(
+    axis_vp = axis_vp,
+    axisGrob = dg,
+    gridList = gridList,
+    labGrob = labGrob,
+    graph_favors = graph_favors,
+    txt_gp = txt_gp,
+    zero = zero,
+    clip = clip,
+    x_range = x_range,
+    col = col,
+    shapes_gp = shapes_gp,
+    lwd.zero = lwd.zero
+  ) |>
     structure(class = "forestplot_xaxis")
 }
 
@@ -238,10 +248,10 @@ prFpGetGraphTicksAndClips <- function(xticks,
 #'
 #' @noRd
 getActiveRowSpan <- function(estimates) {
-  mean <- estimates[,1,,drop = FALSE]
+  mean <- estimates[, 1, , drop = FALSE]
   to <- nrow(estimates)
   for (from in 1:to) {
-    if (!all(is.na(mean[from,,]))) {
+    if (!all(is.na(mean[from, , ]))) {
       return(from:to)
     }
   }
