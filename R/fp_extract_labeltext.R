@@ -40,6 +40,7 @@ fp_extract_labeltext <- function(x,
                                  na = "") {
     safeLoadPackage("dplyr")
     safeLoadPackage("tidyr")
+    safeLoadPackage("rlang")
 
     if (!is.data.frame(x)) {
         stop("'x' must be a data.frame or grouped_df")
@@ -208,6 +209,9 @@ fpExtractGroupedLabeltext <- function(raw_x, grouped_x, label_cols) {
 #'     fp_extract_labels(Study = author, E1 = ai, N1 = n1i, E2 = ci, N2 = n2i)
 #' @export
 fp_extract_labels <- function(x, ..., na = "") {
+    safeLoadPackage("rlang")
+    safeLoadPackage("dplyr")
+
     if (!inherits(x, "gforge_forestplot")) {
         stop("'x' must be a gforge_forestplot object")
     }

@@ -78,12 +78,10 @@ fp_decorate_graph <- function(x,
 #' the graph (just above the x-axis) or outside (below the x-axis labels).
 #'
 #' @param x The forestplot object
-#' @param low Label for the lower (left) side. If this is a character string and
-#'   does not start with "Favours", the function prefixes it with "Favours ".
-#'   Can be decorated with `fp_txt_*` functions.
-#' @param high Label for the upper (right) side. If this is a character string and
-#'   does not start with "Favours", the function prefixes it with "Favours ".
-#'   Can be decorated with `fp_txt_*` functions.
+#' @param low Label for the lower (left) side. Can be a character string or
+#'   decorated with `fp_txt_*` functions. The text is used as provided.
+#' @param high Label for the upper (right) side. Can be a character string or
+#'   decorated with `fp_txt_*` functions. The text is used as provided.
 #' @param arrows Should arrows pointing away from the center be drawn?
 #' @param position Where to draw the indicators: `"outside"` (default, below axis)
 #'   or `"inside"` (inside graph, just above axis).

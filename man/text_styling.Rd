@@ -28,7 +28,7 @@ fp_span(txt, columns)
 fp_align_right(txt)
 }
 \arguments{
-\item{txt}{The text to styl}
+\item{txt}{The text to style}
 
 \item{gp}{A \code{\link[grid:gpar]{grid::gpar()}} style to apply}
 

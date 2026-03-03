@@ -2,7 +2,7 @@
 #'
 #' This is a collection of functions to allow styling of text
 #'
-#' @param txt The text to styl
+#' @param txt The text to style
 #' @returns A list of txt with style attributes
 #'
 #' @examples
@@ -122,8 +122,12 @@ fp_align_center <- function(txt) {
 #'
 fp_span <- function(txt, columns) {
   sapply(txt, \(str) {
-    if (!is.numeric(columns) || any(columns < 1) || any(columns %% 1 != 0)) {
-      stop("'columns' must be an integer vector")
+    if (!is.numeric(columns) ||
+      length(columns) < 1L ||
+      any(!is.finite(columns)) ||
+      any(columns < 1) ||
+      any(columns %% 1 != 0)) {
+      stop("'columns' must be a non-empty integer vector of finite values")
     }
     attr(str, "span") <- as.integer(columns)
     return(str)
@@ -312,9 +316,11 @@ fpApplyCellTransform <- function(x, rows = NULL, cols = NULL, where = NULL, tran
 #' @export
 fp_set_summary <- function(x, where) {
   fpAssertPlotObject(x)
+  safeLoadPackage("rlang")
 
   selector_data <- x$extra_arguments$.fp_data
   if (!is.null(selector_data) && inherits(selector_data, "grouped_df")) {
+    safeLoadPackage("dplyr")
     selector_data <- dplyr::ungroup(selector_data)
   }
 
@@ -437,8 +443,12 @@ fp_span_where <- function(x,
                           rows = NULL,
                           cols = NULL,
                           where = NULL) {
-  if (!is.numeric(columns) || any(columns < 1) || any(columns %% 1 != 0)) {
-    stop("'columns' must be an integer vector")
+  if (!is.numeric(columns) ||
+    length(columns) < 1L ||
+    any(!is.finite(columns)) ||
+    any(columns < 1) ||
+    any(columns %% 1 != 0)) {
+    stop("'columns' must be a non-empty integer vector of finite values")
   }
 
   fpApplyCellTransform(

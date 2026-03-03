@@ -63,7 +63,7 @@ prepLabelText <- function(labeltext, nr) {
         # treat expression as non-empty; for other objects only consider
         # NA or NULL as empty, avoiding is.na() on grobs or complex objects
         is_na_or_null <- function(z) {
-          (length(z) == 1L && (is.na(z) || is.null(z)))
+          is.null(z) || (is.atomic(z) && length(z) == 1L && is.na(z))
         }
         if (is.expression(cell) || !is_na_or_null(cell)) {
           empty_row <- FALSE
@@ -131,7 +131,7 @@ isValidLabelList <- function(listData) {
   # this avoids calling `is.na()` on grobs or other complex objects which
   # can return a vector and trigger coercion errors.
   is_na_or_null <- function(z) {
-    (length(z) == 1L && (is.na(z) || is.null(z)))
+    is.null(z) || (is.atomic(z) && length(z) == 1L && is.na(z))
   }
 
   if (!is.expression(row_column_text) &&

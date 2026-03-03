@@ -64,7 +64,7 @@ fp_insert_row <- function(x,
     lacking_match <- desired_colnames[!(desired_colnames %in% names(x$labels))]
     if (length(lacking_match) > 0) {
       stop(
-        "Unkown label columns ", paste(lacking_match, collapse = ", "),
+        "Unknown label columns ", paste(lacking_match, collapse = ", "),
         " not present among: ", paste(names(x$labels), collapse = ", ")
       )
     }

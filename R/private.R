@@ -299,10 +299,11 @@ prFpPrintLabels <- function(labels, nc, nr, graph.pos) {
               ", but only ", nc, " columns are available"
             )
           }
-          if (graph.pos %in% span) {
-            stop("Cannot span the graph column (position ", graph.pos, ")")
-          }
           span <- sort(unique(as.integer(span)))
+          # do not allow spans that cross the graph column insertion point
+          if (min(span) < graph.pos && max(span) >= graph.pos) {
+            stop("Cannot span across the graph column (position ", graph.pos, ")")
+          }
           # make contiguous range
           span <- seq(min(span), max(span))
           # only draw once in the first column of the span

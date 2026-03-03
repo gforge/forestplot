@@ -19,13 +19,11 @@ fp_set_favors(
 \arguments{
 \item{x}{The forestplot object}
 
-\item{low}{Label for the lower (left) side. If this is a character string and
-does not start with "Favours", the function prefixes it with "Favours ".
-Can be decorated with \verb{fp_txt_*} functions.}
+\item{low}{Label for the lower (left) side. Can be a character string or
+decorated with \verb{fp_txt_*} functions. The text is used as provided.}
 
-\item{high}{Label for the upper (right) side. If this is a character string and
-does not start with "Favours", the function prefixes it with "Favours ".
-Can be decorated with \verb{fp_txt_*} functions.}
+\item{high}{Label for the upper (right) side. Can be a character string or
+decorated with \verb{fp_txt_*} functions. The text is used as provided.}
 
 \item{arrows}{Should arrows pointing away from the center be drawn?}
 
@@ -78,14 +76,14 @@ sweden |>
     )
 }
 \seealso{
-Other graph modifiers: 
+Other graph modifiers:
 \code{\link{fp_add_lines}()},
 \code{\link{fp_decorate_graph}()},
 \code{\link{fp_insert_row}()},
 \code{\link{fp_set_style}()},
 \code{\link{fp_set_zebra_style}()}
 
-Other forestplot functions: 
+Other forestplot functions:
 \code{\link{forestplot}()},
 \code{\link{fpColors}()},
 \code{\link{fpDrawNormalCI}()},
