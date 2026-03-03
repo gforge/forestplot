@@ -84,27 +84,47 @@ prGetLabelsList <- function(labels,
       }
 
       if (is.expression(txt_out) || is.character(txt_out) || is.numeric(txt_out) || is.factor(txt_out)) {
+        # handle span attribute: ensure it is valid when possible
+        span <- attr(txt_out, "span")
+        if (!is.null(span)) {
+          if (!is.numeric(span) || any(span < 1) || any(span %% 1 != 0)) {
+            stop("Invalid 'span' attribute: must be integer column indices")
+          }
+          span <- sort(unique(as.integer(span)))
+          # if multiple columns are spanned and the user hasn't specified a
+          # separate alignment, centre the text in the combined viewport
+          if (length(span) > 1 && is.null(attr(txt_out, "align"))) {
+            txt_align <- "c"
+          }
+          # we'll check bounds later when actual number of columns is known
+        }
+
         x <- switch(txt_align,
-                    l = 0,
-                    r = 1,
-                    c = 0.5)
+          l = 0,
+          r = 1,
+          c = 0.5
+        )
 
         just <- switch(txt_align,
-                       l = "left",
-                       r = "right",
-                       c = "center")
+          l = "left",
+          r = "right",
+          c = "center"
+        )
 
         # Bold the text if this is a summary
         if (is.summary[i]) {
           x <- switch(txt_align,
-                      l = 0,
-                      r = 1,
-                      c = 0.5)
+            l = 0,
+            r = 1,
+            c = 0.5
+          )
 
           gp_list <- txt_gp$summary[[sum(is.summary[1:i])]][[j]]
           gp_list[["col"]] <- rep(col$text, length = attr(labels, "no_rows"))[i]
-          gp_list <- merge_with_txt_gp(gp_list = gp_list,
-                                       txt_out = txt_out)
+          gp_list <- merge_with_txt_gp(
+            gp_list = gp_list,
+            txt_out = txt_out
+          )
 
           # Create a textGrob for the summary
           # The row/column order is in this order
@@ -112,25 +132,53 @@ prGetLabelsList <- function(labels,
           # list(rownames(x), list(expression(1 >= a), "b", "c"))
           fixed_labels[[j]][[i]] <-
             textGrob(txt_out,
-                     x = x,
-                     just = just,
-                     gp = do.call(gpar, gp_list)
+              x = x,
+              just = just,
+              gp = do.call(gpar, gp_list)
             )
+          if (!is.null(span)) {
+            attr(fixed_labels[[j]][[i]], "span") <- span
+          }
         } else {
           gp_list <- txt_gp$label[[sum(!is.summary[1:i])]][[j]]
           if (is.null(gp_list$col)) {
             gp_list[["col"]] <- rep(col$text, length = attr(labels, "no_rows"))[i]
           }
-          gp_list <- merge_with_txt_gp(gp_list = gp_list,
-                                       txt_out = txt_out)
+          gp_list <- merge_with_txt_gp(
+            gp_list = gp_list,
+            txt_out = txt_out
+          )
 
           # Create a textGrob with the current row-cell for the label
           fixed_labels[[j]][[i]] <-
             textGrob(txt_out,
-                     x = x,
-                     just = just,
-                     gp = do.call(gpar, gp_list)
+              x = x,
+              just = just,
+              gp = do.call(gpar, gp_list)
             )
+          if (!is.null(span)) {
+            attr(fixed_labels[[j]][[i]], "span") <- span
+          }
+        }
+
+        attr(fixed_labels[[j]][[i]], "height") <- grobHeight(fixed_labels[[j]][[i]])
+        attr(fixed_labels[[j]][[i]], "width") <- grobWidth(fixed_labels[[j]][[i]])
+        if (is.null(max_height)) {
+          max_height <- attr(fixed_labels[[j]][[i]], "height")
+          max_width <- attr(fixed_labels[[j]][[i]], "width")
+        } else {
+          max_height <- max(max_height, attr(fixed_labels[[j]][[i]], "height"))
+          max_width <- max(max_width, attr(fixed_labels[[j]][[i]], "width"))
+        }
+      } else if (inherits(txt_out, "grob")) {
+        fixed_labels[[j]][[i]] <- txt_out
+
+        span <- attr(txt_out, "span")
+        if (!is.null(span)) {
+          if (!is.numeric(span) || any(span < 1) || any(span %% 1 != 0)) {
+            stop("Invalid 'span' attribute: must be integer column indices")
+          }
+          attr(fixed_labels[[j]][[i]], "span") <- sort(unique(as.integer(span)))
         }
 
         attr(fixed_labels[[j]][[i]], "height") <- grobHeight(fixed_labels[[j]][[i]])
@@ -147,11 +195,13 @@ prGetLabelsList <- function(labels,
   }
 
   structure(fixed_labels,
-            max_height = max_height,
-            max_width = max_width,
-            cex =  ifelse(any(is.summary),
-                          txt_gp$summary[[1]][[1]]$cex,
-                          txt_gp$label[[1]][[1]]$cex),
-            no_cols = attr(labels, "no_cols"),
-            no_rows = attr(labels, "no_rows"))
+    max_height = max_height,
+    max_width = max_width,
+    cex = ifelse(any(is.summary),
+      txt_gp$summary[[1]][[1]]$cex,
+      txt_gp$label[[1]][[1]]$cex
+    ),
+    no_cols = attr(labels, "no_cols"),
+    no_rows = attr(labels, "no_rows")
+  )
 }

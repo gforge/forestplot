@@ -16,11 +16,12 @@ The list should be wrapped in m x n number to resemble a matrix:
 \code{list(list("rowname 1 col 1", "rowname 2 col 1"), list("r1c2", expression(beta))}.
 You can also provide a matrix although this cannot have expressions by design:
 \code{matrix(c("rowname 1 col 1", "rowname 2 col 1", "r1c2", "beta"), ncol = 2)}.
-Use \code{NA}:s for blank spaces and if you provide a full column with \code{NA} then
-that column is a empty column that adds some space. \emph{Note:} If you do not
-provide the mean/lower/upper arguments the function expects the label text
-to be a matrix containing the labeltext in the rownames and then columns for
-mean, lower, and upper.}
+Any element may also be a grid grob, which will be drawn directly inside the
+corresponding table cell. Use \code{NA}:s for blank spaces and if you provide
+a full column with \code{NA} then that column is a empty column that adds some
+space. \emph{Note:} If you do not provide the mean/lower/upper arguments the
+function expects the label text to be a matrix containing the labeltext in the
+rownames and then columns for mean, lower, and upper.}
 
 \item{i}{The row}
 

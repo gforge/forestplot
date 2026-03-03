@@ -26,38 +26,27 @@ fp_insert_row <- function(x,
                           mean = NULL, lower = NULL, upper = NULL,
                           position = 1,
                           is.summary = FALSE,
-                          boxsize = NA){
+                          boxsize = NA) {
   args <- list(...)
-  labels <- sapply(args,
-                   FUN = function(var) {
-                     if (is.list(var)) {
-                       return(var)
-                     }
-
-                     if (is.expression(var) || is.character(var)) {
-                       return(lapply(1:length(var), \(i) var[i]))
-                     }
-
-                     return(as.list(var))
-                   },
-                   simplify = FALSE,
-                   USE.NAMES = TRUE)
-  estimates <- pr_convert_insert_estimates(mean = mean,
-                                           lower = lower,
-                                           upper = upper,
-                                           label_length = length(labels[[1]]),
-                                           xlog = x$xlog,
-                                           depth = dim(x$estimates)[3])
+  labels <- pr_coerce_insert_labels(args)
+  estimates <- pr_convert_insert_estimates(
+    mean = mean,
+    lower = lower,
+    upper = upper,
+    label_length = length(labels[[1]]),
+    xlog = x$xlog,
+    depth = dim(x$estimates)[3]
+  )
   stopifnot(all(nrow(estimates) == sapply(labels, length)))
 
   if (position == "last") {
     x$estimates <- abind::abind(x$estimates, estimates, along = 1)
   } else {
-    x$estimates <- abind::abind(x$estimates[0:(position - 1),,,drop = FALSE],
-                                estimates,
-                                x$estimates[position:nrow(x$estimates),,,drop = FALSE],
-                                along = 1)
-
+    x$estimates <- abind::abind(x$estimates[0:(position - 1), , , drop = FALSE],
+      estimates,
+      x$estimates[position:nrow(x$estimates), , , drop = FALSE],
+      along = 1
+    )
   }
 
   if (is.null(labels)) {
@@ -65,20 +54,24 @@ fp_insert_row <- function(x,
       stop("Mismatch between number of columns in labels and provided number of columns")
     }
   } else if (is.null(x$labels)) {
-    stop("Original data lacks labels and columns, i.e. names ",
-         paste(names(labels), collapse = ", "),
-         " can't be matched to original labels")
+    stop(
+      "Original data lacks labels and columns, i.e. names ",
+      paste(names(labels), collapse = ", "),
+      " can't be matched to original labels"
+    )
   } else {
     desired_colnames <- names(labels)
     lacking_match <- desired_colnames[!(desired_colnames %in% names(x$labels))]
     if (length(lacking_match) > 0) {
-      stop("Unkown label columns ", paste(lacking_match, collapse = ", "),
-           " not present among: ", paste(names(x$labels), collapse = ", "))
+      stop(
+        "Unknown label columns ", paste(lacking_match, collapse = ", "),
+        " not present among: ", paste(names(x$labels), collapse = ", ")
+      )
     }
   }
 
 
-  for (i  in 1:attr(x$labels, "no_cols")) {
+  for (i in 1:attr(x$labels, "no_cols")) {
     if (is.null(names(labels)) && i > length(labels)) {
       val <- as.list(rep(NA, length.out = nrow(estimates)))
     } else {
@@ -96,9 +89,11 @@ fp_insert_row <- function(x,
     if (position == "last") {
       x$labels[[i]] <- c(x$labels[[i]], val)
     } else {
-      x$labels[[i]] <- c(x$labels[[i]][0:(position - 1)],
-                         val,
-                         x$labels[[i]][position:length(x$labels[[i]])])
+      x$labels[[i]] <- c(
+        x$labels[[i]][0:(position - 1)],
+        val,
+        x$labels[[i]][position:length(x$labels[[i]])]
+      )
     }
   }
 
@@ -108,9 +103,11 @@ fp_insert_row <- function(x,
   if (position == "last") {
     x$is.summary <- c(x$is.summary, is.summary)
   } else {
-    x$is.summary <- c(x$is.summary[0:(position - 1)],
-                      is.summary,
-                      x$is.summary[position:length(x$is.summary)])
+    x$is.summary <- c(
+      x$is.summary[0:(position - 1)],
+      is.summary,
+      x$is.summary[position:length(x$is.summary)]
+    )
   }
 
   if (!is.null(x$boxsize) && !all(is.na(boxsize))) {
@@ -118,9 +115,11 @@ fp_insert_row <- function(x,
     if (position == "last") {
       x$boxsize <- c(x$boxsize, boxsize)
     } else {
-      x$boxsize <- c(x$boxsize[0:(position - 1)],
-                     boxsize,
-                     x$boxsize[position:length(x$boxsize)])
+      x$boxsize <- c(
+        x$boxsize[0:(position - 1)],
+        boxsize,
+        x$boxsize[position:length(x$boxsize)]
+      )
     }
   }
 
@@ -131,7 +130,25 @@ fp_insert_row <- function(x,
 #' @rdname row_manipulation
 #' @export
 fp_add_header <- function(x, ..., position = 1, is.summary = TRUE) {
-  fp_insert_row(x, ..., position = position, is.summary = is.summary)
+  args <- list(...)
+  args <- pr_prepare_header_args(args, existing_label_names = names(x$labels))
+  labels <- pr_coerce_insert_labels(args)
+  pr_validate_header_span_collisions(
+    labels = labels,
+    existing_label_names = names(x$labels)
+  )
+
+  do.call(
+    fp_insert_row,
+    c(
+      list(
+        x = x,
+        position = position,
+        is.summary = is.summary
+      ),
+      args
+    )
+  )
 }
 
 #' @rdname row_manipulation
@@ -151,9 +168,9 @@ pr_convert_insert_estimates <- function(mean, lower, upper, label_length, xlog, 
     if (length(dim(mean)) == 2) {
       mean <- array(mean, dim = c(dim(mean), 1))
     }
-    lower <- mean[,2,,drop = FALSE]
-    upper <- mean[,3,,drop = FALSE]
-    mean <- mean[,1,,drop = FALSE]
+    lower <- mean[, 2, , drop = FALSE]
+    upper <- mean[, 3, , drop = FALSE]
+    mean <- mean[, 1, , drop = FALSE]
   } else {
     stopifnot(all.equal(dim(mean), dim(lower), dim(upper)))
     base_dims <- dim(mean)
@@ -181,13 +198,181 @@ pr_convert_insert_estimates <- function(mean, lower, upper, label_length, xlog, 
   return(estimates)
 }
 
+pr_coerce_insert_labels <- function(args) {
+  sapply(args,
+    FUN = function(var) {
+      if (is.list(var)) {
+        return(var)
+      }
+
+      if (is.expression(var) || is.character(var)) {
+        return(lapply(seq_along(var), \(i) var[i]))
+      }
+
+      return(as.list(var))
+    },
+    simplify = FALSE,
+    USE.NAMES = TRUE
+  )
+}
+
+pr_prepare_header_args <- function(args, existing_label_names) {
+  if (length(args) == 0) {
+    return(args)
+  }
+
+  if (is.null(existing_label_names) || !length(existing_label_names)) {
+    return(args)
+  }
+
+  arg_names <- names(args)
+  if (is.null(arg_names)) {
+    arg_names <- rep("", length(args))
+  }
+
+  used_cols <- integer(0)
+  for (i in seq_along(args)) {
+    if (!nzchar(arg_names[i])) {
+      next
+    }
+    pos <- match(arg_names[i], existing_label_names)
+    if (!is.na(pos)) {
+      used_cols <- c(used_cols, pos)
+    }
+  }
+
+  next_free_col <- 1L
+
+  for (i in seq_along(args)) {
+    if (nzchar(arg_names[i])) {
+      next
+    }
+
+    values <- pr_coerce_insert_labels(list(args[[i]]))[[1]]
+    if (length(values) == 0) {
+      stop("Unnamed fp_add_header() entries must provide at least one value")
+    }
+
+    span <- attr(values[[1]], "span")
+    if (is.null(span)) {
+      while (next_free_col %in% used_cols && next_free_col <= length(existing_label_names)) {
+        next_free_col <- next_free_col + 1L
+      }
+      start_col <- next_free_col
+      span_cols <- start_col
+    } else {
+      if (!is.numeric(span) || any(span < 1) || any(span %% 1 != 0)) {
+        stop("Invalid 'span' attribute: must be integer column indices")
+      }
+      span <- sort(unique(as.integer(span)))
+      start_col <- min(span)
+      span_cols <- seq.int(min(span), max(span))
+    }
+
+    if (start_col < 1 || start_col > length(existing_label_names)) {
+      stop(
+        "The unnamed spanned header starts at column ", start_col,
+        " but valid columns are 1 to ", length(existing_label_names), "."
+      )
+    }
+
+    arg_names[i] <- existing_label_names[start_col]
+    used_cols <- c(used_cols, span_cols)
+    if (start_col == next_free_col) {
+      next_free_col <- next_free_col + 1L
+    }
+  }
+
+  names(args) <- arg_names
+  args
+}
+
+pr_validate_header_span_collisions <- function(labels, existing_label_names) {
+  if (length(labels) == 0) {
+    return(invisible(NULL))
+  }
+
+  if (is.null(existing_label_names) || !length(existing_label_names)) {
+    return(invisible(NULL))
+  }
+
+  if (is.null(names(labels))) {
+    return(invisible(NULL))
+  }
+
+  label_positions <- stats::setNames(seq_along(existing_label_names), existing_label_names)
+
+  rows_n <- max(sapply(labels, length))
+
+  for (row_idx in seq_len(rows_n)) {
+    spans <- list()
+    span_names <- character(0)
+
+    for (label_name in names(labels)) {
+      col_pos <- label_positions[[label_name]]
+      if (!nzchar(label_name) || is.null(col_pos) || is.na(col_pos)) {
+        next
+      }
+
+      values <- labels[[label_name]]
+      if (length(values) < row_idx) {
+        next
+      }
+
+      value <- values[[row_idx]]
+      span <- attr(value, "span")
+      if (is.null(span)) {
+        span <- col_pos
+      }
+
+      span <- sort(unique(as.integer(span)))
+      spans[[length(spans) + 1]] <- c(min(span), max(span))
+      span_names <- c(span_names, label_name)
+    }
+
+    if (length(spans) < 2) {
+      next
+    }
+
+    starts <- vapply(spans, \(x) x[1], integer(1))
+    ends <- vapply(spans, \(x) x[2], integer(1))
+    ord <- order(starts, ends)
+    starts <- starts[ord]
+    ends <- ends[ord]
+    span_names <- span_names[ord]
+
+    for (idx in seq_len(length(starts) - 1)) {
+      current_end <- ends[idx]
+      next_start <- starts[idx + 1]
+      max_allowed <- next_start - 1
+
+      if (current_end >= next_start) {
+        stop(
+          "Header span collision on inserted row ", row_idx,
+          ": column '", span_names[idx], "' spans through column ", current_end,
+          " but the next spanned column '", span_names[idx + 1],
+          "' starts at ", next_start,
+          ". Columns are too close/overlapping; max allowed end for '",
+          span_names[idx], "' is ", max_allowed, "."
+        )
+      }
+    }
+  }
+
+  invisible(NULL)
+}
+
 if (FALSE) {
   base_data |>
-    forestplot(labeltext = c(study, deaths_steroid, deaths_placebo, OR),
-               clip = c(0.1, 2.5),
-               xlog = TRUE,
-               col = fpColors(box = "royalblue",
-                              line = "darkblue",
-                              summary = "royalblue")) |>
+    forestplot(
+      labeltext = c(study, deaths_steroid, deaths_placebo, OR),
+      clip = c(0.1, 2.5),
+      xlog = TRUE,
+      col = fpColors(
+        box = "royalblue",
+        line = "darkblue",
+        summary = "royalblue"
+      )
+    ) |>
     fp_insert_row(c("asdasd", "Asd"))
 }

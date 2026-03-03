@@ -59,8 +59,13 @@ prepLabelText <- function(labeltext, nr) {
     for (col.no in seq(along = labeltext)) {
       empty_row <- TRUE
       for (row.no in seq(along = labeltext[[col.no]])) {
-        if (is.expression(labeltext[[col.no]][[row.no]]) ||
-          !is.na(labeltext[[col.no]][[row.no]])) {
+        cell <- labeltext[[col.no]][[row.no]]
+        # treat expression as non-empty; for other objects only consider
+        # NA or NULL as empty, avoiding is.na() on grobs or complex objects
+        is_na_or_null <- function(z) {
+          is.null(z) || (is.atomic(z) && length(z) == 1L && is.na(z))
+        }
+        if (is.expression(cell) || !is_na_or_null(cell)) {
           empty_row <- FALSE
           break
         }
@@ -82,7 +87,7 @@ prepLabelText <- function(labeltext, nr) {
     label_nr <- NROW(labeltext)
     label_colnames <- colnames(labeltext)
     labeltext <- (\(x) lapply(
-      seq(NCOL(labeltext)),
+      seq_len(NCOL(labeltext)),
       function(i) as.list(x[, i])
     ))(labeltext)
     names(labeltext) <- label_colnames
@@ -122,10 +127,16 @@ isValidLabelList <- function(listData) {
   #    return(FALSE)
   row_column_text <- x[[j]][[i]]
 
+  # only treat NA or NULL as empty when the value is atomic and length 1;
+  # this avoids calling `is.na()` on grobs or other complex objects which
+  # can return a vector and trigger coercion errors.
+  is_na_or_null <- function(z) {
+    is.null(z) || (is.atomic(z) && length(z) == 1L && is.na(z))
+  }
+
   if (!is.expression(row_column_text) &&
     !is.call(row_column_text) &&
-    (is.na(row_column_text) ||
-      is.null(row_column_text))) {
+    is_na_or_null(row_column_text)) {
     return("")
   }
 
