@@ -49,7 +49,7 @@ Text
 
 Forest plots are closely tied to text, and the ability to customize this text is crucial.
 
-```{r}
+```{r, message=FALSE}
 library(forestplot)
 library(dplyr)
 ```
